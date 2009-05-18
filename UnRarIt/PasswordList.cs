@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.IO.IsolatedStorage;
 
 namespace UnRarIt
 {
-    internal class PasswordList : IEnumerable<string>
+    internal class PasswordList : IEnumerable<string>, IDisposable
     {
+        #region Password
         class Password : IComparable<Password>, IEquatable<Password>
         {
             static uint GetStamp()
@@ -75,6 +77,9 @@ namespace UnRarIt
                 return password == other.password;
             }
         }
+        #endregion
+
+        #region PasswordEnumerator
         class PassWordEnumerator : IEnumerator<string>
         {
             int showLastGood = -1;
@@ -127,59 +132,76 @@ namespace UnRarIt
                 }
             }
         }
+        #endregion
+
         List<Password> passwords = new List<Password>();
-        string file;
+        IsolatedStorageFile file;
         string lastGood = String.Empty;
         bool dirty = false;
 
-        public PasswordList(string aFile)
+        public PasswordList()
         {
-            file = aFile;
-            if (File.Exists(file)) {
-                AddFromFile(file);
-            }
+            file = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
             dirty = false;
+            try
+            {
+                using (StreamReader r = new StreamReader(new IsolatedStorageFileStream("passwords", FileMode.Open, FileAccess.Read), Encoding.UTF8))
+                {
+                    AddFromStream(r);
+                }
+            }
+            catch (Exception)
+            {
+                // no op
+            }
+
         }
 
         public void AddFromFile(string aFile)
         {
             using (StreamReader r = new StreamReader(aFile, Encoding.UTF8))
             {
-                string line;
-                uint count, lastUsed;
-                while ((line = r.ReadLine()) != null)
+                AddFromStream(r);
+            }
+        }
+
+        private void AddFromStream(StreamReader r)
+        {
+
+            string line;
+            uint count, lastUsed;
+            while ((line = r.ReadLine()) != null)
+            {
+                line = line.Trim();
+                lastUsed = count = 0;
+                if (line.Contains("\t"))
                 {
-                    line = line.Trim();
-                    lastUsed = count = 0;
-                    if (line.Contains("\t"))
+                    string[] pieces = line.Split(new char[] { '\t' });
+                    if (pieces.Length >= 2)
                     {
-                        string[] pieces = line.Split(new char[] { '\t' });
-                        if (pieces.Length >= 2)
-                        {
-                            uint.TryParse(pieces[1], out count);
-                        }
-                        if (pieces.Length >= 3)
-                        {
-                            uint.TryParse(pieces[2], out lastUsed);
-                        }
-                        line = pieces[0];
+                        uint.TryParse(pieces[1], out count);
                     }
-                    if (string.IsNullOrEmpty(line))
+                    if (pieces.Length >= 3)
                     {
-                        continue;
+                        uint.TryParse(pieces[2], out lastUsed);
                     }
-                    Password toAdd = new Password(line, count, lastUsed);
-                    int idx = passwords.IndexOf(toAdd);
-                    if (idx == -1)
-                    {
-                        passwords.Add(toAdd);
-                    }
-                    else
-                    {
-                        passwords[idx] = new Password(toAdd.Pass, passwords[idx].Count + toAdd.Count, Math.Max(toAdd.LastUsed, passwords[idx].LastUsed));
-                    }
-                    dirty = true;
+                    line = pieces[0];
                 }
+                if (string.IsNullOrEmpty(line))
+                {
+                    continue;
+                }
+                Password toAdd = new Password(line, count, lastUsed);
+                int idx = passwords.IndexOf(toAdd);
+                if (idx == -1)
+                {
+                    passwords.Add(toAdd);
+                }
+                else
+                {
+                    passwords[idx] = new Password(toAdd.Pass, passwords[idx].Count + toAdd.Count, Math.Max(toAdd.LastUsed, passwords[idx].LastUsed));
+                }
+                dirty = true;
             }
             passwords.Sort();
         }
@@ -208,7 +230,7 @@ namespace UnRarIt
                 return;
             }
             passwords.Sort();
-            using (StreamWriter w = new StreamWriter(file, false, Encoding.UTF8))
+            using (StreamWriter w = new StreamWriter(new IsolatedStorageFileStream("passwords", FileMode.OpenOrCreate, FileAccess.Write), Encoding.UTF8))
             {
                 foreach (Password p in passwords)
                 {
@@ -231,5 +253,16 @@ namespace UnRarIt
         {
             return new PassWordEnumerator(lastGood, passwords.GetEnumerator());
         }
+
+
+        public void Dispose()
+        {
+            Save();
+            if (file != null)
+            {
+                file.Dispose();
+            }
+        }
+
     }
 }

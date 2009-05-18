@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.IO;
-using System.Threading;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Forms;
 using Emmy.Interop;
 
 namespace UnRarIt
 {
     public partial class Main : Form
     {
-        private static PasswordList passwords = new PasswordList("passwords.txt");
         private static Properties.Settings Config = Properties.Settings.Default;
         private static string ToFormatedSize(long aSize)
         {
@@ -44,6 +39,7 @@ namespace UnRarIt
         private bool aborted = false;
         private bool auto;
         private IFileIcon FileIcon = new FileIconWin();
+        private PasswordList passwords = new PasswordList();
 
         public Main(bool aAuto, string[] args)
         {
