@@ -41,6 +41,7 @@ namespace UnRarIt
         }
 
         private bool running = false;
+        private bool aborted = false;
         private bool auto;
         private IFileIcon FileIcon = new FileIconWin();
 
@@ -53,6 +54,12 @@ namespace UnRarIt
             StateIcons.Images.Add(Properties.Resources.done);
             StateIcons.Images.Add(Properties.Resources.error);
 
+            UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text);
+            if (!UnrarIt.Enabled)
+            {
+                Dest.ForeColor = Color.Red;
+            }
+
             About.Image = Icon.ToBitmap();
 
             RefreshPasswordCount();
@@ -62,7 +69,6 @@ namespace UnRarIt
             }
             Status.Text = "Ready...";
             BrowseDestDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text);
         }
 
         private void RefreshPasswordCount()
@@ -170,13 +176,33 @@ namespace UnRarIt
 
         private void UnRarIt_Click(object sender, EventArgs e)
         {
+            Run();
+        }
+        private void Abort_Click(object sender, EventArgs e)
+        {
+            UnrarIt.Enabled = false;
+            aborted = true;
+        }
+
+        private void Run()
+        {
             running = true;
-            BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = UnrarIt.Enabled = AddPassword.Enabled = false;
+            aborted = false;
+            BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = AddPassword.Enabled = false;
+            UnrarIt.Text = "Abort";
+
+            UnrarIt.Click += Abort_Click;
+            UnrarIt.Click -= UnRarIt_Click;
+
             Progress.Maximum = Files.Items.Count;
             Progress.Value = 0;
 
             foreach (ListViewItem i in Files.Groups["GroupRar"].Items)
             {
+                if (aborted)
+                {
+                    break;
+                }
                 if (i.StateImageIndex == 1)
                 {
                     continue;
@@ -189,6 +215,10 @@ namespace UnRarIt
             }
             foreach (ListViewItem i in Files.Groups["GroupZip"].Items)
             {
+                if (aborted)
+                {
+                    break;
+                }
                 if (i.StateImageIndex == 1)
                 {
                     continue;
@@ -205,6 +235,9 @@ namespace UnRarIt
             Progress.Value = 0;
             BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = UnrarIt.Enabled = AddPassword.Enabled = true;
             running = false;
+            UnrarIt.Text = "Unrar!";
+            UnrarIt.Click += UnRarIt_Click;
+            UnrarIt.Click -= Abort_Click;
 
             Files.BeginUpdate();
             switch (Config.EmptyListWhenDone)
@@ -220,7 +253,6 @@ namespace UnRarIt
                     break;
             }
             Files.EndUpdate();
-
         }
 
         private void HandleItem(ListViewItem i, IArchiveFile rf)
@@ -242,26 +274,35 @@ namespace UnRarIt
             {
                 passwords.SetGood(rf.Password);
             }
-            switch (Config.SuccessAction)
+            if (!aborted)
             {
-                case 1:
-                    rf.Archive.MoveTo(Path.Combine(rf.Archive.Directory.FullName, String.Format("unrarit_{0}", rf.Archive.Name)));
-                    break;
-                case 2:
-                    rf.Archive.Delete();
-                    break;
-            }
-            if (string.IsNullOrEmpty(task.Result))
-            {
-                i.Checked = true;
-                i.SubItems[2].Text = String.Format("Done, {0} files, {1}", files, ToFormatedSize(unpackedSize));
-                i.StateImageIndex = 1;
+                switch (Config.SuccessAction)
+                {
+                    case 1:
+                        rf.Archive.MoveTo(Path.Combine(rf.Archive.Directory.FullName, String.Format("unrarit_{0}", rf.Archive.Name)));
+                        break;
+                    case 2:
+                        rf.Archive.Delete();
+                        break;
+                }
+                if (string.IsNullOrEmpty(task.Result))
+                {
+                    i.Checked = true;
+                    i.SubItems[2].Text = String.Format("Done, {0} files, {1}", files, ToFormatedSize(unpackedSize));
+                    i.StateImageIndex = 1;
+                }
+                else
+                {
+                    i.SubItems[2].Text = String.Format("Error, {0}", task.Result.ToString());
+                    i.StateImageIndex = 2;
+                }
             }
             else
             {
-                i.SubItems[2].Text = String.Format("Error, {0}", task.Result.ToString());
+                i.SubItems[2].Text = String.Format("Aborted");
                 i.StateImageIndex = 2;
             }
+
             Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
@@ -287,18 +328,20 @@ namespace UnRarIt
         private void OnExtractFile(object sender, ExtractFileEventArgs e)
         {
             Invoke(
-                new SetStatus(delegate(string status) { Status.Text = status; }),
-                String.Format("Extracting {0}::{1}...", e.Archive, e.Item.Name)
+                new SetStatus(delegate(string status) { Details.Text = status; }),
+                e.Item.Name
                 );
             unpackedSize += e.Item.Size;
             files++;
+            e.ContinueOperation = !aborted;
         }
-        private void OnPasswordAttempt(object sender, PasswordEventArgs args)
+        private void OnPasswordAttempt(object sender, PasswordEventArgs e)
         {
             Invoke(
                 new SetStatus(delegate(string status) { Details.Text = status; }),
-                String.Format("Password: {0}", args.Password)
+                String.Format("Password: {0}", e.Password)
                 );
+            e.ContinueOperation = !aborted;
         }
         private void HandleFile(object o)
         {
@@ -310,6 +353,10 @@ namespace UnRarIt
                     String.Format("Opening archive and cracking password: {0}...", task.File.Archive.Name)
                     );
                 task.File.Open((passwords as IEnumerable<string>).GetEnumerator());
+                Invoke(
+                    new SetStatus(delegate(string status) { Status.Text = status; }),
+                    String.Format("Extracting: {0}...", task.File.Archive.Name)
+                );
                 Regex skip = new Regex(@"\bthumbs.db$|\b_macosx\b|\b\.ds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$", RegexOptions.IgnoreCase);
                 List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
 
@@ -448,7 +495,7 @@ namespace UnRarIt
             if (auto)
             {
                 auto = false;
-                UnRarIt_Click(this, null);
+                Run();
                 Close();
             }
         }

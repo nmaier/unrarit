@@ -12,11 +12,11 @@ namespace UnRarIt
         class Options : GetOpt
         {
             [Parameters]
-            public string[] Args;
+            public string[] Args = new string[0];
 
             [Argument]
             [ShortArgument('a')]
-            public bool Auto;
+            public bool Auto = false;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace UnRarIt
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new Main(options.Auto, options.Args));
             }
-            catch (GetOptException ex)
+            catch (GetOptException)
             {
                 MessageBox.Show(
                     options.AssembleUsage(60),

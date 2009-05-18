@@ -146,10 +146,11 @@
             // 
             // Status
             // 
+            this.Status.AutoSize = false;
             this.Status.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.Status.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Status.Name = "Status";
-            this.Status.Size = new System.Drawing.Size(39, 17);
+            this.Status.Size = new System.Drawing.Size(300, 17);
             this.Status.Text = "Status";
             this.Status.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -157,12 +158,12 @@
             // 
             this.Progress.Name = "Progress";
             this.Progress.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
-            this.Progress.Size = new System.Drawing.Size(104, 16);
+            this.Progress.Size = new System.Drawing.Size(204, 16);
             // 
             // Details
             // 
             this.Details.Name = "Details";
-            this.Details.Size = new System.Drawing.Size(622, 17);
+            this.Details.Size = new System.Drawing.Size(230, 17);
             this.Details.Spring = true;
             // 
             // StatusPasswords
