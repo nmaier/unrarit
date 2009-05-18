@@ -135,7 +135,9 @@ namespace UnRarIt
         public PasswordList(string aFile)
         {
             file = aFile;
-            AddFromFile(file);
+            if (File.Exists(file)) {
+                AddFromFile(file);
+            }
             dirty = false;
         }
 
