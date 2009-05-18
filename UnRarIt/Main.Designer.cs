@@ -52,17 +52,19 @@
             this.passwordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ImportPasswords = new System.Windows.Forms.ToolStripMenuItem();
             this.ExportPasswords = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.ClearAllPasswords = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.Homepage = new System.Windows.Forms.ToolStripMenuItem();
             this.About = new System.Windows.Forms.ToolStripMenuItem();
             this.AddPassword = new System.Windows.Forms.Button();
             this.BrowseDestDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.ExportDialog = new System.Windows.Forms.SaveFileDialog();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.ClearAllPasswords = new System.Windows.Forms.ToolStripMenuItem();
             this.GroupDest = new System.Windows.Forms.GroupBox();
             this.Dest = new System.Windows.Forms.TextBox();
             this.BrowseDest = new System.Windows.Forms.Button();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.License = new System.Windows.Forms.ToolStripMenuItem();
             this.Statusbar.SuspendLayout();
             this.MainMenu.SuspendLayout();
             this.GroupDest.SuspendLayout();
@@ -245,10 +247,24 @@
             this.ExportPasswords.Text = "Export";
             this.ExportPasswords.Click += new System.EventHandler(this.ExportPasswords_Click);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(174, 6);
+            // 
+            // ClearAllPasswords
+            // 
+            this.ClearAllPasswords.Name = "ClearAllPasswords";
+            this.ClearAllPasswords.Size = new System.Drawing.Size(177, 22);
+            this.ClearAllPasswords.Text = "Clear all password";
+            this.ClearAllPasswords.Click += new System.EventHandler(this.ClearAllPasswords_Click);
+            // 
             // HelpMenu
             // 
             this.HelpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Homepage,
+            this.toolStripSeparator1,
+            this.License,
             this.About});
             this.HelpMenu.Name = "HelpMenu";
             this.HelpMenu.Size = new System.Drawing.Size(25, 20);
@@ -258,14 +274,14 @@
             // 
             this.Homepage.Image = global::UnRarIt.Properties.Resources.homepage;
             this.Homepage.Name = "Homepage";
-            this.Homepage.Size = new System.Drawing.Size(137, 22);
+            this.Homepage.Size = new System.Drawing.Size(152, 22);
             this.Homepage.Text = "Homepage";
             this.Homepage.Click += new System.EventHandler(this.Homepage_Click);
             // 
             // About
             // 
             this.About.Name = "About";
-            this.About.Size = new System.Drawing.Size(137, 22);
+            this.About.Size = new System.Drawing.Size(152, 22);
             this.About.Text = "About";
             this.About.Click += new System.EventHandler(this.About_Click);
             // 
@@ -284,18 +300,6 @@
             // 
             this.ExportDialog.DefaultExt = "txt";
             this.ExportDialog.Filter = "Text Files|*.txt|All Files|*.*";
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(174, 6);
-            // 
-            // ClearAllPasswords
-            // 
-            this.ClearAllPasswords.Name = "ClearAllPasswords";
-            this.ClearAllPasswords.Size = new System.Drawing.Size(177, 22);
-            this.ClearAllPasswords.Text = "Clear all password";
-            this.ClearAllPasswords.Click += new System.EventHandler(this.ClearAllPasswords_Click);
             // 
             // GroupDest
             // 
@@ -330,6 +334,18 @@
             this.BrowseDest.Text = "...";
             this.BrowseDest.UseVisualStyleBackColor = true;
             this.BrowseDest.Click += new System.EventHandler(this.BrowseDest_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // License
+            // 
+            this.License.Name = "License";
+            this.License.Size = new System.Drawing.Size(152, 22);
+            this.License.Text = "License";
+            this.License.Click += new System.EventHandler(this.License_Click);
             // 
             // Main
             // 
@@ -394,6 +410,8 @@
         private System.Windows.Forms.GroupBox GroupDest;
         private System.Windows.Forms.TextBox Dest;
         private System.Windows.Forms.Button BrowseDest;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem License;
     }
 }
 

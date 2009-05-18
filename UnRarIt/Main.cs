@@ -532,5 +532,18 @@ namespace UnRarIt
                 RefreshPasswordCount();
             }
         }
+
+        private void License_Click(object sender, EventArgs e)
+        {
+            string license = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "license.rtf");
+            if (!File.Exists(license))
+            {
+                MessageBox.Show("License file not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                Process.Start(license);
+            }
+        }
     }
 }
