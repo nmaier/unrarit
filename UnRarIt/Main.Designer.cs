@@ -53,6 +53,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.BrowseDestDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.Dest = new System.Windows.Forms.TextBox();
+            this.homepageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -131,7 +132,7 @@
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(693, 22);
             this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip1.Text = "statusStrip";
             // 
             // Status
             // 
@@ -172,7 +173,7 @@
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(693, 24);
             this.menuStrip1.TabIndex = 3;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.Text = "menuStrip";
             // 
             // fileToolStripMenuItem
             // 
@@ -192,6 +193,7 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.homepageToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(25, 20);
@@ -200,7 +202,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -220,7 +222,7 @@
             this.BrowseDest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BrowseDest.Location = new System.Drawing.Point(657, 454);
             this.BrowseDest.Name = "BrowseDest";
-            this.BrowseDest.Size = new System.Drawing.Size(24, 23);
+            this.BrowseDest.Size = new System.Drawing.Size(24, 20);
             this.BrowseDest.TabIndex = 6;
             this.BrowseDest.Text = "...";
             this.BrowseDest.UseVisualStyleBackColor = true;
@@ -247,6 +249,13 @@
             this.Dest.TabIndex = 5;
             this.Dest.Text = global::UnRarIt.Properties.Settings.Default.Dest;
             this.Dest.TextChanged += new System.EventHandler(this.Dest_TextChanged);
+            // 
+            // homepageToolStripMenuItem
+            // 
+            this.homepageToolStripMenuItem.Name = "homepageToolStripMenuItem";
+            this.homepageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.homepageToolStripMenuItem.Text = "Homepage";
+            this.homepageToolStripMenuItem.Click += new System.EventHandler(this.homepageToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -299,6 +308,7 @@
         private System.Windows.Forms.Button BrowseDest;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.FolderBrowserDialog BrowseDestDialog;
+        private System.Windows.Forms.ToolStripMenuItem homepageToolStripMenuItem;
     }
 }
 

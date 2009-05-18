@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 
 namespace UnRarIt
 {
@@ -257,6 +258,11 @@ namespace UnRarIt
         private void Dest_TextChanged(object sender, EventArgs e)
         {
             UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text);
+        }
+
+        private void homepageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://tn123.ath.cx/UnRarIt/");
         }
     }
 }
