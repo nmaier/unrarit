@@ -41,7 +41,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(315, 54);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 0;
+            this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -61,7 +61,7 @@
             this.buttonImport.Location = new System.Drawing.Point(12, 54);
             this.buttonImport.Name = "buttonImport";
             this.buttonImport.Size = new System.Drawing.Size(75, 23);
-            this.buttonImport.TabIndex = 2;
+            this.buttonImport.TabIndex = 3;
             this.buttonImport.Text = "Import";
             this.buttonImport.UseVisualStyleBackColor = true;
             this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
@@ -71,7 +71,7 @@
             this.Password.Location = new System.Drawing.Point(12, 12);
             this.Password.Name = "Password";
             this.Password.Size = new System.Drawing.Size(378, 20);
-            this.Password.TabIndex = 3;
+            this.Password.TabIndex = 0;
             this.Password.TextChanged += new System.EventHandler(this.Password_TextChanged);
             // 
             // OpenDialog

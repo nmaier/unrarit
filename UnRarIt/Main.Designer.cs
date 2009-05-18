@@ -33,9 +33,9 @@
             System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.Files = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.columnFile = new System.Windows.Forms.ColumnHeader();
+            this.columnSize = new System.Windows.Forms.ColumnHeader();
+            this.columnStatus = new System.Windows.Forms.ColumnHeader();
             this.Icons = new System.Windows.Forms.ImageList(this.components);
             this.StateIcons = new System.Windows.Forms.ImageList(this.components);
             this.UnrarIt = new System.Windows.Forms.Button();
@@ -56,15 +56,16 @@
             this.Homepage = new System.Windows.Forms.ToolStripMenuItem();
             this.About = new System.Windows.Forms.ToolStripMenuItem();
             this.AddPassword = new System.Windows.Forms.Button();
-            this.BrowseDest = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.BrowseDestDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.Dest = new System.Windows.Forms.TextBox();
             this.ExportDialog = new System.Windows.Forms.SaveFileDialog();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.ClearAllPasswords = new System.Windows.Forms.ToolStripMenuItem();
+            this.GroupDest = new System.Windows.Forms.GroupBox();
+            this.Dest = new System.Windows.Forms.TextBox();
+            this.BrowseDest = new System.Windows.Forms.Button();
             this.Statusbar.SuspendLayout();
             this.MainMenu.SuspendLayout();
+            this.GroupDest.SuspendLayout();
             this.SuspendLayout();
             // 
             // Files
@@ -74,9 +75,9 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.Files.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3});
+            this.columnFile,
+            this.columnSize,
+            this.columnStatus});
             listViewGroup1.Header = "Rar-Archives";
             listViewGroup1.Name = "GroupRar";
             listViewGroup2.Header = "Zip-Archives";
@@ -87,7 +88,7 @@
             this.Files.LargeImageList = this.Icons;
             this.Files.Location = new System.Drawing.Point(12, 27);
             this.Files.Name = "Files";
-            this.Files.Size = new System.Drawing.Size(758, 438);
+            this.Files.Size = new System.Drawing.Size(758, 408);
             this.Files.SmallImageList = this.Icons;
             this.Files.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.Files.StateImageList = this.StateIcons;
@@ -98,21 +99,21 @@
             this.Files.DragDrop += new System.Windows.Forms.DragEventHandler(this.Files_DragDrop);
             this.Files.DragEnter += new System.Windows.Forms.DragEventHandler(this.Files_DragEnter);
             // 
-            // columnHeader1
+            // columnFile
             // 
-            this.columnHeader1.Text = "FileName";
-            this.columnHeader1.Width = 200;
+            this.columnFile.Text = "File";
+            this.columnFile.Width = 200;
             // 
-            // columnHeader2
+            // columnSize
             // 
-            this.columnHeader2.Text = "Size";
-            this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeader2.Width = 100;
+            this.columnSize.Text = "Size";
+            this.columnSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnSize.Width = 100;
             // 
-            // columnHeader3
+            // columnStatus
             // 
-            this.columnHeader3.Text = "Status";
-            this.columnHeader3.Width = 100;
+            this.columnStatus.Text = "Status";
+            this.columnStatus.Width = 100;
             // 
             // Icons
             // 
@@ -186,7 +187,7 @@
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.Size = new System.Drawing.Size(782, 24);
-            this.MainMenu.TabIndex = 3;
+            this.MainMenu.TabIndex = 4;
             this.MainMenu.Text = "menuStrip";
             // 
             // FileMenu
@@ -274,43 +275,10 @@
             this.AddPassword.Location = new System.Drawing.Point(93, 471);
             this.AddPassword.Name = "AddPassword";
             this.AddPassword.Size = new System.Drawing.Size(86, 23);
-            this.AddPassword.TabIndex = 4;
+            this.AddPassword.TabIndex = 2;
             this.AddPassword.Text = "Add Password";
             this.AddPassword.UseVisualStyleBackColor = true;
             this.AddPassword.Click += new System.EventHandler(this.AddPassword_Click);
-            // 
-            // BrowseDest
-            // 
-            this.BrowseDest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseDest.Location = new System.Drawing.Point(746, 471);
-            this.BrowseDest.Name = "BrowseDest";
-            this.BrowseDest.Size = new System.Drawing.Size(24, 20);
-            this.BrowseDest.TabIndex = 6;
-            this.BrowseDest.Text = "...";
-            this.BrowseDest.UseVisualStyleBackColor = true;
-            this.BrowseDest.Click += new System.EventHandler(this.BrowseDest_Click);
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(330, 474);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Destination";
-            // 
-            // Dest
-            // 
-            this.Dest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Dest.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::UnRarIt.Properties.Settings.Default, "Dest", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.Dest.Location = new System.Drawing.Point(396, 471);
-            this.Dest.Name = "Dest";
-            this.Dest.ReadOnly = true;
-            this.Dest.Size = new System.Drawing.Size(344, 20);
-            this.Dest.TabIndex = 5;
-            this.Dest.Text = global::UnRarIt.Properties.Settings.Default.Dest;
-            this.Dest.TextChanged += new System.EventHandler(this.Dest_TextChanged);
             // 
             // ExportDialog
             // 
@@ -329,14 +297,46 @@
             this.ClearAllPasswords.Text = "Clear all password";
             this.ClearAllPasswords.Click += new System.EventHandler(this.ClearAllPasswords_Click);
             // 
+            // GroupDest
+            // 
+            this.GroupDest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.GroupDest.Controls.Add(this.Dest);
+            this.GroupDest.Controls.Add(this.BrowseDest);
+            this.GroupDest.Location = new System.Drawing.Point(379, 441);
+            this.GroupDest.Name = "GroupDest";
+            this.GroupDest.Size = new System.Drawing.Size(391, 53);
+            this.GroupDest.TabIndex = 8;
+            this.GroupDest.TabStop = false;
+            this.GroupDest.Text = "Destination";
+            // 
+            // Dest
+            // 
+            this.Dest.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::UnRarIt.Properties.Settings.Default, "Dest", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.Dest.Location = new System.Drawing.Point(11, 21);
+            this.Dest.Name = "Dest";
+            this.Dest.ReadOnly = true;
+            this.Dest.Size = new System.Drawing.Size(344, 20);
+            this.Dest.TabIndex = 5;
+            this.Dest.TabStop = false;
+            this.Dest.Text = global::UnRarIt.Properties.Settings.Default.Dest;
+            this.Dest.TextChanged += new System.EventHandler(this.Dest_TextChanged);
+            // 
+            // BrowseDest
+            // 
+            this.BrowseDest.Location = new System.Drawing.Point(361, 20);
+            this.BrowseDest.Name = "BrowseDest";
+            this.BrowseDest.Size = new System.Drawing.Size(24, 20);
+            this.BrowseDest.TabIndex = 3;
+            this.BrowseDest.Text = "...";
+            this.BrowseDest.UseVisualStyleBackColor = true;
+            this.BrowseDest.Click += new System.EventHandler(this.BrowseDest_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 519);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.BrowseDest);
-            this.Controls.Add(this.Dest);
+            this.Controls.Add(this.GroupDest);
             this.Controls.Add(this.AddPassword);
             this.Controls.Add(this.Statusbar);
             this.Controls.Add(this.MainMenu);
@@ -354,6 +354,8 @@
             this.Statusbar.PerformLayout();
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
+            this.GroupDest.ResumeLayout(false);
+            this.GroupDest.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -363,10 +365,10 @@
 
         private System.Windows.Forms.ListView Files;
         private System.Windows.Forms.Button UnrarIt;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnFile;
+        private System.Windows.Forms.ColumnHeader columnSize;
         private System.Windows.Forms.ImageList Icons;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ColumnHeader columnStatus;
         private System.Windows.Forms.StatusStrip Statusbar;
         private System.Windows.Forms.ToolStripStatusLabel Status;
         private System.Windows.Forms.ToolStripProgressBar Progress;
@@ -378,9 +380,6 @@
         private System.Windows.Forms.ToolStripMenuItem About;
         private System.Windows.Forms.ToolStripMenuItem Exit;
         private System.Windows.Forms.Button AddPassword;
-        private System.Windows.Forms.TextBox Dest;
-        private System.Windows.Forms.Button BrowseDest;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.FolderBrowserDialog BrowseDestDialog;
         private System.Windows.Forms.ToolStripMenuItem Homepage;
         private System.Windows.Forms.ImageList StateIcons;
@@ -392,6 +391,9 @@
         private System.Windows.Forms.SaveFileDialog ExportDialog;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem ClearAllPasswords;
+        private System.Windows.Forms.GroupBox GroupDest;
+        private System.Windows.Forms.TextBox Dest;
+        private System.Windows.Forms.Button BrowseDest;
     }
 }
 

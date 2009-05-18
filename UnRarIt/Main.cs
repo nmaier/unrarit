@@ -50,10 +50,9 @@ namespace UnRarIt
             StateIcons.Images.Add(Properties.Resources.done);
             StateIcons.Images.Add(Properties.Resources.error);
 
-            UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text);
-            if (!UnrarIt.Enabled)
+            if (!(UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text)))
             {
-                Dest.ForeColor = Color.Red;
+                GroupDest.ForeColor = Color.Red;
             }
 
             About.Image = Icon.ToBitmap();
@@ -468,6 +467,7 @@ namespace UnRarIt
             {
                 Config.Dest = BrowseDestDialog.SelectedPath;
                 Config.Save();
+                GroupDest.ForeColor = SystemColors.ControlText;
             }
         }
 
