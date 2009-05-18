@@ -38,9 +38,14 @@ namespace UnRarIt
         public Main()
         {
             InitializeComponent();
-            StatusPasswords.Text = String.Format("{0} passwords...", passwords.Length);
+            RefreshPasswordCount();
             AddFiles(new string[] { @"E:\Beispielmusik.rar", @"G:\Stuff\Unsorted\BNC160.rar" });
             Status.Text = "Ready...";
+        }
+
+        private void RefreshPasswordCount()
+        {
+            StatusPasswords.Text = String.Format("{0} passwords...", passwords.Length);
         }
 
         private void Files_DragDrop(object sender, DragEventArgs e)
@@ -214,7 +219,18 @@ namespace UnRarIt
 
         private void AddPassword_Click(object sender, EventArgs e)
         {
-
+            AddPasswordForm apf = new AddPasswordForm();
+            DialogResult dr = apf.ShowDialog();
+            switch (dr)
+            {
+                case DialogResult.OK:
+                    passwords.SetGood(apf.Password.Text.Trim());
+                    break;
+                case DialogResult.Yes:
+                    passwords.AddFromFile(apf.Password.Text);
+                    break;
+            }
+            RefreshPasswordCount();
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)

@@ -9,7 +9,7 @@ namespace UnRarIt
 {
     internal class PasswordList : IEnumerable<string>
     {
-        class Password : IComparable<Password>
+        class Password : IComparable<Password>, IEquatable<Password>
         {
             static uint GetStamp()
             {
@@ -68,6 +68,11 @@ namespace UnRarIt
             {
                 count++;
                 lastUsed = GetStamp();
+            }
+
+            public bool Equals(Password other)
+            {
+                return password == other.password;
             }
         }
         class PassWordEnumerator : IEnumerator<string>
@@ -130,7 +135,13 @@ namespace UnRarIt
         public PasswordList(string aFile)
         {
             file = aFile;
-            using (StreamReader r = new StreamReader(file, Encoding.UTF8))
+            AddFromFile(file);
+            dirty = false;
+        }
+
+        public void AddFromFile(string aFile)
+        {
+            using (StreamReader r = new StreamReader(aFile, Encoding.UTF8))
             {
                 string line;
                 uint count, lastUsed;
@@ -155,7 +166,17 @@ namespace UnRarIt
                     {
                         continue;
                     }
-                    passwords.Add(new Password(line, count, lastUsed));
+                    Password toAdd = new Password(line, count, lastUsed);
+                    int idx = passwords.IndexOf(toAdd);
+                    if (idx == -1)
+                    {
+                        passwords.Add(toAdd);
+                    }
+                    else
+                    {
+                        passwords[idx] = new Password(toAdd.Pass, passwords[idx].Count + toAdd.Count, Math.Max(toAdd.LastUsed, passwords[idx].LastUsed));
+                    }
+                    dirty = true;
                 }
             }
             passwords.Sort();
