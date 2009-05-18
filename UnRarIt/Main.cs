@@ -14,7 +14,7 @@ namespace UnRarIt
     public partial class Main : Form
     {
         private static PasswordList passwords = new PasswordList("passwords.txt");
-
+        private static Properties.Settings Config = Properties.Settings.Default;
         private static string ToFormatedSize(long aSize)
         {
             if (aSize <= 900)
@@ -41,6 +41,8 @@ namespace UnRarIt
             RefreshPasswordCount();
             AddFiles(new string[] { @"E:\Beispielmusik.rar", @"G:\Stuff\Unsorted\BNC160.rar" });
             Status.Text = "Ready...";
+            BrowseDestDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text);
         }
 
         private void RefreshPasswordCount()
@@ -136,6 +138,7 @@ namespace UnRarIt
 
         private void button1_Click(object sender, EventArgs e)
         {
+            running = true;
             UnrarIt.Enabled = false;
             Progress.Maximum = Files.Items.Count;
             Progress.Value = 0;
@@ -161,6 +164,7 @@ namespace UnRarIt
             Status.Text = "Ready...";
             Progress.Value = 0;
             UnrarIt.Enabled = true;
+            running = false;
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -235,7 +239,24 @@ namespace UnRarIt
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = running;
+            if ((e.Cancel = running))
+            {
+                MessageBox.Show("Wait for the operation to complete", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void BrowseDest_Click(object sender, EventArgs e)
+        {
+            if (BrowseDestDialog.ShowDialog() == DialogResult.OK)
+            {
+                Config.Dest = BrowseDestDialog.SelectedPath;
+                Config.Save();
+            }
+        }
+
+        private void Dest_TextChanged(object sender, EventArgs e)
+        {
+            UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text);
         }
     }
 }

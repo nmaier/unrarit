@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Rar-Archives", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Rar-Archives", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.Files = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
@@ -45,10 +45,14 @@
             this.StatusPasswords = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AddPassword = new System.Windows.Forms.Button();
+            this.BrowseDest = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.BrowseDestDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.Dest = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -63,13 +67,13 @@
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
-            listViewGroup3.Header = "Rar-Archives";
-            listViewGroup3.Name = "GroupRar";
-            listViewGroup4.Header = "Zip-Archives";
-            listViewGroup4.Name = "GroupZip";
+            listViewGroup1.Header = "Rar-Archives";
+            listViewGroup1.Name = "GroupRar";
+            listViewGroup2.Header = "Zip-Archives";
+            listViewGroup2.Name = "GroupZip";
             this.Files.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup3,
-            listViewGroup4});
+            listViewGroup1,
+            listViewGroup2});
             this.Files.LargeImageList = this.Icons;
             this.Files.Location = new System.Drawing.Point(12, 27);
             this.Files.Name = "Files";
@@ -107,6 +111,7 @@
             // 
             // UnrarIt
             // 
+            this.UnrarIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.UnrarIt.Location = new System.Drawing.Point(12, 454);
             this.UnrarIt.Name = "UnrarIt";
             this.UnrarIt.Size = new System.Drawing.Size(75, 23);
@@ -177,6 +182,13 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -188,19 +200,13 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
             // AddPassword
             // 
+            this.AddPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.AddPassword.Location = new System.Drawing.Point(93, 454);
             this.AddPassword.Name = "AddPassword";
             this.AddPassword.Size = new System.Drawing.Size(86, 23);
@@ -209,11 +215,47 @@
             this.AddPassword.UseVisualStyleBackColor = true;
             this.AddPassword.Click += new System.EventHandler(this.AddPassword_Click);
             // 
+            // BrowseDest
+            // 
+            this.BrowseDest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BrowseDest.Location = new System.Drawing.Point(657, 454);
+            this.BrowseDest.Name = "BrowseDest";
+            this.BrowseDest.Size = new System.Drawing.Size(24, 23);
+            this.BrowseDest.TabIndex = 6;
+            this.BrowseDest.Text = "...";
+            this.BrowseDest.UseVisualStyleBackColor = true;
+            this.BrowseDest.Click += new System.EventHandler(this.BrowseDest_Click);
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(241, 457);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(60, 13);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Destination";
+            // 
+            // Dest
+            // 
+            this.Dest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Dest.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::UnRarIt.Properties.Settings.Default, "Dest", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.Dest.Location = new System.Drawing.Point(307, 454);
+            this.Dest.Name = "Dest";
+            this.Dest.ReadOnly = true;
+            this.Dest.Size = new System.Drawing.Size(344, 20);
+            this.Dest.TabIndex = 5;
+            this.Dest.Text = global::UnRarIt.Properties.Settings.Default.Dest;
+            this.Dest.TextChanged += new System.EventHandler(this.Dest_TextChanged);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(693, 502);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.BrowseDest);
+            this.Controls.Add(this.Dest);
             this.Controls.Add(this.AddPassword);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -253,6 +295,10 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Button AddPassword;
+        private System.Windows.Forms.TextBox Dest;
+        private System.Windows.Forms.Button BrowseDest;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.FolderBrowserDialog BrowseDestDialog;
     }
 }
 
