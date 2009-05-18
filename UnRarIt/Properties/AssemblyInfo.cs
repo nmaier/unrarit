@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("UnRarIt.Net")]
-[assembly: AssemblyDescription("Build with the original UnRarIt in mind, which unfortunately was quiet buggy.\r\n\r\nMakes use of unrar.dll and #ZipLib, which use different licenses and are copyrighted.")]
+[assembly: AssemblyDescription("Build with the original UnRarIt in mind, which unfortunately was quite buggy.\r\n\r\nMakes use of unrar.dll and #ZipLib, which use different licenses and are copyrighted.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Nils Maier")]
 [assembly: AssemblyProduct("")]
