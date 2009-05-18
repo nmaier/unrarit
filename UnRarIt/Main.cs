@@ -53,6 +53,7 @@ namespace UnRarIt
             StateIcons.Images.Add(Properties.Resources.idle);
             StateIcons.Images.Add(Properties.Resources.done);
             StateIcons.Images.Add(Properties.Resources.error);
+            StateIcons.Images.Add(Properties.Resources.run);
 
             if (!(UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text)))
             {
@@ -270,6 +271,7 @@ namespace UnRarIt
 
         private void HandleItem(ListViewItem i, IArchiveFile rf)
         {
+            i.StateImageIndex = 3;
             unpackedSize = 0;
             files = 0;
 

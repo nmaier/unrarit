@@ -143,6 +143,7 @@
     <None Include="Resources\homepage.png" />
     <None Include="Resources\new.png" />
     <None Include="Resources\preferences.png" />
+    <None Include="Resources\run.png" />
     <Content Include="unrarit.ico" />
   </ItemGroup>
   <ItemGroup>
