@@ -33,7 +33,6 @@ namespace UnRarIt
             try
             {
                 options.Parse(args);
-                throw new GetOptException("dude");
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
