@@ -40,6 +40,18 @@ namespace UnRarIt
                     SuccessRemove.Checked = true;
                     break;
             }
+            switch (Config.EmptyListWhenDone)
+            {
+                default:
+                    RemoveNone.Checked = true;
+                    break;
+                case 1:
+                    RemoveAll.Checked = true;
+                    break;
+                case 2:
+                    RemoveDone.Checked = true;
+                    break;
+            }
             OwnDirectoryLimit.Value = Config.OwnDirectoryLimit;
         }
 
@@ -63,6 +75,7 @@ namespace UnRarIt
             {
                 Config.OverwriteAction = 2;
             }
+
             if (SuccesNothing.Checked)
             {
                 Config.SuccessAction = 0;
@@ -75,6 +88,20 @@ namespace UnRarIt
             {
                 Config.SuccessAction = 2;
             }
+
+            if (RemoveNone.Checked)
+            {
+                Config.EmptyListWhenDone = 0;
+            }
+            else if (RemoveAll.Checked)
+            {
+                Config.EmptyListWhenDone = 1;
+            }
+            else
+            {
+                Config.EmptyListWhenDone = 2;
+            }
+
             Config.Save();
             Close();
         }

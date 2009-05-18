@@ -41,17 +41,22 @@
             this.SuccessRemove = new System.Windows.Forms.RadioButton();
             this.SuccessRename = new System.Windows.Forms.RadioButton();
             this.SuccesNothing = new System.Windows.Forms.RadioButton();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.RemoveAll = new System.Windows.Forms.RadioButton();
+            this.RemoveDone = new System.Windows.Forms.RadioButton();
+            this.RemoveNone = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OwnDirectoryLimit)).BeginInit();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(343, 179);
+            this.buttonCancel.Location = new System.Drawing.Point(343, 233);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 0;
@@ -62,7 +67,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(262, 179);
+            this.buttonOK.Location = new System.Drawing.Point(262, 233);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
@@ -121,7 +126,7 @@
             this.groupBox2.Controls.Add(this.OwnDirectoryLimit);
             this.groupBox2.Location = new System.Drawing.Point(12, 118);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 84);
+            this.groupBox2.Size = new System.Drawing.Size(200, 100);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Directories...";
@@ -186,13 +191,59 @@
             this.SuccesNothing.Text = "left alone";
             this.SuccesNothing.UseVisualStyleBackColor = true;
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.RemoveAll);
+            this.groupBox4.Controls.Add(this.RemoveDone);
+            this.groupBox4.Controls.Add(this.RemoveNone);
+            this.groupBox4.Location = new System.Drawing.Point(218, 118);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(200, 100);
+            this.groupBox4.TabIndex = 5;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Remove on completion...";
+            // 
+            // RemoveAll
+            // 
+            this.RemoveAll.AutoSize = true;
+            this.RemoveAll.Location = new System.Drawing.Point(17, 65);
+            this.RemoveAll.Name = "RemoveAll";
+            this.RemoveAll.Size = new System.Drawing.Size(64, 17);
+            this.RemoveAll.TabIndex = 6;
+            this.RemoveAll.TabStop = true;
+            this.RemoveAll.Text = "Clear list";
+            this.RemoveAll.UseVisualStyleBackColor = true;
+            // 
+            // RemoveDone
+            // 
+            this.RemoveDone.AutoSize = true;
+            this.RemoveDone.Location = new System.Drawing.Point(17, 42);
+            this.RemoveDone.Name = "RemoveDone";
+            this.RemoveDone.Size = new System.Drawing.Size(113, 17);
+            this.RemoveDone.TabIndex = 5;
+            this.RemoveDone.TabStop = true;
+            this.RemoveDone.Text = "Extracted archives";
+            this.RemoveDone.UseVisualStyleBackColor = true;
+            // 
+            // RemoveNone
+            // 
+            this.RemoveNone.AutoSize = true;
+            this.RemoveNone.Location = new System.Drawing.Point(17, 19);
+            this.RemoveNone.Name = "RemoveNone";
+            this.RemoveNone.Size = new System.Drawing.Size(91, 17);
+            this.RemoveNone.TabIndex = 4;
+            this.RemoveNone.TabStop = true;
+            this.RemoveNone.Text = "No items at all";
+            this.RemoveNone.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(430, 214);
+            this.ClientSize = new System.Drawing.Size(430, 268);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -211,6 +262,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.OwnDirectoryLimit)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -230,5 +283,9 @@
         private System.Windows.Forms.RadioButton SuccessRemove;
         private System.Windows.Forms.RadioButton SuccessRename;
         private System.Windows.Forms.RadioButton SuccesNothing;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.RadioButton RemoveAll;
+        private System.Windows.Forms.RadioButton RemoveDone;
+        private System.Windows.Forms.RadioButton RemoveNone;
     }
 }
