@@ -49,7 +49,7 @@ namespace UnRarIt.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public uint EmptyListWhenDone {
             get {
                 return ((uint)(this["EmptyListWhenDone"]));

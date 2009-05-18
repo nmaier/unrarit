@@ -9,7 +9,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="EmptyListWhenDone" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="OverwriteAction" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">2</Value>

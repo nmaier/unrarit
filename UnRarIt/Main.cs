@@ -228,6 +228,35 @@ namespace UnRarIt
                 }
                 Progress.Increment(1);
             }
+            if (!aborted)
+            {
+                Files.BeginUpdate();
+                switch (Config.EmptyListWhenDone)
+                {
+                    case 1:
+                        Files.Clear();
+                        break;
+                    case 2:
+                        {
+                            List<int> idx = new List<int>();
+                            foreach (ListViewItem i in Files.Items)
+                            {
+                                if (i.StateImageIndex == 1)
+                                {
+                                    idx.Add(i.Index);
+                                }
+                            }
+                            idx.Reverse();
+                            foreach (int i in idx)
+                            {
+                                Files.Items.RemoveAt(i);
+                            }
+                        }
+                        break;
+
+                }
+                Files.EndUpdate();
+            }
 
             Details.Text = "";
             Status.Text = "Ready...";
@@ -237,21 +266,6 @@ namespace UnRarIt
             UnrarIt.Text = "Unrar!";
             UnrarIt.Click += UnRarIt_Click;
             UnrarIt.Click -= Abort_Click;
-
-            Files.BeginUpdate();
-            switch (Config.EmptyListWhenDone)
-            {
-                case 1:
-                    foreach (ListViewItem i in Files.CheckedItems)
-                    {
-                        Files.Items.Remove(i);
-                    }
-                    break;
-                case 2:
-                    Files.Clear();
-                    break;
-            }
-            Files.EndUpdate();
         }
 
         private void HandleItem(ListViewItem i, IArchiveFile rf)
