@@ -63,6 +63,8 @@
     <Compile Include="AddPasswordForm.Designer.cs">
       <DependentUpon>AddPasswordForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="IArchiveEntry.cs" />
+    <Compile Include="IArchiveFile.cs" />
     <Compile Include="Interop\FileIconWin.cs" />
     <Compile Include="Interop\IFileIcon.cs" />
     <Compile Include="Main.cs">
@@ -114,6 +116,7 @@
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UnrarLib.cs" />
+    <Compile Include="UnZipLib.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\unrarit-about.png" />
@@ -122,8 +125,13 @@
     <None Include="Resources\homepage.png" />
     <None Include="Resources\new.png" />
     <None Include="Resources\preferences.png" />
-    <Content Include="unrar.dll" />
     <Content Include="unrarit.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpZipLib\ICSharpCode.SharpZLib.csproj">
+      <Project>{0E7413FF-EB9E-4714-ACF2-BE3A6A7B2FFD}</Project>
+      <Name>ICSharpCode.SharpZLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,41 +6,6 @@ using System.IO;
 
 namespace UnRarIt
 {
-    public class PasswordEventArgs
-    {
-        public string Password = string.Empty;
-
-        public bool ContinueOperation = true;
-
-        internal PasswordEventArgs()
-        {
-        }
-        internal PasswordEventArgs(string aPassword)
-        {
-            Password = aPassword;
-        }
-    }
-
-    public class ExtractFileEventArgs
-    {
-        public FileInfo Archive;
-        public RarItemInfo Item;
-        public string Destination;
-
-        public bool ContinueOperation = true;
-
-        internal ExtractFileEventArgs(FileInfo aArchive, RarItemInfo aItem, string aDestination)
-        {
-            Archive = aArchive;
-            Item = aItem;
-            Destination = aDestination;
-        }
-    }
-
-    public delegate void ExtractFileHandler(object sender, ExtractFileEventArgs e);
-    public delegate void PasswordAttemptHandler(object sender, PasswordEventArgs e);
-    public delegate void PasswordRequiredHandler(object sender, PasswordEventArgs e);
-
     public enum RarErrors : int
     {
         SUCCESS = 0,
@@ -72,7 +37,7 @@ namespace UnRarIt
         }
     }
 
-    public class RarItemInfo
+    public class RarItemInfo : UnRarIt.IArchiveEntry
     {
         string fileName;
         bool isEncrypted;
@@ -87,27 +52,27 @@ namespace UnRarIt
 
         FileInfo dest;
 
-        public string FileName
+        public string Name
         {
             get { return fileName; }
         }
-        public bool IsEncrypted
+        public bool IsCrypted
         {
             get { return isEncrypted; }
         }
-        public ulong UnpackedSize
+        public ulong Size
         {
             get { return unpacked; }
         }
-        public ulong PackedSize
+        public ulong CompressedSize
         {
             get { return packed; }
         }
-        public UInt32 CRC
+        public UInt32 Crc
         {
             get { return crc; }
         }
-        public DateTime FileTime
+        public DateTime DateTime
         {
             get { return fileTime; }
         }
@@ -139,7 +104,7 @@ namespace UnRarIt
         }
     }
 
-    public class RarFile : IDisposable, IEnumerable<RarItemInfo>
+    public class RarFile : UnRarIt.IArchiveFile
     {
         const int RAR_OM_LIST = 0;
         const int RAR_OM_EXTRACT = 1;
@@ -238,7 +203,7 @@ namespace UnRarIt
         IntPtr handle;
         bool isSolid = false;
         RAROpenArchiveDataEx openData = new RAROpenArchiveDataEx();
-        Dictionary<string, RarItemInfo> items = new Dictionary<string, RarItemInfo>();
+        Dictionary<string, IArchiveEntry> items = new Dictionary<string, IArchiveEntry>();
         IEnumerator<string> passwords;
         string password = string.Empty;
         FileInfo archive;
@@ -308,17 +273,17 @@ namespace UnRarIt
         public event PasswordAttemptHandler PasswordAttempt;
         public event ExtractFileHandler ExtractFile;
 
-        public RarFile(string aFileName, IEnumerator<string> aPasswords)
+        public RarFile(string aFileName)
         {
             archive = new FileInfo(aFileName);
             if (!archive.Exists)
             {
                 throw new FileNotFoundException("Archive does not exist", archive.FullName);
             }
-            passwords = aPasswords;
         }
-        public void Open()
+        public void Open(IEnumerator<string> aPasswords)
         {
+            passwords = aPasswords; 
             RarErrors status;
             openData.ArcName = archive.FullName;
             openData.OpenMode = RAR_OM_LIST;
@@ -379,7 +344,6 @@ namespace UnRarIt
             }
             if (!string.IsNullOrEmpty(password))
             {
-                passwords.Dispose();
                 passwords = null;
                 return;
             }
@@ -388,10 +352,10 @@ namespace UnRarIt
             foreach (RarItemInfo info in items.Values)
             {
 
-                if (info.IsEncrypted)
+                if (info.IsCrypted)
                 {
                     stillNeedPassword = true;
-                    if (itemToCrack == null || itemToCrack.PackedSize > info.PackedSize)
+                    if (itemToCrack == null || itemToCrack.CompressedSize > info.CompressedSize)
                     {
                         itemToCrack = info;
                     }
@@ -420,7 +384,7 @@ namespace UnRarIt
                     for (; status != RarErrors.END_ARCHIVE; status = GetHeader(handle, ref header))
                     {
                         TryResult(status);
-                        bool rightFile = header.FileName == itemToCrack.FileName;
+                        bool rightFile = header.FileName == itemToCrack.Name;
                         status = ProcessFile(handle, rightFile ? RAR_TEST : RAR_SKIP, null, null);
                         if (status != RarErrors.SUCCESS)
                         {
@@ -446,7 +410,6 @@ namespace UnRarIt
             }
             finally
             {
-                passwords.Dispose();
                 passwords = null;
                 Close();
             }
@@ -478,7 +441,7 @@ namespace UnRarIt
                     {
                         continue;
                     }
-                    RarItemInfo info = items[header.FileName];
+                    RarItemInfo info = items[header.FileName] as RarItemInfo;
                     if (info == null || info.Destination == null)
                     {
                         TryResult(ProcessFile(handle, RAR_SKIP, null, null));
@@ -590,13 +553,9 @@ namespace UnRarIt
         public void Dispose()
         {
             Close();
-            if (passwords != null)
-            {
-                passwords.Dispose();
-                passwords = null;
-            }
+            passwords = null;
         }
-        public IEnumerator<RarItemInfo> GetEnumerator()
+        public IEnumerator<IArchiveEntry> GetEnumerator()
         {
             return items.Values.GetEnumerator();
         }
