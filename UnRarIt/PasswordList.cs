@@ -13,7 +13,7 @@ namespace UnRarIt
         {
             static uint GetStamp()
             {
-                return ((uint)DateTime.Now.Year  << 4) + (uint)DateTime.Now.Month;
+                return ((uint)DateTime.Now.Year << 4) + (uint)DateTime.Now.Month;
             }
 
             string password;
@@ -115,7 +115,7 @@ namespace UnRarIt
                 {
                     if (showLastGood == 0)
                     {
-                        
+
                         return lastGood;
                     }
                     return enumerator.Current.Pass;
@@ -150,6 +150,10 @@ namespace UnRarIt
                             uint.TryParse(pieces[2], out lastUsed);
                         }
                         line = pieces[0];
+                    }
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        continue;
                     }
                     passwords.Add(new Password(line, count, lastUsed));
                 }

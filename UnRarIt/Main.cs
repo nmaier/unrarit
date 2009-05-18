@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading;
 
 namespace UnRarIt
 {
@@ -32,11 +33,14 @@ namespace UnRarIt
             return String.Format("{0:F2} {1}", size, fmt);
         }
 
+        private bool running = false;
+
         public Main()
         {
             InitializeComponent();
             StatusPasswords.Text = String.Format("{0} passwords...", passwords.Length);
             AddFiles(new string[] { @"E:\Beispielmusik.rar", @"G:\Stuff\Unsorted\BNC160.rar" });
+            Status.Text = "Ready...";
         }
 
         private void Files_DragDrop(object sender, DragEventArgs e)
@@ -127,44 +131,36 @@ namespace UnRarIt
 
         private void button1_Click(object sender, EventArgs e)
         {
+            UnrarIt.Enabled = false;
+            Progress.Maximum = Files.Items.Count;
+            Progress.Value = 0;
             foreach (ListViewItem i in Files.Groups["GroupRar"].Items)
             {
-                try
+                using (RarFile rf = new RarFile(i.Text, (passwords as IEnumerable<string>).GetEnumerator()))
                 {
-                    using (RarFile rf = new RarFile(i.Text, (passwords as IEnumerable<string>).GetEnumerator()))
+                    rf.ExtractFile += OnExtractFile;
+                    Thread thread = new Thread(HandleFile);
+                    thread.Start(rf);
+                    while (!thread.Join(200))
                     {
-                        if (!string.IsNullOrEmpty(rf.Password))
-                        {
-                            passwords.SetGood(rf.Password);
-                        }
-                        StringWriter w = new StringWriter();
-                        w.WriteLine("{0}: {1}", rf.FileName, rf.Password);
-                        foreach (RarItemInfo info in rf)
-                        {
-                            w.WriteLine("{0}: {1} {2}", info.FileName, info.UnpackedSize, info.IsEncrypted ? "*" : "");
-                        }
-                        MessageBox.Show(w.ToString());
+                        Application.DoEvents();
+                    }
+                    if (!string.IsNullOrEmpty(rf.Password))
+                    {
+                        passwords.SetGood(rf.Password);
                     }
                 }
-                catch (RarException ex) {
-                    MessageBox.Show(
-                        String.Format("Rar Error processing: {0}\n{1}", i.Text, ex.Result.ToString()),
-                        "Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
-                        );
-                }
+                Progress.Increment(1);
             }
+
+            Status.Text = "Ready...";
+            Progress.Value = 0;
+            UnrarIt.Enabled = true;
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(
-                "Written 2009 by Nils Maier - Copyrights are disclaimed - Public domain\n\nUnRar and #ZipLib are copyrighted and available under free-to-use or completely free licenses",
-                "About",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-                );
+            new AboutBox().ShowDialog();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -175,6 +171,55 @@ namespace UnRarIt
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
             passwords.Save();
+        }
+        delegate void SetStatus(string NewStatus);
+        private void OnExtractFile(object sender, ExtractFileEventArgs e)
+        {
+            Invoke(
+                new SetStatus(delegate(string status) { Status.Text = status; }),
+                String.Format("Extracting {0}::{1}...", e.Archive, e.FileName)
+                );
+        }
+        private void HandleFile(object o)
+        {
+            RarFile file = o as RarFile;
+            try
+            {
+                Invoke(
+                    new SetStatus(delegate(string status) { Status.Text = status; }),
+                    String.Format("Opening archive and cracking password: {0}...", file.FileName.Name)
+                    );
+                file.Open();
+                foreach (RarItemInfo info in file)
+                {
+                    info.Destination = new FileInfo(Path.Combine(Path.GetTempPath(), info.FileName));
+                }
+                file.Extract();
+            }
+            catch (RarException ex)
+            {
+                MessageBox.Show(
+                    String.Format("Rar Error processing: {0}\n{1}", file.FileName.Name, ex.Result.ToString()),
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                    );
+            }
+        }
+
+        private void Status_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AddPassword_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = running;
         }
     }
 }

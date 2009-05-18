@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("UnRarIt")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("UnRarIt.Net")]
+[assembly: AssemblyDescription("Build with the original UnRarIt in mind, which unfortunately was quiet buggy.\r\n\r\nMakes use of unrar.dll and #ZipLib, which use different licenses and are copyrighted.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("home")]
-[assembly: AssemblyProduct("UnRarIt")]
-[assembly: AssemblyCopyright("Copyright © home 2009")]
+[assembly: AssemblyCompany("Nils Maier")]
+[assembly: AssemblyProduct("")]
+[assembly: AssemblyCopyright("Copyright is disclaimed - Public domain")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
