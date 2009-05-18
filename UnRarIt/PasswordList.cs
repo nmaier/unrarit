@@ -15,7 +15,7 @@ namespace UnRarIt
         {
             static uint GetStamp()
             {
-                return ((uint)DateTime.Now.Year << 4) + (uint)DateTime.Now.Month;
+                return ((uint)DateTime.Now.Year * 100) + (uint)DateTime.Now.Month;
             }
 
             string password;
@@ -229,15 +229,31 @@ namespace UnRarIt
             {
                 return;
             }
+            using (Stream stream = new IsolatedStorageFileStream("passwords", FileMode.OpenOrCreate, FileAccess.Write))
+            {
+                SaveToStream(stream);
+            }
+            dirty = false;
+        }
+        public void SaveToFile(string file)
+        {
+            using (Stream stream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write))
+            {
+                SaveToStream(stream);
+            }
+        }
+
+        private void SaveToStream(Stream stream)
+        {
+            stream.SetLength(0);
             passwords.Sort();
-            using (StreamWriter w = new StreamWriter(new IsolatedStorageFileStream("passwords", FileMode.OpenOrCreate, FileAccess.Write), Encoding.UTF8))
+            using (StreamWriter w = new StreamWriter(stream, Encoding.UTF8))
             {
                 foreach (Password p in passwords)
                 {
                     w.WriteLine("{0}\t{1}\t{2}", p.Pass, p.Count, p.LastUsed);
                 }
             }
-            dirty = false;
         }
 
         public int Length
@@ -264,5 +280,12 @@ namespace UnRarIt
             }
         }
 
+
+        public void Clear()
+        {
+            passwords.Clear();
+            dirty = true;
+            Save();
+        }
     }
 }

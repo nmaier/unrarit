@@ -495,5 +495,22 @@ namespace UnRarIt
                 Close();
             }
         }
+
+        private void ExportPasswords_Click(object sender, EventArgs e)
+        {
+            if (ExportDialog.ShowDialog() == DialogResult.OK)
+            {
+                passwords.SaveToFile(ExportDialog.FileName);
+            }
+        }
+
+        private void ClearAllPasswords_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Do you really want to clear all passwords?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            {
+                passwords.Clear();
+                RefreshPasswordCount();
+            }
+        }
     }
 }
