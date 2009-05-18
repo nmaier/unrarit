@@ -8,15 +8,19 @@ namespace UnRarIt
 {
     static class Program
     {
-        [GetOptOptions(AcceptPrefixType=ArgumentPrefixType.Dashes)]
+        [GetOptOptions(AcceptPrefixType=ArgumentPrefixType.Dashes, CaseType=ArgumentCaseType.OnlyLower)]
         class Options : GetOpt
         {
             [Parameters]
             public string[] Args = new string[0];
 
-            [Argument]
+            [Argument(Helptext="Extract all files and exit")]
             [ShortArgument('a')]
             public bool Auto = false;
+
+            [Argument(Helpvar="DIRECTORY", Helptext="Specifies the directory to extract to")]
+            [ShortArgument('d')]
+            public string Dir = string.Empty;
         }
 
         /// <summary>
@@ -29,15 +33,17 @@ namespace UnRarIt
             try
             {
                 options.Parse(args);
+                throw new GetOptException("dude");
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Main(options.Auto, options.Args));
+                Application.Run(new Main(options.Auto, options.Dir, options.Args));
             }
             catch (GetOptException)
             {
                 MessageBox.Show(
-                    options.AssembleUsage(60),
+                    "You provided invalid options. Please mind the usage as described below:\n\n" +
+                    options.AssembleUsage(73),
                     "Usage",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error

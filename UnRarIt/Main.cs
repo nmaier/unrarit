@@ -41,9 +41,13 @@ namespace UnRarIt
         private IFileIcon FileIcon = new FileIconWin();
         private PasswordList passwords = new PasswordList();
 
-        public Main(bool aAuto, string[] args)
+        public Main(bool aAuto, string dir, string[] args)
         {
             auto = aAuto;
+            if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
+            {
+                Config.Dest = dir;
+            }
 
             InitializeComponent();
             StateIcons.Images.Add(Properties.Resources.idle);
