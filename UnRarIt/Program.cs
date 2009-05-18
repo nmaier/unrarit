@@ -2,20 +2,47 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using NMaier.GetOptNet;
 
 namespace UnRarIt
 {
     static class Program
     {
+        [GetOptOptions(AcceptPrefixType=ArgumentPrefixType.Dashes)]
+        class Options : GetOpt
+        {
+            [Parameters]
+            public string[] Args;
+
+            [Argument]
+            [ShortArgument('a')]
+            public bool Auto;
+        }
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+            Options options = new Options();
+            try
+            {
+                options.Parse(args);
+
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new Main(options.Auto, options.Args));
+            }
+            catch (GetOptException ex)
+            {
+                MessageBox.Show(
+                    options.AssembleUsage(60),
+                    "Usage",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                    );
+            }
         }
     }
 }

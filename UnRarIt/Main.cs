@@ -41,10 +41,13 @@ namespace UnRarIt
         }
 
         private bool running = false;
+        private bool auto;
         private IFileIcon FileIcon = new FileIconWin();
 
-        public Main()
+        public Main(bool aAuto, string[] args)
         {
+            auto = aAuto;
+
             InitializeComponent();
             StateIcons.Images.Add(Properties.Resources.idle);
             StateIcons.Images.Add(Properties.Resources.done);
@@ -53,7 +56,10 @@ namespace UnRarIt
             About.Image = Icon.ToBitmap();
 
             RefreshPasswordCount();
-            AddFiles(new string[] { @"E:\Beispielmusik.rar", @"D:\Unsorted\Unsorted.zip" });
+            if (args != null && args.Length != 0)
+            {
+                AddFiles(args);
+            }
             Status.Text = "Ready...";
             BrowseDestDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text);
@@ -194,7 +200,7 @@ namespace UnRarIt
                 Progress.Increment(1);
             }
 
-
+            Details.Text = "";
             Status.Text = "Ready...";
             Progress.Value = 0;
             BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = UnrarIt.Enabled = AddPassword.Enabled = true;
@@ -223,6 +229,8 @@ namespace UnRarIt
             files = 0;
 
             rf.ExtractFile += OnExtractFile;
+            rf.PasswordAttempt += OnPasswordAttempt;
+
             Thread thread = new Thread(HandleFile);
             Task task = new Task(rf);
             thread.Start(task);
@@ -284,6 +292,13 @@ namespace UnRarIt
                 );
             unpackedSize += e.Item.Size;
             files++;
+        }
+        private void OnPasswordAttempt(object sender, PasswordEventArgs args)
+        {
+            Invoke(
+                new SetStatus(delegate(string status) { Details.Text = status; }),
+                String.Format("Password: {0}", args.Password)
+                );
         }
         private void HandleFile(object o)
         {
@@ -380,11 +395,6 @@ namespace UnRarIt
             }
         }
 
-        private void Status_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void AddPassword_Click(object sender, EventArgs e)
         {
             AddPasswordForm apf = new AddPasswordForm();
@@ -431,6 +441,16 @@ namespace UnRarIt
         private void OpenSettings_Click(object sender, EventArgs e)
         {
             new SettingsForm().ShowDialog();
+        }
+
+        private void Main_Shown(object sender, EventArgs e)
+        {
+            if (auto)
+            {
+                auto = false;
+                UnRarIt_Click(this, null);
+                Close();
+            }
         }
     }
 }

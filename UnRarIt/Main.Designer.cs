@@ -37,26 +37,26 @@
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.Icons = new System.Windows.Forms.ImageList(this.components);
+            this.StateIcons = new System.Windows.Forms.ImageList(this.components);
             this.UnrarIt = new System.Windows.Forms.Button();
             this.Statusbar = new System.Windows.Forms.StatusStrip();
             this.Status = new System.Windows.Forms.ToolStripStatusLabel();
             this.Progress = new System.Windows.Forms.ToolStripProgressBar();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.Details = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusPasswords = new System.Windows.Forms.ToolStripStatusLabel();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.FileMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.Homepage = new System.Windows.Forms.ToolStripMenuItem();
             this.About = new System.Windows.Forms.ToolStripMenuItem();
             this.AddPassword = new System.Windows.Forms.Button();
             this.BrowseDest = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.BrowseDestDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.Dest = new System.Windows.Forms.TextBox();
-            this.StateIcons = new System.Windows.Forms.ImageList(this.components);
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.OpenSettings = new System.Windows.Forms.ToolStripMenuItem();
-            this.Homepage = new System.Windows.Forms.ToolStripMenuItem();
             this.Statusbar.SuspendLayout();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -81,7 +81,7 @@
             this.Files.LargeImageList = this.Icons;
             this.Files.Location = new System.Drawing.Point(12, 27);
             this.Files.Name = "Files";
-            this.Files.Size = new System.Drawing.Size(669, 421);
+            this.Files.Size = new System.Drawing.Size(758, 438);
             this.Files.SmallImageList = this.Icons;
             this.Files.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.Files.StateImageList = this.StateIcons;
@@ -114,10 +114,16 @@
             this.Icons.ImageSize = new System.Drawing.Size(16, 16);
             this.Icons.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // StateIcons
+            // 
+            this.StateIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.StateIcons.ImageSize = new System.Drawing.Size(16, 16);
+            this.StateIcons.TransparentColor = System.Drawing.Color.Transparent;
+            // 
             // UnrarIt
             // 
             this.UnrarIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.UnrarIt.Location = new System.Drawing.Point(12, 454);
+            this.UnrarIt.Location = new System.Drawing.Point(12, 471);
             this.UnrarIt.Name = "UnrarIt";
             this.UnrarIt.Size = new System.Drawing.Size(75, 23);
             this.UnrarIt.TabIndex = 1;
@@ -130,24 +136,22 @@
             this.Statusbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Status,
             this.Progress,
-            this.toolStripStatusLabel2,
+            this.Details,
             this.StatusPasswords});
-            this.Statusbar.Location = new System.Drawing.Point(0, 480);
+            this.Statusbar.Location = new System.Drawing.Point(0, 497);
             this.Statusbar.Name = "Statusbar";
-            this.Statusbar.Size = new System.Drawing.Size(693, 22);
+            this.Statusbar.Size = new System.Drawing.Size(782, 22);
             this.Statusbar.TabIndex = 2;
             this.Statusbar.Text = "statusStrip";
             // 
             // Status
             // 
-            this.Status.AutoSize = false;
             this.Status.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.Status.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Status.Name = "Status";
-            this.Status.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.Status.Size = new System.Drawing.Size(400, 17);
+            this.Status.Size = new System.Drawing.Size(39, 17);
+            this.Status.Text = "Status";
             this.Status.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Status.Click += new System.EventHandler(this.Status_Click);
             // 
             // Progress
             // 
@@ -155,11 +159,11 @@
             this.Progress.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
             this.Progress.Size = new System.Drawing.Size(104, 16);
             // 
-            // toolStripStatusLabel2
+            // Details
             // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(172, 17);
-            this.toolStripStatusLabel2.Spring = true;
+            this.Details.Name = "Details";
+            this.Details.Size = new System.Drawing.Size(622, 17);
+            this.Details.Spring = true;
             // 
             // StatusPasswords
             // 
@@ -173,7 +177,7 @@
             this.HelpMenu});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
-            this.MainMenu.Size = new System.Drawing.Size(693, 24);
+            this.MainMenu.Size = new System.Drawing.Size(782, 24);
             this.MainMenu.TabIndex = 3;
             this.MainMenu.Text = "menuStrip";
             // 
@@ -186,6 +190,19 @@
             this.FileMenu.Name = "FileMenu";
             this.FileMenu.Size = new System.Drawing.Size(37, 20);
             this.FileMenu.Text = "File";
+            // 
+            // OpenSettings
+            // 
+            this.OpenSettings.Image = global::UnRarIt.Properties.Resources.preferences;
+            this.OpenSettings.Name = "OpenSettings";
+            this.OpenSettings.Size = new System.Drawing.Size(176, 22);
+            this.OpenSettings.Text = "Open Preferences";
+            this.OpenSettings.Click += new System.EventHandler(this.OpenSettings_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(173, 6);
             // 
             // Exit
             // 
@@ -203,6 +220,14 @@
             this.HelpMenu.Size = new System.Drawing.Size(25, 20);
             this.HelpMenu.Text = "?";
             // 
+            // Homepage
+            // 
+            this.Homepage.Image = global::UnRarIt.Properties.Resources.homepage;
+            this.Homepage.Name = "Homepage";
+            this.Homepage.Size = new System.Drawing.Size(137, 22);
+            this.Homepage.Text = "Homepage";
+            this.Homepage.Click += new System.EventHandler(this.Homepage_Click);
+            // 
             // About
             // 
             this.About.Name = "About";
@@ -213,7 +238,7 @@
             // AddPassword
             // 
             this.AddPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AddPassword.Location = new System.Drawing.Point(93, 454);
+            this.AddPassword.Location = new System.Drawing.Point(93, 471);
             this.AddPassword.Name = "AddPassword";
             this.AddPassword.Size = new System.Drawing.Size(86, 23);
             this.AddPassword.TabIndex = 4;
@@ -224,7 +249,7 @@
             // BrowseDest
             // 
             this.BrowseDest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseDest.Location = new System.Drawing.Point(657, 454);
+            this.BrowseDest.Location = new System.Drawing.Point(746, 471);
             this.BrowseDest.Name = "BrowseDest";
             this.BrowseDest.Size = new System.Drawing.Size(24, 20);
             this.BrowseDest.TabIndex = 6;
@@ -236,7 +261,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(241, 457);
+            this.label1.Location = new System.Drawing.Point(330, 474);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 13);
             this.label1.TabIndex = 7;
@@ -246,7 +271,7 @@
             // 
             this.Dest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Dest.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::UnRarIt.Properties.Settings.Default, "Dest", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.Dest.Location = new System.Drawing.Point(307, 454);
+            this.Dest.Location = new System.Drawing.Point(396, 471);
             this.Dest.Name = "Dest";
             this.Dest.ReadOnly = true;
             this.Dest.Size = new System.Drawing.Size(344, 20);
@@ -254,38 +279,11 @@
             this.Dest.Text = global::UnRarIt.Properties.Settings.Default.Dest;
             this.Dest.TextChanged += new System.EventHandler(this.Dest_TextChanged);
             // 
-            // StateIcons
-            // 
-            this.StateIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.StateIcons.ImageSize = new System.Drawing.Size(16, 16);
-            this.StateIcons.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(173, 6);
-            // 
-            // OpenSettings
-            // 
-            this.OpenSettings.Image = global::UnRarIt.Properties.Resources.preferences;
-            this.OpenSettings.Name = "OpenSettings";
-            this.OpenSettings.Size = new System.Drawing.Size(176, 22);
-            this.OpenSettings.Text = "Open Preferences";
-            this.OpenSettings.Click += new System.EventHandler(this.OpenSettings_Click);
-            // 
-            // Homepage
-            // 
-            this.Homepage.Image = global::UnRarIt.Properties.Resources.homepage;
-            this.Homepage.Name = "Homepage";
-            this.Homepage.Size = new System.Drawing.Size(137, 22);
-            this.Homepage.Text = "Homepage";
-            this.Homepage.Click += new System.EventHandler(this.Homepage_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(693, 502);
+            this.ClientSize = new System.Drawing.Size(782, 519);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.BrowseDest);
             this.Controls.Add(this.Dest);
@@ -297,7 +295,9 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.MainMenu;
             this.Name = "Main";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "UnRarIt.Net";
+            this.Shown += new System.EventHandler(this.Main_Shown);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Statusbar.ResumeLayout(false);
@@ -320,7 +320,7 @@
         private System.Windows.Forms.StatusStrip Statusbar;
         private System.Windows.Forms.ToolStripStatusLabel Status;
         private System.Windows.Forms.ToolStripProgressBar Progress;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ToolStripStatusLabel Details;
         private System.Windows.Forms.ToolStripStatusLabel StatusPasswords;
         private System.Windows.Forms.MenuStrip MainMenu;
         private System.Windows.Forms.ToolStripMenuItem FileMenu;

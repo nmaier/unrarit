@@ -128,6 +128,10 @@
     <Content Include="unrarit.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\GetOptRedox\GetOptNet.csproj">
+      <Project>{ABF98F9F-CF28-4242-9459-B10AAA00E305}</Project>
+      <Name>GetOptNet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpZipLib\ICSharpCode.SharpZLib.csproj">
       <Project>{0E7413FF-EB9E-4714-ACF2-BE3A6A7B2FFD}</Project>
       <Name>ICSharpCode.SharpZLib</Name>
