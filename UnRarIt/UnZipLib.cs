@@ -121,12 +121,15 @@ namespace UnRarIt
                     {
                         using (FileStream ostream = new FileStream(info.Destination.FullName, FileMode.OpenOrCreate, FileAccess.Write))
                         {
-                            int read = istream.Read(data, 0, ushort.MaxValue);
-                            if (read <= 0)
+                            for (; ; )
                             {
-                                break;
+                                int read = istream.Read(data, 0, ushort.MaxValue);
+                                if (read <= 0)
+                                {
+                                    break;
+                                }
+                                ostream.Write(data, 0, read);
                             }
-                            ostream.Write(data, 0, read);
                         }
                     }
                 }
@@ -184,7 +187,31 @@ namespace UnRarIt
                             }
                             if (!found)
                             {
-                                throw new ZipException("Password not found!");
+                                if (PasswordRequired != null)
+                                {
+                                    for (; ; )
+                                    {
+                                        PasswordEventArgs args = new PasswordEventArgs();
+                                        PasswordRequired(this, args);
+                                        if (!args.ContinueOperation || string.IsNullOrEmpty(args.Password))
+                                        {
+                                            break;
+                                        }
+                                        try
+                                        {
+                                            using (Stream s = ar.GetInputStream(e))
+                                            {
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                        catch (ZipPasswordException) { }
+                                    }
+                                    if (!found)
+                                    {
+                                        throw new ZipException("Password not found!");
+                                    }
+                                }
                             }
                         }
                     }

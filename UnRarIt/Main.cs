@@ -219,6 +219,9 @@ namespace UnRarIt
 
         private void HandleItem(ListViewItem i, IArchiveFile rf)
         {
+            unpackedSize = 0;
+            files = 0;
+
             rf.ExtractFile += OnExtractFile;
             Thread thread = new Thread(HandleFile);
             Task task = new Task(rf);
@@ -292,7 +295,7 @@ namespace UnRarIt
                     String.Format("Opening archive and cracking password: {0}...", task.File.Archive.Name)
                     );
                 task.File.Open((passwords as IEnumerable<string>).GetEnumerator());
-                Regex skip = new Regex(@"\bthums.db$|\b_macosx\b|\b\.ds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$", RegexOptions.IgnoreCase);
+                Regex skip = new Regex(@"\bthumbs.db$|\b_macosx\b|\b\.ds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$", RegexOptions.IgnoreCase);
                 List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
 
                 string maxPath = null;
@@ -318,9 +321,10 @@ namespace UnRarIt
                 {
                     maxPath = string.Empty;
                 }
-                if (items >= Config.OwnDirectoryLimit)
+                string basePath = string.Empty;
+                if (items >= Config.OwnDirectoryLimit && string.IsNullOrEmpty(maxPath))
                 {
-                    maxPath = new Regex(@"(?:\.part\d+)?\.[r|z].{2}$", RegexOptions.IgnoreCase).Replace(task.File.Archive.Name, "");
+                    basePath = new Regex(@"(?:\.part\d+)?\.[r|z].{2}$", RegexOptions.IgnoreCase).Replace(task.File.Archive.Name, "");
                 }
                 foreach (IArchiveEntry info in task.File)
                 {
@@ -328,7 +332,7 @@ namespace UnRarIt
                     {
                         continue;
                     }
-                    FileInfo dest = new FileInfo(Path.Combine(Path.Combine(Config.Dest, maxPath), info.Name));
+                    FileInfo dest = new FileInfo(Path.Combine(Path.Combine(Config.Dest, basePath), info.Name));
                     if (dest.Exists)
                     {
                         switch (Config.OverwriteAction)
