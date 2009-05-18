@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="OwnDirectoryLimit" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">10</Value>
+      <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="SuccessAction" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">0</Value>
@@ -12,7 +12,7 @@
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="OverwriteAction" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="Dest" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

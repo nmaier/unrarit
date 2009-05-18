@@ -65,7 +65,7 @@
             // logoPictureBox
             // 
             this.logoPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logoPictureBox.Image = global::UnRarIt.Properties.Resources.unrarit_about;
+            this.logoPictureBox.Image = global::UnRarIt.Properties.Resources.aboutlogo;
             this.logoPictureBox.Location = new System.Drawing.Point(3, 3);
             this.logoPictureBox.Name = "logoPictureBox";
             this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 6);

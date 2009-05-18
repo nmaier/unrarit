@@ -38,24 +38,27 @@
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.Icons = new System.Windows.Forms.ImageList(this.components);
             this.UnrarIt = new System.Windows.Forms.Button();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.Statusbar = new System.Windows.Forms.StatusStrip();
             this.Status = new System.Windows.Forms.ToolStripStatusLabel();
             this.Progress = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusPasswords = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu = new System.Windows.Forms.MenuStrip();
+            this.FileMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.Exit = new System.Windows.Forms.ToolStripMenuItem();
+            this.HelpMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.About = new System.Windows.Forms.ToolStripMenuItem();
             this.AddPassword = new System.Windows.Forms.Button();
             this.BrowseDest = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.BrowseDestDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.Dest = new System.Windows.Forms.TextBox();
-            this.homepageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this.StateIcons = new System.Windows.Forms.ImageList(this.components);
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.OpenSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.Homepage = new System.Windows.Forms.ToolStripMenuItem();
+            this.Statusbar.SuspendLayout();
+            this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // Files
@@ -81,6 +84,7 @@
             this.Files.Size = new System.Drawing.Size(669, 421);
             this.Files.SmallImageList = this.Icons;
             this.Files.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.Files.StateImageList = this.StateIcons;
             this.Files.TabIndex = 0;
             this.Files.UseCompatibleStateImageBehavior = false;
             this.Files.View = System.Windows.Forms.View.Details;
@@ -119,20 +123,20 @@
             this.UnrarIt.TabIndex = 1;
             this.UnrarIt.Text = "Unrar!";
             this.UnrarIt.UseVisualStyleBackColor = true;
-            this.UnrarIt.Click += new System.EventHandler(this.button1_Click);
+            this.UnrarIt.Click += new System.EventHandler(this.UnRarIt_Click);
             // 
-            // statusStrip1
+            // Statusbar
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Statusbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Status,
             this.Progress,
             this.toolStripStatusLabel2,
             this.StatusPasswords});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 480);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(693, 22);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip";
+            this.Statusbar.Location = new System.Drawing.Point(0, 480);
+            this.Statusbar.Name = "Statusbar";
+            this.Statusbar.Size = new System.Drawing.Size(693, 22);
+            this.Statusbar.TabIndex = 2;
+            this.Statusbar.Text = "statusStrip";
             // 
             // Status
             // 
@@ -142,7 +146,6 @@
             this.Status.Name = "Status";
             this.Status.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.Status.Size = new System.Drawing.Size(400, 17);
-            this.Status.Text = "toolStripStatusLabel1";
             this.Status.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Status.Click += new System.EventHandler(this.Status_Click);
             // 
@@ -155,56 +158,57 @@
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(54, 17);
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(172, 17);
             this.toolStripStatusLabel2.Spring = true;
             // 
             // StatusPasswords
             // 
             this.StatusPasswords.Name = "StatusPasswords";
-            this.StatusPasswords.Size = new System.Drawing.Size(118, 17);
-            this.StatusPasswords.Text = "toolStripStatusLabel3";
+            this.StatusPasswords.Size = new System.Drawing.Size(0, 17);
             // 
-            // menuStrip1
+            // MainMenu
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.toolStripMenuItem1});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(693, 24);
-            this.menuStrip1.TabIndex = 3;
-            this.menuStrip1.Text = "menuStrip";
+            this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.FileMenu,
+            this.HelpMenu});
+            this.MainMenu.Location = new System.Drawing.Point(0, 0);
+            this.MainMenu.Name = "MainMenu";
+            this.MainMenu.Size = new System.Drawing.Size(693, 24);
+            this.MainMenu.TabIndex = 3;
+            this.MainMenu.Text = "menuStrip";
             // 
-            // fileToolStripMenuItem
+            // FileMenu
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.FileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.OpenSettings,
+            this.toolStripMenuItem2,
+            this.Exit});
+            this.FileMenu.Name = "FileMenu";
+            this.FileMenu.Size = new System.Drawing.Size(37, 20);
+            this.FileMenu.Text = "File";
             // 
-            // exitToolStripMenuItem
+            // Exit
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.Exit.Name = "Exit";
+            this.Exit.Size = new System.Drawing.Size(176, 22);
+            this.Exit.Text = "Exit";
+            this.Exit.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem1
+            // HelpMenu
             // 
-            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.homepageToolStripMenuItem,
-            this.aboutToolStripMenuItem});
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(25, 20);
-            this.toolStripMenuItem1.Text = "?";
+            this.HelpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Homepage,
+            this.About});
+            this.HelpMenu.Name = "HelpMenu";
+            this.HelpMenu.Size = new System.Drawing.Size(25, 20);
+            this.HelpMenu.Text = "?";
             // 
-            // aboutToolStripMenuItem
+            // About
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.About.Name = "About";
+            this.About.Size = new System.Drawing.Size(137, 22);
+            this.About.Text = "About";
+            this.About.Click += new System.EventHandler(this.About_Click);
             // 
             // AddPassword
             // 
@@ -250,12 +254,32 @@
             this.Dest.Text = global::UnRarIt.Properties.Settings.Default.Dest;
             this.Dest.TextChanged += new System.EventHandler(this.Dest_TextChanged);
             // 
-            // homepageToolStripMenuItem
+            // StateIcons
             // 
-            this.homepageToolStripMenuItem.Name = "homepageToolStripMenuItem";
-            this.homepageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.homepageToolStripMenuItem.Text = "Homepage";
-            this.homepageToolStripMenuItem.Click += new System.EventHandler(this.homepageToolStripMenuItem_Click);
+            this.StateIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.StateIcons.ImageSize = new System.Drawing.Size(16, 16);
+            this.StateIcons.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(173, 6);
+            // 
+            // OpenSettings
+            // 
+            this.OpenSettings.Image = global::UnRarIt.Properties.Resources.preferences;
+            this.OpenSettings.Name = "OpenSettings";
+            this.OpenSettings.Size = new System.Drawing.Size(176, 22);
+            this.OpenSettings.Text = "Open Preferences";
+            this.OpenSettings.Click += new System.EventHandler(this.OpenSettings_Click);
+            // 
+            // Homepage
+            // 
+            this.Homepage.Image = global::UnRarIt.Properties.Resources.homepage;
+            this.Homepage.Name = "Homepage";
+            this.Homepage.Size = new System.Drawing.Size(137, 22);
+            this.Homepage.Text = "Homepage";
+            this.Homepage.Click += new System.EventHandler(this.Homepage_Click);
             // 
             // Main
             // 
@@ -266,20 +290,20 @@
             this.Controls.Add(this.BrowseDest);
             this.Controls.Add(this.Dest);
             this.Controls.Add(this.AddPassword);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.Statusbar);
+            this.Controls.Add(this.MainMenu);
             this.Controls.Add(this.UnrarIt);
             this.Controls.Add(this.Files);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this.MainMenu;
             this.Name = "Main";
             this.Text = "UnRarIt.Net";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.Statusbar.ResumeLayout(false);
+            this.Statusbar.PerformLayout();
+            this.MainMenu.ResumeLayout(false);
+            this.MainMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -293,22 +317,25 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ImageList Icons;
         private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip Statusbar;
         private System.Windows.Forms.ToolStripStatusLabel Status;
         private System.Windows.Forms.ToolStripProgressBar Progress;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel StatusPasswords;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.MenuStrip MainMenu;
+        private System.Windows.Forms.ToolStripMenuItem FileMenu;
+        private System.Windows.Forms.ToolStripMenuItem HelpMenu;
+        private System.Windows.Forms.ToolStripMenuItem About;
+        private System.Windows.Forms.ToolStripMenuItem Exit;
         private System.Windows.Forms.Button AddPassword;
         private System.Windows.Forms.TextBox Dest;
         private System.Windows.Forms.Button BrowseDest;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.FolderBrowserDialog BrowseDestDialog;
-        private System.Windows.Forms.ToolStripMenuItem homepageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Homepage;
+        private System.Windows.Forms.ImageList StateIcons;
+        private System.Windows.Forms.ToolStripMenuItem OpenSettings;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
     }
 }
 

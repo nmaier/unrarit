@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
+using Emmy.Interop;
 
 namespace UnRarIt
 {
@@ -17,6 +19,10 @@ namespace UnRarIt
         private static PasswordList passwords = new PasswordList("passwords.txt");
         private static Properties.Settings Config = Properties.Settings.Default;
         private static string ToFormatedSize(long aSize)
+        {
+            return ToFormatedSize((ulong)aSize);
+        }
+        private static string ToFormatedSize(ulong aSize)
         {
             if (aSize <= 900)
             {
@@ -35,12 +41,19 @@ namespace UnRarIt
         }
 
         private bool running = false;
+        private IFileIcon FileIcon = new FileIconWin();
 
         public Main()
         {
             InitializeComponent();
+            StateIcons.Images.Add(Properties.Resources.idle);
+            StateIcons.Images.Add(Properties.Resources.done);
+            StateIcons.Images.Add(Properties.Resources.error);
+
+            About.Image = Icon.ToBitmap();
+
             RefreshPasswordCount();
-            AddFiles(new string[] { @"E:\Beispielmusik.rar", @"G:\Stuff\Unsorted\BNC160.rar" });
+            AddFiles(new string[] { @"E:\Beispielmusik.rar" });
             Status.Text = "Ready...";
             BrowseDestDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text);
@@ -110,9 +123,10 @@ namespace UnRarIt
                     }
                     if (!Icons.Images.ContainsKey(ext))
                     {
-                        Icons.Images.Add(ext, Icon.ExtractAssociatedIcon(info.FullName));
+                        Icons.Images.Add(ext, FileIcon.GetIcon(info.FullName, ExtractIconSize.Small));
                     }
                     item.ImageKey = ext;
+                    item.StateImageIndex = 0;
                     Files.Items.Add(item);
                 }
                 catch (Exception ex)
@@ -137,19 +151,36 @@ namespace UnRarIt
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        class Task
+        {
+            public RarFile File;
+            public RarErrors Result = RarErrors.SUCCESS;
+            public Task(RarFile aFile)
+            {
+                File = aFile;
+            }
+        }
+
+
+        private void UnRarIt_Click(object sender, EventArgs e)
         {
             running = true;
-            UnrarIt.Enabled = false;
+            BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = UnrarIt.Enabled = AddPassword.Enabled = false;
             Progress.Maximum = Files.Items.Count;
             Progress.Value = 0;
+
             foreach (ListViewItem i in Files.Groups["GroupRar"].Items)
             {
+                if (i.StateImageIndex == 1)
+                {
+                    continue;
+                }
                 using (RarFile rf = new RarFile(i.Text, (passwords as IEnumerable<string>).GetEnumerator()))
                 {
                     rf.ExtractFile += OnExtractFile;
                     Thread thread = new Thread(HandleFile);
-                    thread.Start(rf);
+                    Task task = new Task(rf);
+                    thread.Start(task);
                     while (!thread.Join(200))
                     {
                         Application.DoEvents();
@@ -158,17 +189,55 @@ namespace UnRarIt
                     {
                         passwords.SetGood(rf.Password);
                     }
+                    switch (Config.SuccessAction)
+                    {
+                        case 1:
+                            rf.Archive.MoveTo(Path.Combine(rf.Archive.Directory.FullName, String.Format("unrarit_{0}", rf.Archive.Name)));
+                            break;
+                        case 2:
+                            rf.Archive.Delete();
+                            break;
+                    }
+                    if (task.Result == RarErrors.SUCCESS)
+                    {
+                        i.Checked = true;
+                        i.SubItems[2].Text = String.Format("Done, {0} files, {1}", files, ToFormatedSize(unpackedSize));
+                        i.StateImageIndex = 1;
+                    }
+                    else
+                    {
+                        i.SubItems[2].Text = String.Format("Error, {0}", task.Result.ToString());
+                        i.StateImageIndex = 2;
+                    }
+                    Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
                 }
                 Progress.Increment(1);
             }
 
+
             Status.Text = "Ready...";
             Progress.Value = 0;
-            UnrarIt.Enabled = true;
+            BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = UnrarIt.Enabled = AddPassword.Enabled = true;
             running = false;
+
+            Files.BeginUpdate();
+            switch (Config.EmptyListWhenDone)
+            {
+                case 1:
+                    foreach (ListViewItem i in Files.CheckedItems)
+                    {
+                        Files.Items.Remove(i);
+                    }
+                    break;
+                case 2:
+                    Files.Clear();
+                    break;
+            }
+            Files.EndUpdate();
+
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void About_Click(object sender, EventArgs e)
         {
             new AboutBox().ShowDialog();
         }
@@ -183,37 +252,105 @@ namespace UnRarIt
             passwords.Save();
         }
         delegate void SetStatus(string NewStatus);
+
+        ulong unpackedSize = 0;
+        ulong files = 0;
+
         private void OnExtractFile(object sender, ExtractFileEventArgs e)
         {
             Invoke(
                 new SetStatus(delegate(string status) { Status.Text = status; }),
-                String.Format("Extracting {0}::{1}...", e.Archive, e.FileName)
+                String.Format("Extracting {0}::{1}...", e.Archive, e.Item.FileName)
                 );
+            unpackedSize += e.Item.UnpackedSize;
+            files++;
         }
         private void HandleFile(object o)
         {
-            RarFile file = o as RarFile;
+            Task task = o as Task;
             try
             {
                 Invoke(
                     new SetStatus(delegate(string status) { Status.Text = status; }),
-                    String.Format("Opening archive and cracking password: {0}...", file.FileName.Name)
+                    String.Format("Opening archive and cracking password: {0}...", task.File.Archive.Name)
                     );
-                file.Open();
-                foreach (RarItemInfo info in file)
+                task.File.Open();
+                Regex skip = new Regex(@"\bthums.db$|\b_macosx\b|\b\.ds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$", RegexOptions.IgnoreCase);
+                List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
+
+                string maxPath = null;
+                uint items = 0;
+                foreach (RarItemInfo info in task.File)
                 {
-                    info.Destination = new FileInfo(Path.Combine(Path.GetTempPath(), info.FileName));
+                    if (skip.IsMatch(info.FileName))
+                    {
+                        continue;
+                    }
+                    ++items;
+                    int idx = info.FileName.LastIndexOfAny(new char[] { '\\', '/' });
+                    if (idx != -1)
+                    {
+                        string path = info.FileName.Substring(0, idx);
+                        if (maxPath == null || maxPath.Length > path.Length)
+                        {
+                            maxPath = path;
+                        }
+                    }
                 }
-                file.Extract();
+                if (maxPath == null) {
+                    maxPath = string.Empty;
+                }
+                if (items >= Config.OwnDirectoryLimit)
+                {
+                    maxPath = new Regex(@"(?:\.part\d+)?\.[r|z].{2}$", RegexOptions.IgnoreCase).Replace(task.File.Archive.Name, "");
+                }
+                foreach (RarItemInfo info in task.File)
+                {
+                    if (skip.IsMatch(info.FileName))
+                    {
+                        continue;
+                    }
+                    FileInfo dest = new FileInfo(Path.Combine(Path.Combine(Config.Dest, maxPath), info.FileName));
+                    if (dest.Exists)
+                    {
+                        switch (Config.OverwriteAction)
+                        {
+                            case 1:
+                                info.Destination = dest;
+                                break;
+                            case 2:
+                                switch (MessageBox.Show(
+                                    String.Format(
+                                    "{0} already exists.\nOverwrite?\n\nCurrent file:\t{1} bytes\nArchive File:\t{2} bytes",
+                                    dest.FullName,
+                                    dest.Length,
+                                    info.UnpackedSize
+                                    ),
+                                    "Confirm overwrite",
+                                    MessageBoxButtons.YesNoCancel,
+                                    MessageBoxIcon.Question
+                                    ))
+                                {
+                                    case DialogResult.OK:
+                                        info.Destination = dest;
+                                        break;
+                                    case DialogResult.Cancel:
+                                        return;
+                                }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        info.Destination = dest;
+                    }
+
+                }
+                task.File.Extract();
             }
             catch (RarException ex)
             {
-                MessageBox.Show(
-                    String.Format("Rar Error processing: {0}\n{1}", file.FileName.Name, ex.Result.ToString()),
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                    );
+                task.Result = ex.Result;
             }
         }
 
@@ -260,9 +397,14 @@ namespace UnRarIt
             UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text);
         }
 
-        private void homepageToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Homepage_Click(object sender, EventArgs e)
         {
             Process.Start("http://tn123.ath.cx/UnRarIt/");
+        }
+
+        private void OpenSettings_Click(object sender, EventArgs e)
+        {
+            new SettingsForm().ShowDialog();
         }
     }
 }

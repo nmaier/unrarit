@@ -23,7 +23,7 @@ namespace UnRarIt
             public Password(string aPassword)
             {
                 password = aPassword;
-                count = 1;
+                count = 0;
                 lastUsed = GetStamp();
             }
             public Password(string aPassword, uint aCount, uint aLastUsed)

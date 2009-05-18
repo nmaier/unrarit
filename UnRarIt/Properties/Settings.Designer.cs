@@ -25,7 +25,7 @@ namespace UnRarIt.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
         public uint OwnDirectoryLimit {
             get {
                 return ((uint)(this["OwnDirectoryLimit"]));
@@ -61,7 +61,7 @@ namespace UnRarIt.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public uint OverwriteAction {
             get {
                 return ((uint)(this["OverwriteAction"]));

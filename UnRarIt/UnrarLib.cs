@@ -23,20 +23,16 @@ namespace UnRarIt
 
     public class ExtractFileEventArgs
     {
-        FileInfo archive;
-        public FileInfo Archive
-        {
-            get { return archive; }
-        }
-        public string FileName;
+        public FileInfo Archive;
+        public RarItemInfo Item;
         public string Destination;
 
         public bool ContinueOperation = true;
 
-        internal ExtractFileEventArgs(FileInfo aArchive, string aFileName, string aDestination)
+        internal ExtractFileEventArgs(FileInfo aArchive, RarItemInfo aItem, string aDestination)
         {
-            archive = aArchive;
-            FileName = aFileName;
+            Archive = aArchive;
+            Item = aItem;
             Destination = aDestination;
         }
     }
@@ -245,7 +241,7 @@ namespace UnRarIt
         Dictionary<string, RarItemInfo> items = new Dictionary<string, RarItemInfo>();
         IEnumerator<string> passwords;
         string password = string.Empty;
-        FileInfo file;
+        FileInfo archive;
 
         static void TryResult(int result)
         {
@@ -298,9 +294,14 @@ namespace UnRarIt
         {
             get { return isSolid; }
         }
-        public FileInfo FileName
+        public FileInfo Archive
         {
-            get { return file; }
+            get { return archive; }
+        }
+
+        public int ItemCount
+        {
+            get { return items.Count; }
         }
 
         public event PasswordRequiredHandler PasswordRequired;
@@ -309,17 +310,17 @@ namespace UnRarIt
 
         public RarFile(string aFileName, IEnumerator<string> aPasswords)
         {
-            file = new FileInfo(aFileName);
-            if (!file.Exists)
+            archive = new FileInfo(aFileName);
+            if (!archive.Exists)
             {
-                throw new FileNotFoundException("Archive does not exist", file.FullName);
+                throw new FileNotFoundException("Archive does not exist", archive.FullName);
             }
             passwords = aPasswords;
         }
         public void Open()
         {
             RarErrors status;
-            openData.ArcName = file.FullName;
+            openData.ArcName = archive.FullName;
             openData.OpenMode = RAR_OM_LIST;
             openData.CmtBuf = new string((char)0, ushort.MaxValue);
             openData.CmtBufSize = ushort.MaxValue;
@@ -486,7 +487,7 @@ namespace UnRarIt
                     {
                         if (ExtractFile != null)
                         {
-                            ExtractFileEventArgs args = new ExtractFileEventArgs(file, info.FileName, info.Destination.FullName);
+                            ExtractFileEventArgs args = new ExtractFileEventArgs(archive, info, info.Destination.FullName);
                             ExtractFile(this, args);
                             if (!args.ContinueOperation)
                             {
@@ -595,23 +596,13 @@ namespace UnRarIt
                 passwords = null;
             }
         }
-
-        #region IEnumerable<RarItemInfo> Members
-
         public IEnumerator<RarItemInfo> GetEnumerator()
         {
             return items.Values.GetEnumerator();
         }
-
-        #endregion
-
-        #region IEnumerable Members
-
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return items.Values.GetEnumerator();
         }
-
-        #endregion
     }
 }
