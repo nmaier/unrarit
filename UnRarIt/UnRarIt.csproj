@@ -12,7 +12,7 @@
     <AssemblyName>UnRarIt</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ApplicationIcon>unrarit.ico</ApplicationIcon>
+    <ApplicationIcon>UI\unrarit.ico</ApplicationIcon>
     <SignManifests>false</SignManifests>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -60,48 +60,48 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox.cs">
+    <Compile Include="UI\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutBox.Designer.cs">
+    <Compile Include="UI\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="AddPasswordForm.cs">
+    <Compile Include="UI\AddPasswordForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddPasswordForm.Designer.cs">
+    <Compile Include="UI\AddPasswordForm.Designer.cs">
       <DependentUpon>AddPasswordForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="IArchiveEntry.cs" />
-    <Compile Include="IArchiveFile.cs" />
+    <Compile Include="Archive\IArchiveEntry.cs" />
+    <Compile Include="Archive\IArchiveFile.cs" />
     <Compile Include="Interop\FileIconWin.cs" />
     <Compile Include="Interop\IFileIcon.cs" />
     <Compile Include="Interop\Reimplement.cs" />
-    <Compile Include="Main.cs">
+    <Compile Include="UI\Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Designer.cs">
+    <Compile Include="UI\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="OverwriteForm.cs">
+    <Compile Include="UI\OverwriteForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OverwriteForm.Designer.cs">
+    <Compile Include="UI\OverwriteForm.Designer.cs">
       <DependentUpon>OverwriteForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PasswordList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AboutBox.resx">
+    <EmbeddedResource Include="UI\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddPasswordForm.resx">
+    <EmbeddedResource Include="UI\AddPasswordForm.resx">
       <DependentUpon>AddPasswordForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Main.resx">
+    <EmbeddedResource Include="UI\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OverwriteForm.resx">
+    <EmbeddedResource Include="UI\OverwriteForm.resx">
       <DependentUpon>OverwriteForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -109,7 +109,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsForm.resx">
+    <EmbeddedResource Include="UI\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -128,14 +128,14 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="SettingsForm.cs">
+    <Compile Include="UI\SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsForm.Designer.cs">
+    <Compile Include="UI\SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UnrarLib.cs" />
-    <Compile Include="UnZipLib.cs" />
+    <Compile Include="Archive\Rar\UnrarLib.cs" />
+    <Compile Include="Archive\Zip\UnZipLib.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\unrarit-about.png" />
@@ -145,7 +145,7 @@
     <None Include="Resources\new.png" />
     <None Include="Resources\preferences.png" />
     <None Include="Resources\run.png" />
-    <Content Include="unrarit.ico" />
+    <Content Include="UI\unrarit.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GetOptRedox\GetOptNet.csproj">

@@ -40,7 +40,7 @@ namespace UnRarIt
     }
 
     #region RarItemInfo
-    public class RarItemInfo : UnRarIt.IArchiveEntry
+    public class RarItemInfo : IArchiveEntry
     {
         string fileName;
         bool isEncrypted;
@@ -108,7 +108,7 @@ namespace UnRarIt
     }
     #endregion
 
-    public class RarFile : UnRarIt.IArchiveFile
+    public class RarFile : IArchiveFile
     {
 
         class RarArchive : IDisposable
