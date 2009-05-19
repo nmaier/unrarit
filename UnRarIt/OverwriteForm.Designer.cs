@@ -43,8 +43,8 @@
             this.Overwrite = new System.Windows.Forms.RadioButton();
             this.Skip = new System.Windows.Forms.RadioButton();
             this.Rename = new System.Windows.Forms.RadioButton();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.All = new System.Windows.Forms.Button();
+            this.Archive = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FileIcon)).BeginInit();
@@ -229,27 +229,27 @@
             this.Rename.Text = "Rename";
             this.Rename.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // All
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.Abort;
-            this.button1.Location = new System.Drawing.Point(325, 200);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "Use for &all";
-            this.button1.UseVisualStyleBackColor = true;
+            this.All.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.All.DialogResult = System.Windows.Forms.DialogResult.Abort;
+            this.All.Location = new System.Drawing.Point(325, 200);
+            this.All.Name = "All";
+            this.All.Size = new System.Drawing.Size(100, 23);
+            this.All.TabIndex = 3;
+            this.All.Text = "Use for &all";
+            this.All.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // Archive
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.DialogResult = System.Windows.Forms.DialogResult.Retry;
-            this.button2.Location = new System.Drawing.Point(219, 200);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(100, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "&From now on";
-            this.button2.UseVisualStyleBackColor = true;
+            this.Archive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Archive.DialogResult = System.Windows.Forms.DialogResult.Retry;
+            this.Archive.Location = new System.Drawing.Point(219, 200);
+            this.Archive.Name = "Archive";
+            this.Archive.Size = new System.Drawing.Size(100, 23);
+            this.Archive.TabIndex = 2;
+            this.Archive.Text = "&From now on";
+            this.Archive.UseVisualStyleBackColor = true;
             // 
             // label5
             // 
@@ -263,12 +263,13 @@
             // 
             // OverwriteForm
             // 
+            this.AcceptButton = this.OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(543, 235);
             this.ControlBox = false;
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.Archive);
+            this.Controls.Add(this.All);
             this.Controls.Add(this.OK);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -305,8 +306,8 @@
         private System.Windows.Forms.RadioButton Skip;
         private System.Windows.Forms.RadioButton Rename;
         private System.Windows.Forms.Button OK;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button All;
+        private System.Windows.Forms.Button Archive;
         private System.Windows.Forms.Label label5;
     }
 }
