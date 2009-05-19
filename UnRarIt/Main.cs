@@ -84,8 +84,26 @@ namespace UnRarIt
             {
                 AddFiles(args);
             }
+            else
+            {
+                AdjustHeaders();
+            }
             Status.Text = "Ready...";
             BrowseDestDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+
+        }
+
+        private void AdjustHeaders()
+        {
+            ColumnHeaderAutoResizeStyle style = ColumnHeaderAutoResizeStyle.ColumnContent;
+            if (Files.Items.Count == 0)
+            {
+                style = ColumnHeaderAutoResizeStyle.HeaderSize;
+            }
+            foreach (ColumnHeader h in Files.Columns)
+            {
+                h.AutoResize(style);
+            }
         }
 
         private void RefreshPasswordCount()
@@ -164,10 +182,7 @@ namespace UnRarIt
                 }
             }
             Files.EndUpdate();
-            foreach (ColumnHeader h in Files.Columns)
-            {
-                h.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-            }
+            AdjustHeaders();
         }
 
         private void Files_DragEnter(object sender, DragEventArgs e)
@@ -393,7 +408,7 @@ namespace UnRarIt
                     new SetStatus(delegate(string status) { Status.Text = status; }),
                     String.Format("Extracting: {0}...", task.File.Archive.Name)
                 );
-                Regex skip = new Regex(@"\bthumbs.db$|\b_macosx\b|\b\.ds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$", RegexOptions.IgnoreCase);
+                Regex skip = new Regex(@"\bthumbs.db$|\b_macosx\b|\bds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$|[/\\].", RegexOptions.IgnoreCase);
                 List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
 
                 string maxPath = null;
@@ -612,6 +627,21 @@ namespace UnRarIt
             {
                 Process.Start(license);
             }
+        }
+
+        private void CtxClearList_Click(object sender, EventArgs e)
+        {
+            Files.Items.Clear();
+            AdjustHeaders();
+        }
+
+        private void CtxClearSelected_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in Files.SelectedItems)
+            {
+                item.Remove();
+            }
+            AdjustHeaders();
         }
     }
 }

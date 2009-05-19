@@ -46,7 +46,6 @@
             this.StatusPasswords = new System.Windows.Forms.ToolStripStatusLabel();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.FileMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.OpenSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.passwordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,7 +54,6 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.ClearAllPasswords = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.Homepage = new System.Windows.Forms.ToolStripMenuItem();
             this.About = new System.Windows.Forms.ToolStripMenuItem();
             this.AddPassword = new System.Windows.Forms.Button();
             this.BrowseDestDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -65,9 +63,17 @@
             this.BrowseDest = new System.Windows.Forms.Button();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.License = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.Homepage = new System.Windows.Forms.ToolStripMenuItem();
+            this.FilesCtx = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.CtxClearSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.CtxClearList = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.requeueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Statusbar.SuspendLayout();
             this.MainMenu.SuspendLayout();
             this.GroupDest.SuspendLayout();
+            this.FilesCtx.SuspendLayout();
             this.SuspendLayout();
             // 
             // Files
@@ -80,6 +86,7 @@
             this.columnFile,
             this.columnSize,
             this.columnStatus});
+            this.Files.ContextMenuStrip = this.FilesCtx;
             listViewGroup1.Header = "Rar-Archives";
             listViewGroup1.Name = "GroupRar";
             listViewGroup2.Header = "Zip-Archives";
@@ -173,7 +180,7 @@
             // Details
             // 
             this.Details.Name = "Details";
-            this.Details.Size = new System.Drawing.Size(230, 17);
+            this.Details.Size = new System.Drawing.Size(261, 17);
             this.Details.Spring = true;
             // 
             // StatusPasswords
@@ -202,14 +209,6 @@
             this.FileMenu.Name = "FileMenu";
             this.FileMenu.Size = new System.Drawing.Size(37, 20);
             this.FileMenu.Text = "File";
-            // 
-            // OpenSettings
-            // 
-            this.OpenSettings.Image = global::UnRarIt.Properties.Resources.preferences;
-            this.OpenSettings.Name = "OpenSettings";
-            this.OpenSettings.Size = new System.Drawing.Size(176, 22);
-            this.OpenSettings.Text = "Open Preferences";
-            this.OpenSettings.Click += new System.EventHandler(this.OpenSettings_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -271,18 +270,10 @@
             this.HelpMenu.Size = new System.Drawing.Size(25, 20);
             this.HelpMenu.Text = "?";
             // 
-            // Homepage
-            // 
-            this.Homepage.Image = global::UnRarIt.Properties.Resources.homepage;
-            this.Homepage.Name = "Homepage";
-            this.Homepage.Size = new System.Drawing.Size(152, 22);
-            this.Homepage.Text = "Homepage";
-            this.Homepage.Click += new System.EventHandler(this.Homepage_Click);
-            // 
             // About
             // 
             this.About.Name = "About";
-            this.About.Size = new System.Drawing.Size(152, 22);
+            this.About.Size = new System.Drawing.Size(137, 22);
             this.About.Text = "About";
             this.About.Click += new System.EventHandler(this.About_Click);
             // 
@@ -339,14 +330,65 @@
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(134, 6);
             // 
             // License
             // 
             this.License.Name = "License";
-            this.License.Size = new System.Drawing.Size(152, 22);
+            this.License.Size = new System.Drawing.Size(137, 22);
             this.License.Text = "License";
             this.License.Click += new System.EventHandler(this.License_Click);
+            // 
+            // OpenSettings
+            // 
+            this.OpenSettings.Image = global::UnRarIt.Properties.Resources.preferences;
+            this.OpenSettings.Name = "OpenSettings";
+            this.OpenSettings.Size = new System.Drawing.Size(176, 22);
+            this.OpenSettings.Text = "Open Preferences";
+            this.OpenSettings.Click += new System.EventHandler(this.OpenSettings_Click);
+            // 
+            // Homepage
+            // 
+            this.Homepage.Image = global::UnRarIt.Properties.Resources.homepage;
+            this.Homepage.Name = "Homepage";
+            this.Homepage.Size = new System.Drawing.Size(137, 22);
+            this.Homepage.Text = "Homepage";
+            this.Homepage.Click += new System.EventHandler(this.Homepage_Click);
+            // 
+            // FilesCtx
+            // 
+            this.FilesCtx.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CtxClearSelected,
+            this.CtxClearList,
+            this.toolStripMenuItem3,
+            this.requeueToolStripMenuItem});
+            this.FilesCtx.Name = "FilesCtx";
+            this.FilesCtx.Size = new System.Drawing.Size(155, 98);
+            // 
+            // CtxClearSelected
+            // 
+            this.CtxClearSelected.Name = "CtxClearSelected";
+            this.CtxClearSelected.Size = new System.Drawing.Size(154, 22);
+            this.CtxClearSelected.Text = "Clear selected";
+            this.CtxClearSelected.Click += new System.EventHandler(this.CtxClearSelected_Click);
+            // 
+            // CtxClearList
+            // 
+            this.CtxClearList.Name = "CtxClearList";
+            this.CtxClearList.Size = new System.Drawing.Size(154, 22);
+            this.CtxClearList.Text = "Clear List";
+            this.CtxClearList.Click += new System.EventHandler(this.CtxClearList_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(151, 6);
+            // 
+            // requeueToolStripMenuItem
+            // 
+            this.requeueToolStripMenuItem.Name = "requeueToolStripMenuItem";
+            this.requeueToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.requeueToolStripMenuItem.Text = "Requeue";
             // 
             // Main
             // 
@@ -373,6 +415,7 @@
             this.MainMenu.PerformLayout();
             this.GroupDest.ResumeLayout(false);
             this.GroupDest.PerformLayout();
+            this.FilesCtx.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -413,6 +456,11 @@
         private System.Windows.Forms.Button BrowseDest;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem License;
+        private System.Windows.Forms.ContextMenuStrip FilesCtx;
+        private System.Windows.Forms.ToolStripMenuItem CtxClearSelected;
+        private System.Windows.Forms.ToolStripMenuItem CtxClearList;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem requeueToolStripMenuItem;
     }
 }
 
