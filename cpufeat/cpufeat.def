@@ -1,0 +1,12 @@
+EXPORTS
+	featuresEDX
+	featuresECX
+	hasMMX
+	hasSSE
+	hasSSE2
+	hasHT
+	hasSSE3
+	hasSSSE3
+	hasSSE4
+	hasSSSE4
+	
