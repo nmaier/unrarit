@@ -142,6 +142,7 @@
             // 
             // Statusbar
             // 
+            this.Statusbar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.Statusbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Status,
             this.Progress,
@@ -172,7 +173,7 @@
             // Details
             // 
             this.Details.Name = "Details";
-            this.Details.Size = new System.Drawing.Size(261, 17);
+            this.Details.Size = new System.Drawing.Size(230, 17);
             this.Details.Spring = true;
             // 
             // StatusPasswords
@@ -190,7 +191,7 @@
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.Size = new System.Drawing.Size(782, 24);
             this.MainMenu.TabIndex = 4;
-            this.MainMenu.Text = "menuStrip";
+            this.MainMenu.Text = "MainMenu";
             // 
             // FileMenu
             // 

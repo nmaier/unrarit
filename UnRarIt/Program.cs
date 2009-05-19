@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using NMaier.GetOptNet;
+using System.Windows.Forms.VisualStyles;
 
 namespace UnRarIt
 {
@@ -33,7 +34,8 @@ namespace UnRarIt
                 options.Parse(args);
 
                 Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
+                Application.VisualStyleState = VisualStyleState.ClientAndNonClientAreasEnabled;
+                Application.SetCompatibleTextRenderingDefault(true);
                 Application.Run(new Main(options.Auto, options.Dir, options.Args));
             }
             catch (GetOptException)

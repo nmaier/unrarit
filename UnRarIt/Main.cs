@@ -34,6 +34,23 @@ namespace UnRarIt
             }
             return String.Format("{0:F2} {1}", size, fmt);
         }
+        private static FileInfo MakeUnique(FileInfo info)
+        {
+            if (!info.Exists)
+            {
+                return info;
+            }
+            string ext = info.Extension;
+            string baseName = info.Name.Substring(0, info.Name.Length - info.Extension.Length);
+
+            for (uint i = 1; info.Exists; ++i)
+            {
+                info = new FileInfo(Path.Combine(info.DirectoryName,  String.Format("{0}_{1}{2}", baseName, i, ext)));
+            }
+
+            return info;
+        }
+
 
         private bool running = false;
         private bool aborted = false;
@@ -274,6 +291,10 @@ namespace UnRarIt
             i.StateImageIndex = 3;
             unpackedSize = 0;
             files = 0;
+            if (!actionForSession)
+            {
+                actionRemembered = OverwriteAction.Unspecified;
+            }
 
             rf.ExtractFile += OnExtractFile;
             rf.PasswordAttempt += OnPasswordAttempt;
@@ -342,7 +363,7 @@ namespace UnRarIt
 
         private void OnExtractFile(object sender, ExtractFileEventArgs e)
         {
-            Invoke(
+            BeginInvoke(
                 new SetStatus(delegate(string status) { Details.Text = status; }),
                 e.Item.Name
                 );
@@ -352,7 +373,7 @@ namespace UnRarIt
         }
         private void OnPasswordAttempt(object sender, PasswordEventArgs e)
         {
-            Invoke(
+            BeginInvoke(
                 new SetStatus(delegate(string status) { Details.Text = status; }),
                 String.Format("Password: {0}", e.Password)
                 );
@@ -418,23 +439,14 @@ namespace UnRarIt
                                 info.Destination = dest;
                                 break;
                             case 2:
-                                switch (MessageBox.Show(
-                                    String.Format(
-                                    "{0} already exists.\nOverwrite?\n\nCurrent file:\t{1} bytes\nArchive File:\t{2} bytes",
-                                    dest.FullName,
-                                    dest.Length,
-                                    info.Size
-                                    ),
-                                    "Confirm overwrite",
-                                    MessageBoxButtons.YesNoCancel,
-                                    MessageBoxIcon.Question
-                                    ))
+                                switch (OverwritePrompt(info, dest))
                                 {
-                                    case DialogResult.OK:
+                                    case OverwriteAction.Overwrite:
                                         info.Destination = dest;
                                         break;
-                                    case DialogResult.Cancel:
-                                        return;
+                                    case OverwriteAction.Rename:
+                                        info.Destination = MakeUnique(dest);
+                                        break;
                                 }
                                 break;
                         }
@@ -455,6 +467,59 @@ namespace UnRarIt
             {
                 task.Result = ex.Message;
             }
+        }
+
+        OverwriteAction actionRemembered = OverwriteAction.Unspecified;
+        bool actionForSession = false;
+
+        class OverwritePromptInfo
+        {
+            public string ExistingFile;
+            public string ExistingSize;
+            public string NewFile;
+            public string NewSize;
+            public OverwriteAction Action = OverwriteAction.Skip;
+            public OverwritePromptInfo(string aExistingFile, string aExistingSize, string aNewFile, string aNewSize)
+            {
+                ExistingFile = aExistingFile;
+                ExistingSize = aExistingSize;
+                NewFile = aNewFile;
+                NewSize = aNewSize;
+            }
+        }
+
+        delegate void OverwriteExecuteDelegate(OverwritePromptInfo aInfo);
+        void OverwriteExecute(OverwritePromptInfo aInfo)
+        {
+            OverwriteForm form = new OverwriteForm(aInfo.ExistingFile, aInfo.ExistingSize, aInfo.NewFile, aInfo.NewSize);
+            DialogResult dr = form.ShowDialog();
+            aInfo.Action = form.Action;
+            form.Dispose();
+
+            switch (dr)
+            {
+                default:
+                    actionRemembered = OverwriteAction.Unspecified;
+                    break;
+                case DialogResult.Retry:
+                    actionForSession = false;
+                    actionRemembered = aInfo.Action;
+                    break;
+                case DialogResult.Abort:
+                    actionForSession = true;
+                    actionRemembered = aInfo.Action;
+                    break;
+            }
+        }
+        private OverwriteAction OverwritePrompt(IArchiveEntry info, FileInfo dest)
+        {
+            if (actionRemembered != OverwriteAction.Unspecified)
+            {
+                return actionRemembered;
+            }
+            OverwritePromptInfo oi = new OverwritePromptInfo(dest.FullName, ToFormatedSize(dest.Length), info.Name, ToFormatedSize(info.Size));
+            Invoke(new OverwriteExecuteDelegate(OverwriteExecute), oi);
+            return oi.Action;
         }
 
         private void AddPassword_Click(object sender, EventArgs e)
