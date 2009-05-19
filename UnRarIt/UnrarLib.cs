@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.IO;
+using UnRarIt.Interop;
 
 namespace UnRarIt
 {
@@ -37,6 +38,7 @@ namespace UnRarIt
         }
     }
 
+    #region RarItemInfo
     public class RarItemInfo : UnRarIt.IArchiveEntry
     {
         string fileName;
@@ -92,7 +94,7 @@ namespace UnRarIt
 
         public RarItemInfo(string aFileName, bool aIsEncrypted, ulong aPacked, ulong aUnpacked, UInt32 aCRC, DateTime aFileTime, uint aVersion, uint aMethod, uint aAttributes)
         {
-            fileName = aFileName;
+            fileName = Reimplement.CleanFileName(aFileName);
             isEncrypted = aIsEncrypted;
             packed = aPacked;
             unpacked = aUnpacked;
@@ -103,9 +105,12 @@ namespace UnRarIt
             attributes = aAttributes;
         }
     }
+    #endregion
 
     public class RarFile : UnRarIt.IArchiveFile
     {
+
+        #region UnRarDLL
         const int RAR_OM_LIST = 0;
         const int RAR_OM_EXTRACT = 1;
 
@@ -199,6 +204,7 @@ namespace UnRarIt
 
         [DllImportAttribute("unrar.dll", EntryPoint = "RARSetCallback", CallingConvention = CallingConvention.StdCall)]
         static extern void SetCallback(IntPtr hArcData, UnRarCallback callback, int UserData);
+        #endregion
 
         IntPtr handle;
         bool isSolid = false;

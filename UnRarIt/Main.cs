@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using Emmy.Interop;
+using UnRarIt.Interop;
 
 namespace UnRarIt
 {
@@ -45,7 +46,7 @@ namespace UnRarIt
 
             for (uint i = 1; info.Exists; ++i)
             {
-                info = new FileInfo(Path.Combine(info.DirectoryName,  String.Format("{0}_{1}{2}", baseName, i, ext)));
+                info = new FileInfo(Reimplement.CombinePath(info.DirectoryName,  String.Format("{0}_{1}{2}", baseName, i, ext)));
             }
 
             return info;
@@ -330,7 +331,7 @@ namespace UnRarIt
                 switch (Config.SuccessAction)
                 {
                     case 1:
-                        rf.Archive.MoveTo(Path.Combine(rf.Archive.Directory.FullName, String.Format("unrarit_{0}", rf.Archive.Name)));
+                        rf.Archive.MoveTo(Reimplement.CombinePath(rf.Archive.Directory.FullName, String.Format("unrarit_{0}", rf.Archive.Name)));
                         break;
                     case 2:
                         rf.Archive.Delete();
@@ -408,7 +409,7 @@ namespace UnRarIt
                     new SetStatus(delegate(string status) { Status.Text = status; }),
                     String.Format("Extracting: {0}...", task.File.Archive.Name)
                 );
-                Regex skip = new Regex(@"\bthumbs.db$|\b_macosx\b|\bds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$|[/\\].", RegexOptions.IgnoreCase);
+                Regex skip = new Regex(@"\bthumbs.db$|\b__MACOSX\b|\bds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$", RegexOptions.IgnoreCase);
                 List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
 
                 string maxPath = null;
@@ -445,7 +446,7 @@ namespace UnRarIt
                     {
                         continue;
                     }
-                    FileInfo dest = new FileInfo(Path.Combine(Path.Combine(Config.Dest, basePath), info.Name));
+                    FileInfo dest = new FileInfo(Reimplement.CombinePath(Reimplement.CombinePath(Config.Dest, basePath), info.Name));
                     if (dest.Exists)
                     {
                         switch (Config.OverwriteAction)
@@ -618,7 +619,7 @@ namespace UnRarIt
 
         private void License_Click(object sender, EventArgs e)
         {
-            string license = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "license.rtf");
+            string license = Reimplement.CombinePath(Path.GetDirectoryName(Application.ExecutablePath), "license.rtf");
             if (!File.Exists(license))
             {
                 MessageBox.Show("License file not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -637,11 +638,23 @@ namespace UnRarIt
 
         private void CtxClearSelected_Click(object sender, EventArgs e)
         {
+            Files.BeginUpdate();
             foreach (ListViewItem item in Files.SelectedItems)
             {
                 item.Remove();
             }
+            Files.EndUpdate();
             AdjustHeaders();
+        }
+
+        private void requeueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Files.BeginUpdate();
+            foreach (ListViewItem item in Files.SelectedItems)
+            {
+                item.StateImageIndex = 0;
+            }
+            Files.EndUpdate();
         }
     }
 }

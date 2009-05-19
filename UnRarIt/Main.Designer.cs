@@ -389,6 +389,7 @@
             this.requeueToolStripMenuItem.Name = "requeueToolStripMenuItem";
             this.requeueToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.requeueToolStripMenuItem.Text = "Requeue";
+            this.requeueToolStripMenuItem.Click += new System.EventHandler(this.requeueToolStripMenuItem_Click);
             // 
             // Main
             // 

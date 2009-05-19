@@ -84,6 +84,7 @@
     <Compile Include="IArchiveFile.cs" />
     <Compile Include="Interop\FileIconWin.cs" />
     <Compile Include="Interop\IFileIcon.cs" />
+    <Compile Include="Interop\Reimplement.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>

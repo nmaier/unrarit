@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
+using UnRarIt.Interop;
 
 namespace UnRarIt
 {
+    #region ZipItemInfo
     class ZipItemInfo : IArchiveEntry
     {
         private ZipEntry entry;
-        FileInfo dest = null;
+        private string name;
+        private FileInfo dest = null;
 
         public ulong CompressedSize
         {
@@ -38,7 +41,7 @@ namespace UnRarIt
 
         public string Name
         {
-            get { return entry.Name; }
+            get { return name; }
         }
 
         public ulong Size
@@ -54,8 +57,11 @@ namespace UnRarIt
         public ZipItemInfo(ZipEntry aEntry)
         {
             entry = aEntry;
+            name = Reimplement.CleanFileName(entry.Name);
         }
     }
+    #endregion
+
     class ZipArchiveFile : IArchiveFile
     {
         private FileInfo archive;
