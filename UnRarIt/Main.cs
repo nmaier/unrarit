@@ -412,7 +412,7 @@ namespace UnRarIt
                 Regex skip = new Regex(@"\bthumbs.db$|\b__MACOSX\b|\bds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$", RegexOptions.IgnoreCase);
                 List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
 
-                string maxPath = null;
+                string minPath = null;
                 uint items = 0;
                 foreach (IArchiveEntry info in task.File)
                 {
@@ -421,22 +421,18 @@ namespace UnRarIt
                         continue;
                     }
                     ++items;
-                    int idx = info.Name.LastIndexOfAny(new char[] { '\\', '/' });
-                    if (idx != -1)
+                    string path = Path.GetDirectoryName(info.Name);
+                    if (minPath == null || minPath.Length > path.Length)
                     {
-                        string path = info.Name.Substring(0, idx);
-                        if (maxPath == null || maxPath.Length > path.Length)
-                        {
-                            maxPath = path;
-                        }
+                        minPath = path;
                     }
                 }
-                if (maxPath == null)
+                if (minPath == null)
                 {
-                    maxPath = string.Empty;
+                    minPath = string.Empty;
                 }
                 string basePath = string.Empty;
-                if (items >= Config.OwnDirectoryLimit && string.IsNullOrEmpty(maxPath))
+                if (items >= Config.OwnDirectoryLimit && string.IsNullOrEmpty(minPath))
                 {
                     basePath = new Regex(@"(?:\.part\d+)?\.[r|z].{2}$", RegexOptions.IgnoreCase).Replace(task.File.Archive.Name, "");
                 }
