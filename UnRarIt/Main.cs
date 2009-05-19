@@ -318,7 +318,7 @@ namespace UnRarIt
             Thread thread = new Thread(HandleFile);
             Task task = new Task(rf);
             thread.Start(task);
-            while (!thread.Join(200))
+            while (!thread.Join(100))
             {
                 Application.DoEvents();
             }
@@ -340,7 +340,11 @@ namespace UnRarIt
                             break;
                     }
                     i.Checked = true;
-                    i.SubItems[2].Text = String.Format("Done, {0} files, {1}", files, ToFormatedSize(unpackedSize));
+                    i.SubItems[2].Text = String.Format("Done, {0} files, {1}{2}",
+                        files,
+                        ToFormatedSize(unpackedSize),
+                        string.IsNullOrEmpty(rf.Password) ? "" : String.Format(" ,{0}", rf.Password)
+                        );
                     i.StateImageIndex = 1;
                 }
                 else
