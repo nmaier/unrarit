@@ -328,17 +328,17 @@ namespace UnRarIt
             }
             if (!aborted)
             {
-                switch (Config.SuccessAction)
-                {
-                    case 1:
-                        rf.Archive.MoveTo(Reimplement.CombinePath(rf.Archive.Directory.FullName, String.Format("unrarit_{0}", rf.Archive.Name)));
-                        break;
-                    case 2:
-                        rf.Archive.Delete();
-                        break;
-                }
                 if (string.IsNullOrEmpty(task.Result))
                 {
+                    switch (Config.SuccessAction)
+                    {
+                        case 1:
+                            rf.Archive.MoveTo(Reimplement.CombinePath(rf.Archive.Directory.FullName, String.Format("unrarit_{0}", rf.Archive.Name)));
+                            break;
+                        case 2:
+                            rf.Archive.Delete();
+                            break;
+                    }
                     i.Checked = true;
                     i.SubItems[2].Text = String.Format("Done, {0} files, {1}", files, ToFormatedSize(unpackedSize));
                     i.StateImageIndex = 1;
