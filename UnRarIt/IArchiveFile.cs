@@ -42,7 +42,6 @@ namespace UnRarIt
     public interface IArchiveFile : IDisposable, IEnumerable<IArchiveEntry>
     {
         System.IO.FileInfo Archive { get; }
-        void Close();
         void Extract();
         event ExtractFileHandler ExtractFile;
         int ItemCount { get; }

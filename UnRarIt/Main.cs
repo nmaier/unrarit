@@ -322,14 +322,15 @@ namespace UnRarIt
             {
                 Application.DoEvents();
             }
-            if (!string.IsNullOrEmpty(rf.Password))
-            {
-                passwords.SetGood(rf.Password);
-            }
+
             if (!aborted)
             {
                 if (string.IsNullOrEmpty(task.Result))
                 {
+                    if (!string.IsNullOrEmpty(rf.Password))
+                    {
+                        passwords.SetGood(rf.Password);
+                    }
                     switch (Config.SuccessAction)
                     {
                         case 1:
@@ -482,10 +483,11 @@ namespace UnRarIt
             {
                 task.Result = ex.Result.ToString();
             }
-            catch (Exception ex)
+           /*catch (Exception ex)
             {
+                MessageBox.Show(ex.StackTrace + "\n[" + task.File.Password + "]");
                 task.Result = ex.Message;
-            }
+            }*/
         }
 
         OverwriteAction actionRemembered = OverwriteAction.Unspecified;

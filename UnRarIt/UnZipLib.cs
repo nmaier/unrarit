@@ -83,10 +83,6 @@ namespace UnRarIt
             get { return archive; }
         }
 
-        public void Close()
-        {
-        }
-
         public void Extract()
         {
             using (ZipFile ar = new ZipFile(archive.FullName))
@@ -151,81 +147,75 @@ namespace UnRarIt
 
         public void Open(IEnumerator<string> aPasswords)
         {
-            try
+            using (ZipFile ar = new ZipFile(archive.FullName))
             {
-                using (ZipFile ar = new ZipFile(archive.FullName))
+                foreach (ZipEntry e in ar)
                 {
-                    foreach (ZipEntry e in ar)
+                    if (!e.IsFile)
                     {
-                        if (!e.IsFile)
+                        continue;
+                    }
+                    items.Add(e.Name, new ZipItemInfo(e));
+                    if (e.IsCrypted && string.IsNullOrEmpty(password))
+                    {
+                        bool found = false;
+                        aPasswords.MoveNext();
+                        for (password = aPasswords.Current; aPasswords.MoveNext(); password = aPasswords.Current)
                         {
-                            continue;
-                        }
-                        items.Add(e.Name, new ZipItemInfo(e));
-                        if (e.IsCrypted && string.IsNullOrEmpty(password))
-                        {
-                            bool found = false;
-                            aPasswords.MoveNext();
-                            for (password = aPasswords.Current; aPasswords.MoveNext(); password = aPasswords.Current)
+                            PasswordEventArgs args = new PasswordEventArgs(password);
+                            if (PasswordAttempt != null)
                             {
-                                PasswordEventArgs args = new PasswordEventArgs(password);
-                                if (PasswordAttempt != null)
+                                PasswordAttempt(this, args);
+                            }
+                            if (!args.ContinueOperation)
+                            {
+                                password = string.Empty;
+                                break;
+                            }
+                            ar.Password = password;
+                            try
+                            {
+                                using (Stream s = ar.GetInputStream(e))
                                 {
-                                    PasswordAttempt(this, args);
-                                }
-                                if (!args.ContinueOperation)
-                                {
-                                    password = string.Empty;
+                                    found = true;
                                     break;
                                 }
-                                ar.Password = password;
-                                try
+                            }
+                            catch (ZipPasswordException) { }
+                        }
+                        if (!found)
+                        {
+                            if (PasswordRequired != null)
+                            {
+                                for (; ; )
                                 {
-                                    using (Stream s = ar.GetInputStream(e))
+                                    PasswordEventArgs args = new PasswordEventArgs();
+                                    PasswordRequired(this, args);
+                                    if (!args.ContinueOperation || string.IsNullOrEmpty(args.Password))
                                     {
-                                        found = true;
                                         break;
                                     }
-                                }
-                                catch (ZipPasswordException) { }
-                            }
-                            if (!found)
-                            {
-                                if (PasswordRequired != null)
-                                {
-                                    for (; ; )
+                                    try
                                     {
-                                        PasswordEventArgs args = new PasswordEventArgs();
-                                        PasswordRequired(this, args);
-                                        if (!args.ContinueOperation || string.IsNullOrEmpty(args.Password))
+                                        using (Stream s = ar.GetInputStream(e))
                                         {
+                                            found = true;
                                             break;
                                         }
-                                        try
-                                        {
-                                            using (Stream s = ar.GetInputStream(e))
-                                            {
-                                                found = true;
-                                                break;
-                                            }
-                                        }
-                                        catch (ZipPasswordException) { }
                                     }
-                                    if (!found)
-                                    {
-                                        throw new ZipException("Password not found!");
-                                    }
+                                    catch (ZipPasswordException) { }
+                                }
+                                if (!found)
+                                {
+                                    throw new ZipException("Password not found!");
                                 }
                             }
                         }
                     }
-
                 }
+
             }
-            finally
-            {
-                Close();
-            }
+
         }
 
         public string Password
@@ -239,7 +229,6 @@ namespace UnRarIt
 
         public void Dispose()
         {
-            Close();
         }
 
         public IEnumerator<IArchiveEntry> GetEnumerator()

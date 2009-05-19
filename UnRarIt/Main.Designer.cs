@@ -180,8 +180,9 @@
             // Details
             // 
             this.Details.Name = "Details";
-            this.Details.Size = new System.Drawing.Size(261, 17);
+            this.Details.Size = new System.Drawing.Size(230, 17);
             this.Details.Spring = true;
+            this.Details.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // StatusPasswords
             // 
@@ -363,7 +364,7 @@
             this.toolStripMenuItem3,
             this.requeueToolStripMenuItem});
             this.FilesCtx.Name = "FilesCtx";
-            this.FilesCtx.Size = new System.Drawing.Size(155, 98);
+            this.FilesCtx.Size = new System.Drawing.Size(155, 76);
             // 
             // CtxClearSelected
             // 
