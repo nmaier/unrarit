@@ -175,7 +175,7 @@
             this.OK.Location = new System.Drawing.Point(431, 200);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(100, 23);
-            this.OK.TabIndex = 0;
+            this.OK.TabIndex = 1;
             this.OK.Text = "&Current File";
             this.OK.UseVisualStyleBackColor = true;
             // 
@@ -215,7 +215,7 @@
             this.Skip.Location = new System.Drawing.Point(103, 3);
             this.Skip.Name = "Skip";
             this.Skip.Size = new System.Drawing.Size(46, 17);
-            this.Skip.TabIndex = 5;
+            this.Skip.TabIndex = 0;
             this.Skip.Text = "Skip";
             this.Skip.UseVisualStyleBackColor = true;
             // 
@@ -237,7 +237,7 @@
             this.All.Name = "All";
             this.All.Size = new System.Drawing.Size(100, 23);
             this.All.TabIndex = 3;
-            this.All.Text = "Use for &all";
+            this.All.Text = "&From now on";
             this.All.UseVisualStyleBackColor = true;
             // 
             // Archive
@@ -248,7 +248,7 @@
             this.Archive.Name = "Archive";
             this.Archive.Size = new System.Drawing.Size(100, 23);
             this.Archive.TabIndex = 2;
-            this.Archive.Text = "&From now on";
+            this.Archive.Text = "&Archive";
             this.Archive.UseVisualStyleBackColor = true;
             // 
             // label5

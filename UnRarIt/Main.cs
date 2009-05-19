@@ -449,6 +449,9 @@ namespace UnRarIt
                                         break;
                                 }
                                 break;
+                            case 3:
+                                info.Destination = MakeUnique(dest);
+                                break;
                         }
                     }
                     else

@@ -21,6 +21,9 @@ namespace UnRarIt
                 case 2:
                     Ask.Checked = true;
                     break;
+                case 3:
+                    Rename.Checked = true;
+                    break;
             }
             switch (Config.SuccessAction)
             {
@@ -64,6 +67,10 @@ namespace UnRarIt
             else if (Overwrite.Checked)
             {
                 Config.OverwriteAction = 1;
+            }
+            else if (Rename.Checked)
+            {
+                Config.OverwriteAction = 3;
             }
             else
             {

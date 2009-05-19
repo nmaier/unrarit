@@ -45,6 +45,7 @@
             this.RemoveAll = new System.Windows.Forms.RadioButton();
             this.RemoveDone = new System.Windows.Forms.RadioButton();
             this.RemoveNone = new System.Windows.Forms.RadioButton();
+            this.Rename = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OwnDirectoryLimit)).BeginInit();
@@ -77,12 +78,13 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.Rename);
             this.groupBox1.Controls.Add(this.Ask);
             this.groupBox1.Controls.Add(this.Overwrite);
             this.groupBox1.Controls.Add(this.Skip);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 100);
+            this.groupBox1.Size = new System.Drawing.Size(200, 119);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "When a file exists...";
@@ -90,7 +92,7 @@
             // Ask
             // 
             this.Ask.AutoSize = true;
-            this.Ask.Location = new System.Drawing.Point(17, 65);
+            this.Ask.Location = new System.Drawing.Point(17, 88);
             this.Ask.Name = "Ask";
             this.Ask.Size = new System.Drawing.Size(43, 17);
             this.Ask.TabIndex = 3;
@@ -124,7 +126,7 @@
             // 
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.OwnDirectoryLimit);
-            this.groupBox2.Location = new System.Drawing.Point(12, 118);
+            this.groupBox2.Location = new System.Drawing.Point(12, 137);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(200, 100);
             this.groupBox2.TabIndex = 3;
@@ -153,7 +155,7 @@
             this.groupBox3.Controls.Add(this.SuccesNothing);
             this.groupBox3.Location = new System.Drawing.Point(218, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(200, 100);
+            this.groupBox3.Size = new System.Drawing.Size(200, 119);
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Processed archives will be...";
@@ -196,7 +198,7 @@
             this.groupBox4.Controls.Add(this.RemoveAll);
             this.groupBox4.Controls.Add(this.RemoveDone);
             this.groupBox4.Controls.Add(this.RemoveNone);
-            this.groupBox4.Location = new System.Drawing.Point(218, 118);
+            this.groupBox4.Location = new System.Drawing.Point(218, 137);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(200, 100);
             this.groupBox4.TabIndex = 5;
@@ -235,6 +237,17 @@
             this.RemoveNone.TabStop = true;
             this.RemoveNone.Text = "No items at all";
             this.RemoveNone.UseVisualStyleBackColor = true;
+            // 
+            // Rename
+            // 
+            this.Rename.AutoSize = true;
+            this.Rename.Location = new System.Drawing.Point(17, 65);
+            this.Rename.Name = "Rename";
+            this.Rename.Size = new System.Drawing.Size(65, 17);
+            this.Rename.TabIndex = 4;
+            this.Rename.TabStop = true;
+            this.Rename.Text = "Rename";
+            this.Rename.UseVisualStyleBackColor = true;
             // 
             // SettingsForm
             // 
@@ -287,5 +300,6 @@
         private System.Windows.Forms.RadioButton RemoveAll;
         private System.Windows.Forms.RadioButton RemoveDone;
         private System.Windows.Forms.RadioButton RemoveNone;
+        private System.Windows.Forms.RadioButton Rename;
     }
 }
