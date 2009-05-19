@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Emmy.Interop
+namespace UnRarIt.Interop
 {
     internal sealed class FileIconWin: IFileIcon
     {

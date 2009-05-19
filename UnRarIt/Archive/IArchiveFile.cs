@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-namespace UnRarIt
+
+namespace UnRarIt.Archive
 {
 
     public class PasswordEventArgs

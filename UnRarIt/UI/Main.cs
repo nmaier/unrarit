@@ -6,7 +6,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using Emmy.Interop;
+using UnRarIt.Archive;
+using UnRarIt.Archive.Rar;
+using UnRarIt.Archive.Zip;
 using UnRarIt.Interop;
 
 namespace UnRarIt
@@ -46,7 +48,7 @@ namespace UnRarIt
 
             for (uint i = 1; info.Exists; ++i)
             {
-                info = new FileInfo(Reimplement.CombinePath(info.DirectoryName,  String.Format("{0}_{1}{2}", baseName, i, ext)));
+                info = new FileInfo(Reimplement.CombinePath(info.DirectoryName, String.Format("{0}_{1}{2}", baseName, i, ext)));
             }
 
             return info;
@@ -196,16 +198,6 @@ namespace UnRarIt
 
         }
 
-        class Task
-        {
-            public IArchiveFile File;
-            public string Result = string.Empty;
-            public Task(IArchiveFile aFile)
-            {
-                File = aFile;
-            }
-        }
-
 
         private void UnRarIt_Click(object sender, EventArgs e)
         {
@@ -215,6 +207,46 @@ namespace UnRarIt
         {
             UnrarIt.Enabled = false;
             aborted = true;
+        }
+
+        class Task
+        {
+            private Main Owner;
+            public ListViewItem Item;
+            public IArchiveFile File;
+            public string Result = string.Empty;
+            public OverwriteAction Action = OverwriteAction.Unspecified;
+
+            public Task(Main aOwner, ListViewItem aItem, IArchiveFile aFile)
+            {
+                File = aFile;
+                Item = aItem;
+                Owner = aOwner;
+                File.ExtractFile += OnExtractFile;
+                File.PasswordAttempt += OnPasswordAttempt;
+            }
+
+            public ulong UnpackedSize = 0;
+            public ulong ExtractedFiles = 0;
+
+            private void OnExtractFile(object sender, ExtractFileEventArgs e)
+            {
+                Owner.BeginInvoke(
+                    new SetStatus(delegate(string status) { Owner.Details.Text = status; }),
+                    e.Item.Name
+                    );
+                UnpackedSize += e.Item.Size;
+                ExtractedFiles++;
+                e.ContinueOperation = !Owner.aborted;
+            }
+            private void OnPasswordAttempt(object sender, PasswordEventArgs e)
+            {
+                Owner.BeginInvoke(
+                    new SetStatus(delegate(string status) { Owner.Details.Text = status; }),
+                    String.Format("Password: {0}", e.Password)
+                    );
+                e.ContinueOperation = !Owner.aborted;
+            }
         }
 
         private void Run()
@@ -230,7 +262,11 @@ namespace UnRarIt
             Progress.Maximum = Files.Items.Count;
             Progress.Value = 0;
 
-            foreach (ListViewItem i in Files.Groups["GroupRar"].Items)
+            List<WaitHandle> handles = new List<WaitHandle>();
+            List<Task> tasks = new List<Task>();
+
+
+            foreach (ListViewItem i in Files.Items)
             {
                 if (aborted)
                 {
@@ -240,28 +276,67 @@ namespace UnRarIt
                 {
                     continue;
                 }
-                using (IArchiveFile rf = new RarFile(i.Text))
+                if (i.Group.Name == "GroupRar")
                 {
-                    HandleItem(i, rf);
+                    tasks.Add(new Task(this, i, new RarArchiveFile(i.Text)));
+                }
+                else
+                {
+                    tasks.Add(new Task(this, i, new ZipArchiveFile(i.Text)));
                 }
                 Progress.Increment(1);
             }
-            foreach (ListViewItem i in Files.Groups["GroupZip"].Items)
+            foreach (Task task in tasks)
             {
+                task.Item.StateImageIndex = 3;
+
+                Thread thread = new Thread(HandleFile);
+                thread.Start(task);
+                while (!thread.Join(100))
+                {
+                    Application.DoEvents();
+                }
+
                 if (aborted)
                 {
+                    task.Item.SubItems[2].Text = String.Format("Aborted");
+                    task.Item.StateImageIndex = 2;
+                    Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+
                     break;
                 }
-                if (i.StateImageIndex == 1)
+                if (string.IsNullOrEmpty(task.Result))
                 {
-                    continue;
+                    if (!string.IsNullOrEmpty(task.File.Password))
+                    {
+                        passwords.SetGood(task.File.Password);
+                    }
+                    switch (Config.SuccessAction)
+                    {
+                        case 1:
+                            task.File.Archive.MoveTo(Reimplement.CombinePath(task.File.Archive.Directory.FullName, String.Format("unrarit_{0}", task.File.Archive.Name)));
+                            break;
+                        case 2:
+                            task.File.Archive.Delete();
+                            break;
+                    }
+                    task.Item.Checked = true;
+                    task.Item.SubItems[2].Text = String.Format("Done, {0} files, {1}{2}",
+                        task.ExtractedFiles,
+                        ToFormatedSize(task.UnpackedSize),
+                        string.IsNullOrEmpty(task.File.Password) ? "" : String.Format(", {0}", task.File.Password)
+                        );
+                    task.Item.StateImageIndex = 1;
                 }
-                using (IArchiveFile rf = new ZipArchiveFile(i.Text))
+                else
                 {
-                    HandleItem(i, rf);
+                    task.Item.SubItems[2].Text = String.Format("Error, {0}", task.Result.ToString());
+                    task.Item.StateImageIndex = 2;
                 }
-                Progress.Increment(1);
+                Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+
             }
+
             if (!aborted)
             {
                 Files.BeginUpdate();
@@ -302,66 +377,6 @@ namespace UnRarIt
             UnrarIt.Click -= Abort_Click;
         }
 
-        private void HandleItem(ListViewItem i, IArchiveFile rf)
-        {
-            i.StateImageIndex = 3;
-            unpackedSize = 0;
-            files = 0;
-            if (!actionForSession)
-            {
-                actionRemembered = OverwriteAction.Unspecified;
-            }
-
-            rf.ExtractFile += OnExtractFile;
-            rf.PasswordAttempt += OnPasswordAttempt;
-
-            Thread thread = new Thread(HandleFile);
-            Task task = new Task(rf);
-            thread.Start(task);
-            while (!thread.Join(100))
-            {
-                Application.DoEvents();
-            }
-
-            if (!aborted)
-            {
-                if (string.IsNullOrEmpty(task.Result))
-                {
-                    if (!string.IsNullOrEmpty(rf.Password))
-                    {
-                        passwords.SetGood(rf.Password);
-                    }
-                    switch (Config.SuccessAction)
-                    {
-                        case 1:
-                            rf.Archive.MoveTo(Reimplement.CombinePath(rf.Archive.Directory.FullName, String.Format("unrarit_{0}", rf.Archive.Name)));
-                            break;
-                        case 2:
-                            rf.Archive.Delete();
-                            break;
-                    }
-                    i.Checked = true;
-                    i.SubItems[2].Text = String.Format("Done, {0} files, {1}{2}",
-                        files,
-                        ToFormatedSize(unpackedSize),
-                        string.IsNullOrEmpty(rf.Password) ? "" : String.Format(" ,{0}", rf.Password)
-                        );
-                    i.StateImageIndex = 1;
-                }
-                else
-                {
-                    i.SubItems[2].Text = String.Format("Error, {0}", task.Result.ToString());
-                    i.StateImageIndex = 2;
-                }
-            }
-            else
-            {
-                i.SubItems[2].Text = String.Format("Aborted");
-                i.StateImageIndex = 2;
-            }
-
-            Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-        }
 
         private void About_Click(object sender, EventArgs e)
         {
@@ -379,27 +394,6 @@ namespace UnRarIt
         }
         delegate void SetStatus(string NewStatus);
 
-        ulong unpackedSize = 0;
-        ulong files = 0;
-
-        private void OnExtractFile(object sender, ExtractFileEventArgs e)
-        {
-            BeginInvoke(
-                new SetStatus(delegate(string status) { Details.Text = status; }),
-                e.Item.Name
-                );
-            unpackedSize += e.Item.Size;
-            files++;
-            e.ContinueOperation = !aborted;
-        }
-        private void OnPasswordAttempt(object sender, PasswordEventArgs e)
-        {
-            BeginInvoke(
-                new SetStatus(delegate(string status) { Details.Text = status; }),
-                String.Format("Password: {0}", e.Password)
-                );
-            e.ContinueOperation = !aborted;
-        }
         private void HandleFile(object o)
         {
             Task task = o as Task;
@@ -456,7 +450,7 @@ namespace UnRarIt
                                 info.Destination = dest;
                                 break;
                             case 2:
-                                switch (OverwritePrompt(info, dest))
+                                switch (OverwritePrompt(task, dest, info))
                                 {
                                     case OverwriteAction.Overwrite:
                                         info.Destination = dest;
@@ -483,62 +477,62 @@ namespace UnRarIt
             {
                 task.Result = ex.Result.ToString();
             }
-           /*catch (Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show(ex.StackTrace + "\n[" + task.File.Password + "]");
                 task.Result = ex.Message;
-            }*/
+            }
         }
 
         OverwriteAction actionRemembered = OverwriteAction.Unspecified;
-        bool actionForSession = false;
 
         class OverwritePromptInfo
         {
-            public string ExistingFile;
-            public string ExistingSize;
-            public string NewFile;
-            public string NewSize;
+            public Task task;
+            public FileInfo dest;
+            public IArchiveEntry entry;
             public OverwriteAction Action = OverwriteAction.Skip;
-            public OverwritePromptInfo(string aExistingFile, string aExistingSize, string aNewFile, string aNewSize)
+            public OverwritePromptInfo(Task aTask, FileInfo aDest, IArchiveEntry aEntry)
             {
-                ExistingFile = aExistingFile;
-                ExistingSize = aExistingSize;
-                NewFile = aNewFile;
-                NewSize = aNewSize;
+                task = aTask;
+                dest = aDest;
+                entry = aEntry;
             }
         }
 
         delegate void OverwriteExecuteDelegate(OverwritePromptInfo aInfo);
         void OverwriteExecute(OverwritePromptInfo aInfo)
         {
-            OverwriteForm form = new OverwriteForm(aInfo.ExistingFile, aInfo.ExistingSize, aInfo.NewFile, aInfo.NewSize);
+            OverwriteForm form = new OverwriteForm(
+                aInfo.dest.FullName,
+                ToFormatedSize(aInfo.dest.Length),
+                aInfo.entry.Name,
+                ToFormatedSize(aInfo.entry.Size)
+                );
             DialogResult dr = form.ShowDialog();
             aInfo.Action = form.Action;
             form.Dispose();
 
             switch (dr)
             {
-                default:
-                    actionRemembered = OverwriteAction.Unspecified;
-                    break;
                 case DialogResult.Retry:
-                    actionForSession = false;
-                    actionRemembered = aInfo.Action;
+                    aInfo.task.Action = aInfo.Action;
                     break;
                 case DialogResult.Abort:
-                    actionForSession = true;
                     actionRemembered = aInfo.Action;
                     break;
             }
         }
-        private OverwriteAction OverwritePrompt(IArchiveEntry info, FileInfo dest)
+        private OverwriteAction OverwritePrompt(Task task, FileInfo Dest, IArchiveEntry Entry)
         {
+            if (task.Action != OverwriteAction.Unspecified)
+            {
+                return task.Action;
+            }
             if (actionRemembered != OverwriteAction.Unspecified)
             {
                 return actionRemembered;
             }
-            OverwritePromptInfo oi = new OverwritePromptInfo(dest.FullName, ToFormatedSize(dest.Length), info.Name, ToFormatedSize(info.Size));
+            OverwritePromptInfo oi = new OverwritePromptInfo(task, Dest, Entry);
             Invoke(new OverwriteExecuteDelegate(OverwriteExecute), oi);
             return oi.Action;
         }

@@ -15,6 +15,18 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_087F440A071744619D28E9CD330CFC1B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_15F9696F734078EFD0AD3AE43AB01233"
+        "OwnerKey" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -27,13 +39,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_835DC8FEC10E723A60A95686A3C0F6AC"
-        "OwnerKey" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
+        "MsmKey" = "8:_9BAC458118BE4FCE9D2DB1E61899A5A1"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_915ADC4D1BA6458EA46E11E60454DB63"
+        "MsmKey" = "8:_A23618ECC5F24064A6AB674A8BD49C3F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -45,14 +57,32 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_835DC8FEC10E723A60A95686A3C0F6AC"
+        "MsmKey" = "8:_B05C517E000C483EACCE31C0D415EBBE"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D335291EAE1B40678B7E84A1FE1A027C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E19DE4223DC641198485905D4E0919C2"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_15F9696F734078EFD0AD3AE43AB01233"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -79,6 +109,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -95,6 +133,27 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5.SP1"
+                    {
+                    "Name" = "8:.NET Framework 3.5 SP1"
+                    "ProductCode" = "8:Microsoft.Net.Framework.3.5.SP1"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -124,6 +183,57 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_087F440A071744619D28E9CD330CFC1B"
+            {
+            "SourcePath" = "8:..\\UnRar\\bin\\unrar_Win32_Release.dll"
+            "TargetName" = "8:unrar_Win32_Release.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_15F9696F734078EFD0AD3AE43AB01233"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:GetOptNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_15F9696F734078EFD0AD3AE43AB01233"
+                    {
+                    "Name" = "8:GetOptNet.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:GetOptNet.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_78163C66F4AB8E1AE3D10B2C2FB7A059"
             {
             "AssemblyRegister" = "3:1"
@@ -155,21 +265,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_835DC8FEC10E723A60A95686A3C0F6AC"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9BAC458118BE4FCE9D2DB1E61899A5A1"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GetOptNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_835DC8FEC10E723A60A95686A3C0F6AC"
-                    {
-                    "Name" = "8:GetOptNet.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:GetOptNet.dll"
-            "TargetName" = "8:"
+            "SourcePath" = "8:..\\cpufeat\\Release\\CPUFeatures_Win32.dll"
+            "TargetName" = "8:CPUFeatures_Win32.dll"
             "Tag" = "8:"
             "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
             "Condition" = "8:"
@@ -183,13 +282,13 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_915ADC4D1BA6458EA46E11E60454DB63"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A23618ECC5F24064A6AB674A8BD49C3F"
             {
-            "SourcePath" = "8:..\\unrar.dll"
-            "TargetName" = "8:unrar.dll"
+            "SourcePath" = "8:..\\UnRar\\bin\\unrar_x64_Release.dll"
+            "TargetName" = "8:unrar_x64_Release.dll"
             "Tag" = "8:"
             "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
             "Condition" = "8:"
@@ -210,6 +309,66 @@
             {
             "SourcePath" = "8:..\\License.rtf"
             "TargetName" = "8:License.rtf"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B05C517E000C483EACCE31C0D415EBBE"
+            {
+            "SourcePath" = "8:..\\UnRar\\bin\\unrar_x64_SSE4.dll"
+            "TargetName" = "8:unrar_x64_SSE4.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D335291EAE1B40678B7E84A1FE1A027C"
+            {
+            "SourcePath" = "8:..\\UnRar\\bin\\unrar_Win32_SSE4.dll"
+            "TargetName" = "8:unrar_Win32_SSE4.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E19DE4223DC641198485905D4E0919C2"
+            {
+            "SourcePath" = "8:..\\cpufeat\\Release\\CPUFeatures_x64.dll"
+            "TargetName" = "8:CPUFeatures_x64.dll"
             "Tag" = "8:"
             "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
             "Condition" = "8:"
@@ -294,7 +453,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UnRarIt.Net"
         "ProductCode" = "8:{804417B8-54FE-4000-859D-25E9AEE9331E}"
-        "PackageCode" = "8:{A4FC1F05-C3C9-4F1A-87EE-81D01E3F477E}"
+        "PackageCode" = "8:{0FE28479-DDA0-4E93-B476-567403CDC6C0}"
         "UpgradeCode" = "8:{AF6374D3-725E-4BC2-9C06-722794CDAD33}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -854,7 +1013,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_371D475A5F9547BC87E7CF2E5BB4540D"
             {
-            "SourcePath" = "8:..\\UnRarIt\\obj\\Debug\\UnRarIt.exe"
+            "SourcePath" = "8:..\\UnRarIt\\obj\\Release\\UnRarIt.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"

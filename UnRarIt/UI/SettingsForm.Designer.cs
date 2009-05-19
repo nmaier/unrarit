@@ -31,6 +31,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Rename = new System.Windows.Forms.RadioButton();
             this.Ask = new System.Windows.Forms.RadioButton();
             this.Overwrite = new System.Windows.Forms.RadioButton();
             this.Skip = new System.Windows.Forms.RadioButton();
@@ -45,7 +46,6 @@
             this.RemoveAll = new System.Windows.Forms.RadioButton();
             this.RemoveDone = new System.Windows.Forms.RadioButton();
             this.RemoveNone = new System.Windows.Forms.RadioButton();
-            this.Rename = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OwnDirectoryLimit)).BeginInit();
@@ -57,7 +57,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(343, 233);
+            this.buttonCancel.Location = new System.Drawing.Point(343, 249);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 0;
@@ -68,7 +68,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(262, 233);
+            this.buttonOK.Location = new System.Drawing.Point(262, 249);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
@@ -88,6 +88,17 @@
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "When a file exists...";
+            // 
+            // Rename
+            // 
+            this.Rename.AutoSize = true;
+            this.Rename.Location = new System.Drawing.Point(17, 65);
+            this.Rename.Name = "Rename";
+            this.Rename.Size = new System.Drawing.Size(65, 17);
+            this.Rename.TabIndex = 4;
+            this.Rename.TabStop = true;
+            this.Rename.Text = "Rename";
+            this.Rename.UseVisualStyleBackColor = true;
             // 
             // Ask
             // 
@@ -238,24 +249,13 @@
             this.RemoveNone.Text = "No items at all";
             this.RemoveNone.UseVisualStyleBackColor = true;
             // 
-            // Rename
-            // 
-            this.Rename.AutoSize = true;
-            this.Rename.Location = new System.Drawing.Point(17, 65);
-            this.Rename.Name = "Rename";
-            this.Rename.Size = new System.Drawing.Size(65, 17);
-            this.Rename.TabIndex = 4;
-            this.Rename.TabStop = true;
-            this.Rename.Text = "Rename";
-            this.Rename.UseVisualStyleBackColor = true;
-            // 
             // SettingsForm
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(430, 268);
+            this.ClientSize = new System.Drawing.Size(430, 284);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);

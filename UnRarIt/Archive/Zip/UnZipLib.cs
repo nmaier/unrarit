@@ -4,7 +4,7 @@ using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using UnRarIt.Interop;
 
-namespace UnRarIt
+namespace UnRarIt.Archive.Zip
 {
     #region ZipItemInfo
     class ZipItemInfo : IArchiveEntry

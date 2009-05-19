@@ -1,5 +1,5 @@
 ﻿using System;
-namespace UnRarIt
+namespace UnRarIt.Archive
 {
     public interface IArchiveEntry
     {

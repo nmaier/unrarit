@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Intel C++ Project"
+	Version="11.0"
+	Name="unrar"
+	ProjectGUID="{A9E034BB-A4E8-4AE1-9083-879FA8C301E5}"
+	VCNestedProjectGUID="{BD5881BD-C8C0-4D35-B615-D7149765CBF7}"
+	VCNestedProjectFileName="UnRar.vcproj">
+	<Configurations>
+		<Configuration
+			Name="Release|Win32">
+			<Tool
+				Name="GeneralTool"
+				InterproceduralOptimization="true"/>
+			<Tool
+				Name="CppCmplrTool"
+				GlobalOptimizations="true"
+				EnableEnhancedInstructionSet="1001"/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64">
+			<Tool
+				Name="GeneralTool"
+				InterproceduralOptimization="true"/>
+			<Tool
+				Name="CppCmplrTool"
+				GlobalOptimizations="true"/>
+		</Configuration>
+		<Configuration
+			Name="SSE4|Win32">
+			<Tool
+				Name="GeneralTool"
+				InterproceduralOptimization="true"/>
+			<Tool
+				Name="CppCmplrTool"
+				GlobalOptimizations="true"
+				EnableEnhancedInstructionSet="1000"
+				GenerateAlternateCodePaths="5"
+				UseProcessorExtensions="2"/>
+		</Configuration>
+		<Configuration
+			Name="SSE4|x64">
+			<Tool
+				Name="GeneralTool"
+				InterproceduralOptimization="true"/>
+			<Tool
+				Name="CppCmplrTool"
+				GlobalOptimizations="true"
+				EnableEnhancedInstructionSet="1000"
+				GenerateAlternateCodePaths="5"
+				UseProcessorExtensions="2"/>
+		</Configuration>
+	</Configurations>
+	<Files/>
+</VisualStudioProject>

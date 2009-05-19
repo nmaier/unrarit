@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
-namespace Emmy.Interop
+namespace UnRarIt.Interop
 {
     public enum ExtractIconSize
     {
