@@ -29,23 +29,23 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.label2 = new System.Windows.Forms.Label();
             this.FileIcon = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.ExistingFile = new System.Windows.Forms.Label();
             this.ExistingSize = new System.Windows.Forms.Label();
-            this.NewFile = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.NewSize = new System.Windows.Forms.Label();
-            this.OK = new System.Windows.Forms.Button();
+            this.NewFile = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.Overwrite = new System.Windows.Forms.RadioButton();
             this.Skip = new System.Windows.Forms.RadioButton();
             this.Rename = new System.Windows.Forms.RadioButton();
+            this.label5 = new System.Windows.Forms.Label();
+            this.OK = new System.Windows.Forms.Button();
             this.All = new System.Windows.Forms.Button();
             this.Archive = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FileIcon)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
@@ -74,14 +74,23 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 6;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(519, 182);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(570, 171);
             this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(71, 22);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(47, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "File size:";
             // 
             // FileIcon
             // 
@@ -101,83 +110,71 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Existing File:";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(71, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(47, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "File size:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(71, 60);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(51, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "New File:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(71, 80);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(49, 13);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "File Size:";
-            // 
             // ExistingFile
             // 
-            this.ExistingFile.AutoSize = true;
+            this.ExistingFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.ExistingFile.AutoEllipsis = true;
             this.ExistingFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ExistingFile.Location = new System.Drawing.Point(158, 0);
+            this.ExistingFile.Location = new System.Drawing.Point(168, 0);
             this.ExistingFile.Name = "ExistingFile";
-            this.ExistingFile.Size = new System.Drawing.Size(41, 13);
+            this.ExistingFile.Size = new System.Drawing.Size(399, 13);
             this.ExistingFile.TabIndex = 5;
             this.ExistingFile.Text = "label5";
             // 
             // ExistingSize
             // 
-            this.ExistingSize.AutoSize = true;
-            this.ExistingSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ExistingSize.Location = new System.Drawing.Point(158, 20);
+            this.ExistingSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.ExistingSize.AutoEllipsis = true;
+            this.ExistingSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ExistingSize.Location = new System.Drawing.Point(168, 22);
             this.ExistingSize.Name = "ExistingSize";
-            this.ExistingSize.Size = new System.Drawing.Size(41, 13);
+            this.ExistingSize.Size = new System.Drawing.Size(399, 13);
             this.ExistingSize.TabIndex = 6;
             this.ExistingSize.Text = "label6";
             // 
-            // NewFile
+            // label4
             // 
-            this.NewFile.AutoSize = true;
-            this.NewFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NewFile.Location = new System.Drawing.Point(158, 60);
-            this.NewFile.Name = "NewFile";
-            this.NewFile.Size = new System.Drawing.Size(41, 13);
-            this.NewFile.TabIndex = 7;
-            this.NewFile.Text = "label7";
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(71, 76);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(49, 13);
+            this.label4.TabIndex = 4;
+            this.label4.Text = "File Size:";
             // 
             // NewSize
             // 
-            this.NewSize.AutoSize = true;
-            this.NewSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NewSize.Location = new System.Drawing.Point(158, 80);
+            this.NewSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.NewSize.AutoEllipsis = true;
+            this.NewSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NewSize.Location = new System.Drawing.Point(168, 76);
             this.NewSize.Name = "NewSize";
-            this.NewSize.Size = new System.Drawing.Size(41, 13);
+            this.NewSize.Size = new System.Drawing.Size(399, 13);
             this.NewSize.TabIndex = 8;
             this.NewSize.Text = "label8";
             // 
-            // OK
+            // NewFile
             // 
-            this.OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OK.Location = new System.Drawing.Point(431, 200);
-            this.OK.Name = "OK";
-            this.OK.Size = new System.Drawing.Size(100, 23);
-            this.OK.TabIndex = 1;
-            this.OK.Text = "&Current File";
-            this.OK.UseVisualStyleBackColor = true;
+            this.NewFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.NewFile.AutoEllipsis = true;
+            this.NewFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NewFile.Location = new System.Drawing.Point(168, 54);
+            this.NewFile.Name = "NewFile";
+            this.NewFile.Size = new System.Drawing.Size(399, 13);
+            this.NewFile.TabIndex = 7;
+            this.NewFile.Text = "label7";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(71, 54);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "New File:";
             // 
             // tableLayoutPanel2
             // 
@@ -190,12 +187,12 @@
             this.tableLayoutPanel2.Controls.Add(this.Overwrite, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.Skip, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.Rename, 0, 1);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(158, 125);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(168, 111);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 47.76119F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 52.23881F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(358, 54);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(399, 57);
             this.tableLayoutPanel2.TabIndex = 9;
             // 
             // Overwrite
@@ -203,37 +200,59 @@
             this.Overwrite.AutoSize = true;
             this.Overwrite.Location = new System.Drawing.Point(3, 3);
             this.Overwrite.Name = "Overwrite";
-            this.Overwrite.Size = new System.Drawing.Size(70, 17);
+            this.Overwrite.Size = new System.Drawing.Size(86, 17);
             this.Overwrite.TabIndex = 4;
-            this.Overwrite.Text = "Overwrite";
+            this.Overwrite.Text = "Overwrite file";
             this.Overwrite.UseVisualStyleBackColor = true;
             // 
             // Skip
             // 
             this.Skip.AutoSize = true;
             this.Skip.Checked = true;
-            this.Skip.Location = new System.Drawing.Point(103, 3);
+            this.Skip.Location = new System.Drawing.Point(115, 3);
             this.Skip.Name = "Skip";
             this.Skip.Size = new System.Drawing.Size(46, 17);
             this.Skip.TabIndex = 0;
+            this.Skip.TabStop = true;
             this.Skip.Text = "Skip";
             this.Skip.UseVisualStyleBackColor = true;
             // 
             // Rename
             // 
             this.Rename.AutoSize = true;
-            this.Rename.Location = new System.Drawing.Point(3, 28);
+            this.Rename.Location = new System.Drawing.Point(3, 30);
             this.Rename.Name = "Rename";
             this.Rename.Size = new System.Drawing.Size(65, 17);
             this.Rename.TabIndex = 6;
             this.Rename.Text = "Rename";
             this.Rename.UseVisualStyleBackColor = true;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(71, 108);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(47, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Action:";
+            // 
+            // OK
+            // 
+            this.OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.OK.Location = new System.Drawing.Point(482, 189);
+            this.OK.Name = "OK";
+            this.OK.Size = new System.Drawing.Size(100, 23);
+            this.OK.TabIndex = 1;
+            this.OK.Text = "&Current File";
+            this.OK.UseVisualStyleBackColor = true;
+            // 
             // All
             // 
             this.All.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.All.DialogResult = System.Windows.Forms.DialogResult.Abort;
-            this.All.Location = new System.Drawing.Point(325, 200);
+            this.All.Location = new System.Drawing.Point(376, 189);
             this.All.Name = "All";
             this.All.Size = new System.Drawing.Size(100, 23);
             this.All.TabIndex = 3;
@@ -244,29 +263,19 @@
             // 
             this.Archive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Archive.DialogResult = System.Windows.Forms.DialogResult.Retry;
-            this.Archive.Location = new System.Drawing.Point(219, 200);
+            this.Archive.Location = new System.Drawing.Point(270, 189);
             this.Archive.Name = "Archive";
             this.Archive.Size = new System.Drawing.Size(100, 23);
             this.Archive.TabIndex = 2;
             this.Archive.Text = "&Archive";
             this.Archive.UseVisualStyleBackColor = true;
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(71, 122);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(47, 13);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "Action:";
-            // 
             // OverwriteForm
             // 
             this.AcceptButton = this.OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(543, 235);
+            this.ClientSize = new System.Drawing.Size(594, 224);
             this.ControlBox = false;
             this.Controls.Add(this.Archive);
             this.Controls.Add(this.All);

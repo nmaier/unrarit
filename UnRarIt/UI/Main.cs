@@ -254,6 +254,8 @@ namespace UnRarIt
 
         private void Run()
         {
+            actionRemembered = OverwriteAction.Unspecified;
+
             running = true;
             aborted = false;
             BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = AddPassword.Enabled = false;
