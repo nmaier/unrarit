@@ -300,7 +300,7 @@ namespace UnRarIt
 
             for (; !aborted; )
             {
-                while (runningTasks.Count < 3)
+                while (runningTasks.Count < Environment.ProcessorCount)
                 {
                     if (!taskEnumerator.MoveNext())
                     {
@@ -365,59 +365,6 @@ namespace UnRarIt
                 }
                 Application.DoEvents();
             }
-
-            /*
-            foreach (Task task in tasks)
-            {
-                task.Item.StateImageIndex = 1;
-
-                Thread thread = new Thread(HandleFile);
-                thread.Start(task);
-                while (!thread.Join(100))
-                {
-                    Application.DoEvents();
-                }
-
-                if (aborted)
-                {
-                    task.Item.SubItems[2].Text = String.Format("Aborted");
-                    task.Item.StateImageIndex = 2;
-                    Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-
-                    break;
-                }
-                if (string.IsNullOrEmpty(task.Result))
-                {
-                    if (!string.IsNullOrEmpty(task.File.Password))
-                    {
-                        passwords.SetGood(task.File.Password);
-                    }
-                    switch (Config.SuccessAction)
-                    {
-                        case 1:
-                            task.File.Archive.MoveTo(Reimplement.CombinePath(task.File.Archive.Directory.FullName, String.Format("unrarit_{0}", task.File.Archive.Name)));
-                            break;
-                        case 2:
-                            task.File.Archive.Delete();
-                            break;
-                    }
-                    task.Item.Checked = true;
-                    task.Item.SubItems[2].Text = String.Format("Done, {0} files, {1}{2}",
-                        task.ExtractedFiles,
-                        ToFormatedSize(task.UnpackedSize),
-                        string.IsNullOrEmpty(task.File.Password) ? "" : String.Format(", {0}", task.File.Password)
-                        );
-                    task.Item.StateImageIndex = 1;
-                }
-                else
-                {
-                    task.Item.SubItems[2].Text = String.Format("Error, {0}", task.Result.ToString());
-                    task.Item.StateImageIndex = 2;
-                }
-                Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-                Progress.Increment(1);
-            }
-            */
 
             if (!aborted)
             {
@@ -605,19 +552,31 @@ namespace UnRarIt
                     break;
             }
         }
+        Mutex overwritePromptMutex = new Mutex();
         private OverwriteAction OverwritePrompt(Task task, FileInfo Dest, IArchiveEntry Entry)
         {
-            if (task.Action != OverwriteAction.Unspecified)
+            overwritePromptMutex.WaitOne();
+            OverwriteAction rv = OverwriteAction.Unspecified;
+            try
             {
-                return task.Action;
+                if (task.Action != OverwriteAction.Unspecified)
+                {
+                    return task.Action;
+                }
+                if (actionRemembered != OverwriteAction.Unspecified)
+                {
+                    return actionRemembered;
+                }
+                OverwritePromptInfo oi = new OverwritePromptInfo(task, Dest, Entry);
+                Invoke(new OverwriteExecuteDelegate(OverwriteExecute), oi);
+                rv = oi.Action;
             }
-            if (actionRemembered != OverwriteAction.Unspecified)
+            finally
             {
-                return actionRemembered;
+                overwritePromptMutex.ReleaseMutex();
             }
-            OverwritePromptInfo oi = new OverwritePromptInfo(task, Dest, Entry);
-            Invoke(new OverwriteExecuteDelegate(OverwriteExecute), oi);
-            return oi.Action;
+            return rv;
+
         }
 
         private void AddPassword_Click(object sender, EventArgs e)
