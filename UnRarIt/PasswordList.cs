@@ -70,6 +70,11 @@ namespace UnRarIt
                 count++;
                 lastUsed = GetStamp();
             }
+            public void Merge(Password pass)
+            {
+                count += pass.count;
+                lastUsed = GetStamp();
+            }
 
             public bool Equals(Password other)
             {
@@ -81,39 +86,54 @@ namespace UnRarIt
         #region PasswordEnumerator
         class PassWordEnumerator : IEnumerator<string>
         {
-            int showLastGood = -1;
-            string lastGood;
+            List<string> lastGood = new List<string>();
             IEnumerator<Password> enumerator;
-            public PassWordEnumerator(string aLastGood, IEnumerator<Password> aEnumerator)
+            IEnumerator<string> lgEnumerator;
+            public PassWordEnumerator(IEnumerable<string> aLastGood, IEnumerator<Password> aEnumerator)
             {
+
                 enumerator = aEnumerator;
-                lastGood = aLastGood;
+                lastGood.AddRange(aLastGood);
                 Reset();
             }
             public bool MoveNext()
             {
-                if (++showLastGood == 0)
+                if (lgEnumerator != null)
                 {
-                    return true;
+                    if (lgEnumerator.MoveNext())
+                    {
+                        return true;
+                    }
+                    lgEnumerator.Dispose();
+                    lgEnumerator = null;
                 }
                 return enumerator.MoveNext();
             }
             public void Reset()
             {
                 enumerator.Reset();
-                showLastGood = !string.IsNullOrEmpty(lastGood) ? -1 : 0;
+                if (lgEnumerator != null)
+                {
+                    lgEnumerator.Dispose();
+                    lgEnumerator = null;
+                }
+                lgEnumerator = lastGood.GetEnumerator();
             }
             public void Dispose()
             {
+                if (lgEnumerator != null)
+                {
+                    lgEnumerator.Dispose();
+                }
                 enumerator.Dispose();
             }
             public object Current
             {
                 get
                 {
-                    if (showLastGood == 0)
+                    if (lgEnumerator != null)
                     {
-                        return lastGood;
+                        return lgEnumerator.Current;
                     }
                     return enumerator.Current.Pass;
                 }
@@ -122,10 +142,9 @@ namespace UnRarIt
             {
                 get
                 {
-                    if (showLastGood == 0)
+                    if (lgEnumerator != null)
                     {
-
-                        return lastGood;
+                        return lgEnumerator.Current;
                     }
                     return enumerator.Current.Pass;
                 }
@@ -135,7 +154,7 @@ namespace UnRarIt
 
         List<Password> passwords = new List<Password>();
         IsolatedStorageFile file;
-        string lastGood = String.Empty;
+        Dictionary<string, Password> used = new Dictionary<string, Password>();
         bool dirty = false;
 
         public PasswordList()
@@ -208,18 +227,14 @@ namespace UnRarIt
         public void SetGood(string password)
         {
             dirty = true;
-            lastGood = password;
-            foreach (Password p in passwords)
+            if (used.ContainsKey(password))
             {
-                if (p.Pass == lastGood)
-                {
-                    p.Mark();
-                    passwords.Sort();
-                    return;
-                }
+                used[password].Mark();
             }
-            passwords.Add(new Password(lastGood));
-            passwords.Sort();
+            else
+            {
+                used[password] = new Password(password);
+            }
         }
 
         public void Save()
@@ -228,6 +243,19 @@ namespace UnRarIt
             {
                 return;
             }
+            foreach (Password p in used.Values)
+            {
+                int idx = passwords.IndexOf(p);
+                if (idx != -1)
+                {
+                    passwords[idx].Merge(p);
+                }
+                else
+                {
+                    passwords.Add(p);
+                }
+            }
+            passwords.Sort();
             using (Stream stream = new IsolatedStorageFileStream("passwords", FileMode.OpenOrCreate, FileAccess.Write))
             {
                 SaveToStream(stream);
@@ -245,7 +273,6 @@ namespace UnRarIt
         private void SaveToStream(Stream stream)
         {
             stream.SetLength(0);
-            passwords.Sort();
             using (StreamWriter w = new StreamWriter(stream, Encoding.UTF8))
             {
                 foreach (Password p in passwords)
@@ -262,11 +289,11 @@ namespace UnRarIt
 
         IEnumerator<string> IEnumerable<string>.GetEnumerator()
         {
-            return new PassWordEnumerator(lastGood, passwords.GetEnumerator());
+            return new PassWordEnumerator(used.Keys, passwords.GetEnumerator());
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new PassWordEnumerator(lastGood, passwords.GetEnumerator());
+            return new PassWordEnumerator(used.Keys, passwords.GetEnumerator());
         }
 
 

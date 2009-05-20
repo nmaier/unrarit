@@ -132,6 +132,8 @@ namespace UnRarIt
 
         private void AddFiles(string[] aFiles)
         {
+            /// XXX skip part files except first one.
+            /// But remember for renaming purposes.
             Files.BeginUpdate();
             Dictionary<string, bool> seen = new Dictionary<string, bool>();
             foreach (ListViewItem i in Files.Items)
@@ -276,6 +278,14 @@ namespace UnRarIt
                 {
                     continue;
                 }
+                if (!File.Exists(i.Text))
+                {
+                    i.SubItems[2].Text = "Error, File not found";
+                    i.StateImageIndex = 2;
+                    continue;
+                }
+
+
                 if (i.Group.Name == "GroupRar")
                 {
                     tasks.Add(new Task(this, i, new RarArchiveFile(i.Text)));
@@ -284,7 +294,6 @@ namespace UnRarIt
                 {
                     tasks.Add(new Task(this, i, new ZipArchiveFile(i.Text)));
                 }
-                Progress.Increment(1);
             }
             foreach (Task task in tasks)
             {
@@ -334,7 +343,7 @@ namespace UnRarIt
                     task.Item.StateImageIndex = 2;
                 }
                 Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-
+                Progress.Increment(1);
             }
 
             if (!aborted)
