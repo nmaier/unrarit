@@ -44,7 +44,6 @@
             this.StateIcons = new System.Windows.Forms.ImageList(this.components);
             this.UnrarIt = new System.Windows.Forms.Button();
             this.Statusbar = new System.Windows.Forms.StatusStrip();
-            this.Status = new System.Windows.Forms.ToolStripStatusLabel();
             this.Progress = new System.Windows.Forms.ToolStripProgressBar();
             this.Details = new System.Windows.Forms.ToolStripStatusLabel();
             this.StatusPasswords = new System.Windows.Forms.ToolStripStatusLabel();
@@ -119,7 +118,7 @@
             // columnStatus
             // 
             this.columnStatus.Text = "Status";
-            this.columnStatus.Width = 100;
+            this.columnStatus.Width = 400;
             // 
             // FilesCtx
             // 
@@ -178,7 +177,6 @@
             // 
             this.Statusbar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.Statusbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Status,
             this.Progress,
             this.Details,
             this.StatusPasswords});
@@ -188,26 +186,16 @@
             this.Statusbar.TabIndex = 2;
             this.Statusbar.Text = "statusStrip";
             // 
-            // Status
-            // 
-            this.Status.AutoSize = false;
-            this.Status.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.Status.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Status.Name = "Status";
-            this.Status.Size = new System.Drawing.Size(300, 17);
-            this.Status.Text = "Status";
-            this.Status.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // Progress
             // 
             this.Progress.Name = "Progress";
             this.Progress.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
-            this.Progress.Size = new System.Drawing.Size(204, 16);
+            this.Progress.Size = new System.Drawing.Size(504, 16);
             // 
             // Details
             // 
             this.Details.Name = "Details";
-            this.Details.Size = new System.Drawing.Size(261, 17);
+            this.Details.Size = new System.Drawing.Size(230, 17);
             this.Details.Spring = true;
             this.Details.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -422,7 +410,6 @@
         private System.Windows.Forms.ColumnHeader columnSize;
         private System.Windows.Forms.ColumnHeader columnStatus;
         private System.Windows.Forms.StatusStrip Statusbar;
-        private System.Windows.Forms.ToolStripStatusLabel Status;
         private System.Windows.Forms.ToolStripProgressBar Progress;
         private System.Windows.Forms.ToolStripStatusLabel Details;
         private System.Windows.Forms.ToolStripStatusLabel StatusPasswords;

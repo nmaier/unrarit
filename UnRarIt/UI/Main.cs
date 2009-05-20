@@ -91,7 +91,6 @@ namespace UnRarIt
             {
                 AdjustHeaders();
             }
-            Status.Text = "Ready...";
             BrowseDestDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
         }
@@ -103,7 +102,7 @@ namespace UnRarIt
             {
                 style = ColumnHeaderAutoResizeStyle.HeaderSize;
             }
-            foreach (ColumnHeader h in Files.Columns)
+            foreach (ColumnHeader h in new ColumnHeader[] { columnFile, columnSize})
             {
                 h.AutoResize(style);
             }
@@ -280,8 +279,8 @@ namespace UnRarIt
             private void OnExtractFile(object sender, ExtractFileEventArgs e)
             {
                 Owner.BeginInvoke(
-                    new SetStatus(delegate(string status) { Owner.Details.Text = status; }),
-                    e.Item.Name
+                    new SetStatus(delegate(string status) { Item.SubStatus = status; }),
+                    String.Format("Extracting {0}", e.Item.Name)
                     );
                 UnpackedSize += e.Item.Size;
                 ExtractedFiles++;
@@ -290,7 +289,7 @@ namespace UnRarIt
             private void OnPasswordAttempt(object sender, PasswordEventArgs e)
             {
                 Owner.BeginInvoke(
-                    new SetStatus(delegate(string status) { Owner.Details.Text = status; }),
+                    new SetStatus(delegate(string status) { Item.SubStatus = status; }),
                     String.Format("Password: {0}", e.Password)
                     );
                 e.ContinueOperation = !Owner.aborted;
@@ -359,7 +358,6 @@ namespace UnRarIt
                     thread.Start(task);
                     runningTasks[task.Event] = task;
                 }
-                Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
                 if (runningTasks.Count == 0)
                 {
                     break;
@@ -375,7 +373,6 @@ namespace UnRarIt
                     {
                         task.Item.Status = String.Format("Aborted");
                         task.Item.StateImageIndex = 2;
-                        Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 
                         continue;
                     }
@@ -444,7 +441,6 @@ namespace UnRarIt
             }
 
             Details.Text = "";
-            Status.Text = "Ready...";
             Progress.Value = 0;
             BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = UnrarIt.Enabled = AddPassword.Enabled = true;
             running = false;
@@ -476,12 +472,12 @@ namespace UnRarIt
             try
             {
                 Invoke(
-                    new SetStatus(delegate(string status) { Status.Text = status; }),
+                    new SetStatus(delegate(string status) { task.Item.SubStatus = status; }),
                     String.Format("Opening archive and cracking password: {0}...", task.File.Archive.Name)
                     );
                 task.File.Open((passwords as IEnumerable<string>).GetEnumerator());
                 Invoke(
-                    new SetStatus(delegate(string status) { Status.Text = status; }),
+                    new SetStatus(delegate(string status) { task.Item.SubStatus = status; }),
                     String.Format("Extracting: {0}...", task.File.Archive.Name)
                 );
                 Regex skip = new Regex(@"\bthumbs.db$|\b__MACOSX\b|\bds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$", RegexOptions.IgnoreCase);

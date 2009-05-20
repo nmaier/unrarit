@@ -66,6 +66,17 @@ namespace UnRarIt
             get { return SubItems[2].Text; }
             set { SubItems[2].Text = value; }
         }
+        public string SubStatus
+        {
+            set
+            {
+                if (StateImageIndex != 3)
+                {
+                    return;
+                }
+                SubItems[2].Text = value;
+            }
+        }
         public FileInfo File
         {
             get { return file; }
@@ -91,7 +102,7 @@ namespace UnRarIt
                             parts[Rename(part).FullName] = true;
                         }
                     }
-                   break;
+                    break;
                 case 2:
                     file.Delete();
                     foreach (string part in parts.Keys)
