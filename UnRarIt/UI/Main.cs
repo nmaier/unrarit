@@ -550,13 +550,23 @@ namespace UnRarIt
                         basePath = tmpPath;
                     }
                 }
+                else
+                {
+                    minPath = Path.GetDirectoryName(minPath);
+                }
                 foreach (IArchiveEntry info in task.File)
                 {
                     if (skipper.IsMatch(info.Name))
                     {
                         continue;
                     }
-                    FileInfo dest = new FileInfo(Reimplement.CombinePath(Reimplement.CombinePath(Config.Dest, basePath), info.Name));
+
+                    string name = info.Name;
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        name = name.Substring(minPath.Length + 1);
+                    }
+                    FileInfo dest = new FileInfo(Reimplement.CombinePath(Reimplement.CombinePath(Config.Dest, basePath), name));
                     if (dest.Exists)
                     {
                         switch (Config.OverwriteAction)
