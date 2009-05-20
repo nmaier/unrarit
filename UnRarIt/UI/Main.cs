@@ -298,9 +298,11 @@ namespace UnRarIt
             IEnumerator<Task> taskEnumerator = tasks.GetEnumerator();
             Dictionary<AutoResetEvent, Task> runningTasks = new Dictionary<AutoResetEvent, Task>();
 
+            int threads = Math.Min(Environment.ProcessorCount, 4);
+
             for (; !aborted; )
             {
-                while (runningTasks.Count < Environment.ProcessorCount)
+                while (runningTasks.Count < threads)
                 {
                     if (!taskEnumerator.MoveNext())
                     {
