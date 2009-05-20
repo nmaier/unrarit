@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using UnRarIt.Interop;
 
 namespace UnRarIt.Archive.Rar
 {
@@ -130,38 +131,17 @@ namespace UnRarIt.Archive.Rar
             Close();
         }
 
-        static bool isX64 = IntPtr.Size == 8;
-        static bool hasSSE3 = false;
-
-        [DllImportAttribute("CPUFeatures_Win32.dll", EntryPoint = "hasSSE3", CallingConvention = CallingConvention.StdCall)]
-        private static extern uint HasSSE3_32();
-        [DllImportAttribute("CPUFeatures_x64.dll", EntryPoint = "hasSSE3", CallingConvention = CallingConvention.StdCall)]
-        private static extern uint HasSSE3_64();
-
-        static RarArchive()
-        {
-            if (isX64)
-            {
-                hasSSE3 = HasSSE3_64() != 0;
-            }
-            else
-            {
-                hasSSE3 = HasSSE3_32() != 0;
-            }
-        }
-
-
         public static RarArchive Open(string FileName, RarOpenMode Mode, UnRarCallback callback)
         {
-            if (isX64)
+            if (CpuInfo.isX64)
             {
-                if (hasSSE3)
+                if (CpuInfo.hasSSE3)
                 {
                     return new RarArchiveX64SSE4(FileName, Mode, callback);
                 }
                 return new RarArchiveX64Release(FileName, Mode, callback);
             }
-            if (hasSSE3)
+            if (CpuInfo.hasSSE3)
             {
                 return new RarArchiveWin32SSE4(FileName, Mode, callback);
             }

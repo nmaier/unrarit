@@ -69,6 +69,7 @@
     <Compile Include="Archive\Rar\RarArchive.cs" />
     <Compile Include="Archive\Rar\RarArchiveWin32Release.cs" />
     <Compile Include="Archive\Rar\Types.cs" />
+    <Compile Include="Interop\CpuInfo.cs" />
     <Compile Include="UI\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>

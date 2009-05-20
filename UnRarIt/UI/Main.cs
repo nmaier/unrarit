@@ -75,6 +75,9 @@ namespace UnRarIt
             StateIcons.Images.Add(Properties.Resources.error);
             StateIcons.Images.Add(Properties.Resources.run);
 
+            
+            Text = String.Format("{0} - {1}bit - {2}", Text, CpuInfo.isX64 ? 64 : 32, CpuInfo.hasSSE3 ? "SSE3/4" : "Generic");
+
             if (!(UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text)))
             {
                 GroupDest.ForeColor = Color.Red;
