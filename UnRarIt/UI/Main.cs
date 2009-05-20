@@ -58,7 +58,6 @@ namespace UnRarIt
         private bool running = false;
         private bool aborted = false;
         private bool auto;
-        private IFileIcon FileIcon = new FileIconWin();
         private PasswordList passwords = new PasswordList();
 
         public Main(bool aAuto, string dir, string[] args)
@@ -70,6 +69,7 @@ namespace UnRarIt
             }
 
             InitializeComponent();
+            Files.SmallImageList = Files.LargeImageList = ArchiveItem.Icons;
             StateIcons.Images.Add(Properties.Resources.idle);
             StateIcons.Images.Add(Properties.Resources.done);
             StateIcons.Images.Add(Properties.Resources.error);
@@ -184,12 +184,6 @@ namespace UnRarIt
                     {
                         item.Group = Files.Groups["GroupRar"];
                     }
-                    if (!Icons.Images.ContainsKey(ext))
-                    {
-                        Icons.Images.Add(ext, FileIcon.GetIcon(info.FullName, ExtractIconSize.Small));
-                    }
-                    item.ImageKey = ext;
-                    item.StateImageIndex = 0;
                     Files.Items.Add(item);
                 }
                 catch (Exception ex)
@@ -415,7 +409,7 @@ namespace UnRarIt
                         task.Item.Status = String.Format("Error, {0}", task.Result.ToString());
                         task.Item.StateImageIndex = 2;
                     }
-                    Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    AdjustHeaders();
                     Progress.Increment(1);
                 }
                 Application.DoEvents();

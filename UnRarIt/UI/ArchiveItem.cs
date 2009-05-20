@@ -4,11 +4,15 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using UnRarIt.Interop;
+using System.Text.RegularExpressions;
 
 namespace UnRarIt
 {
     internal class ArchiveItem : ListViewItem
     {
+        internal static ImageList Icons = new ImageList();
+        private static IFileIcon FileIcon = new FileIconWin();
+
         private static Properties.Settings Config = Properties.Settings.Default;
 
         Dictionary<string, bool> parts = new Dictionary<string, bool>();
@@ -18,6 +22,13 @@ namespace UnRarIt
             SubItems.Add(string.Empty);
             SubItems.Add("Ready...");
             file = new FileInfo(aFileName);
+            if (!Icons.Images.ContainsKey(file.Extension))
+            {
+                Icons.Images.Add(file.Extension, FileIcon.GetIcon(file.FullName, ExtractIconSize.Small));
+            }
+            ImageKey = file.Extension;
+            StateImageIndex = 0;
+
             Invalidate();
         }
 
@@ -71,25 +82,37 @@ namespace UnRarIt
             switch (Config.SuccessAction)
             {
                 case 1:
-                    Rename(file.FullName);
-                    foreach (string part in parts.Keys)
+                    file = Rename(file.FullName);
                     {
-                        Rename(part);
+                        Dictionary<string, bool> oldParts = parts;
+                        parts = new Dictionary<string, bool>();
+                        foreach (string part in oldParts.Keys)
+                        {
+                            parts[Rename(part).FullName] = true;
+                        }
                     }
-                    break;
+                   break;
                 case 2:
                     file.Delete();
                     foreach (string part in parts.Keys)
                     {
                         new FileInfo(part).Delete();
                     }
+                    parts.Clear();
                     break;
             }
+            Invalidate();
         }
-        internal static void Rename(string aFile)
+        private static Regex renamer = new Regex("^unrarit_");
+        internal static FileInfo Rename(string aFile)
         {
             FileInfo fi = new FileInfo(aFile);
+            if (renamer.IsMatch(fi.Name))
+            {
+                return fi;
+            }
             fi.MoveTo(Reimplement.CombinePath(fi.Directory.FullName, String.Format("unrarit_{0}", fi.Name)));
+            return fi;
         }
 
     }
