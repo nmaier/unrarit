@@ -10,32 +10,6 @@ namespace UnRarIt.Archive.Rar
     {
 
         #region UnRarDLL
-        public enum RarOpenMode : uint
-        {
-            LIST = 0,
-            EXTRACT = 1,
-            LIST_INCSPLIT = 2,
-        }
-
-        public enum RarOperation : uint
-        {
-            SKIP = 0,
-            TEST = 1,
-            EXTRACT = 2
-        }
-
-        public enum RarMessage : uint
-        {
-            CHANGEVOLUME = 0,
-            PROCESSDATA = 1,
-            NEEDPASSWORD = 2
-        }
-
-        public enum RarVolumeMsg : uint
-        {
-            ASK = 0,
-            NOTIFY = 1
-        }
 
         [StructLayout(LayoutKind.Sequential)]
         protected struct RAROpenArchiveDataEx
@@ -45,7 +19,7 @@ namespace UnRarIt.Archive.Rar
             [MarshalAs(UnmanagedType.LPWStr)]
             public string ArcName;
             public RarOpenMode OpenMode;
-            public RarErrors OpenResult;
+            public RarStatus OpenResult;
             [MarshalAs(UnmanagedType.LPStr)]
             public string CmtBuf;
             public uint CmtBufSize;
@@ -90,55 +64,56 @@ namespace UnRarIt.Archive.Rar
             public uint[] Reserved;
         };
 
-        public delegate int UnRarCallback(RarMessage msg, int UserData, IntPtr WParam, int LParam);
+        public delegate int UnRarCallback(RarMessage msg, IntPtr UserData, IntPtr WParam, IntPtr LParam);
 
 
-        abstract protected RarErrors CloseArchive(IntPtr hArcData);
+        abstract protected RarStatus CloseArchive();
         abstract protected IntPtr OpenArchive(ref RAROpenArchiveDataEx ArchiveData);
-        abstract protected RarErrors GetHeader(IntPtr hArcData, ref Header HeaderData);
-        abstract protected RarErrors ProcessFile(IntPtr hArcData, RarOperation Operation, string DestPath, string DestName);
-        abstract public RarErrors GetVersion();
-        abstract protected RarErrors SetPassword(IntPtr hArcData, string Password);
-        abstract protected void SetCallback(IntPtr hArcData, UnRarCallback callback, int UserData);
+        abstract public RarStatus GetHeader(ref Header HeaderData);
+        abstract public RarStatus ProcessFile(RarOperation Operation, string DestPath, string DestName);
+        abstract public RarStatus GetVersion();
+        abstract public RarStatus SetPassword(string Password);
+        abstract protected void SetCallback(UnRarCallback callback, IntPtr UserData);
         #endregion
 
-        IntPtr handle;
+        protected IntPtr handle;
 
         public static void TryResult(int result)
         {
-            TryResult((RarErrors)Enum.ToObject(typeof(RarErrors), result));
+            TryResult((RarStatus)Enum.ToObject(typeof(RarStatus), result));
         }
-        public static void TryResult(RarErrors result)
+        public static void TryResult(RarStatus result)
         {
             switch (result)
             {
-                case RarErrors.BAD_ARCHIVE:
-                case RarErrors.BAD_DATA:
-                case RarErrors.ECLOSE:
-                case RarErrors.ECREATE:
-                case RarErrors.EOPEN:
-                case RarErrors.EREAD:
-                case RarErrors.EWRITE:
-                case RarErrors.NO_MEMORY:
-                case RarErrors.SMALL_BUF:
-                case RarErrors.UNKNOWN_FORMAT:
+                case RarStatus.BAD_ARCHIVE:
+                case RarStatus.BAD_DATA:
+                case RarStatus.ECLOSE:
+                case RarStatus.ECREATE:
+                case RarStatus.EOPEN:
+                case RarStatus.EREAD:
+                case RarStatus.EWRITE:
+                case RarStatus.NO_MEMORY:
+                case RarStatus.SMALL_BUF:
+                case RarStatus.UNKNOWN_FORMAT:
                     throw new RarException(result);
             }
         }
 
+        private RAROpenArchiveDataEx od;
         public RarArchive(string FileName, RarOpenMode Mode, UnRarCallback callback)
         {
-            RAROpenArchiveDataEx od = new RAROpenArchiveDataEx();
+            od = new RAROpenArchiveDataEx();
             od.ArcName = FileName;
             od.OpenMode = Mode;
             handle = OpenArchive(ref od);
-            if (handle == IntPtr.Zero || od.OpenResult != RarErrors.SUCCESS)
+            if (handle == IntPtr.Zero || od.OpenResult != RarStatus.SUCCESS)
             {
-                throw new RarException(RarErrors.EOPEN);
+                throw new RarException(RarStatus.EOPEN);
             }
             if (callback != null)
             {
-                SetCallback(handle, callback, 0);
+                SetCallback(callback, IntPtr.Zero);
             }
         }
 
@@ -146,26 +121,13 @@ namespace UnRarIt.Archive.Rar
         {
             if (handle != IntPtr.Zero)
             {
-                CloseArchive(handle);
+                CloseArchive();
                 handle = IntPtr.Zero;
             }
         }
         public void Dispose()
         {
             Close();
-        }
-
-        public RarErrors ReadHeader(ref Header header)
-        {
-            return GetHeader(handle, ref header);
-        }
-        public RarErrors ProcessFile(RarOperation Operation, string DestPath, string DestName)
-        {
-            return ProcessFile(handle, Operation, DestPath, DestName);
-        }
-        public RarErrors SetPassword(string Password)
-        {
-            return SetPassword(handle, Password);
         }
 
         static bool isX64 = IntPtr.Size == 8;

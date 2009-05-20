@@ -218,8 +218,7 @@ int PASCAL RARReadHeaderEx(HANDLE hArcData,struct RARHeaderDataEx *D)
 int PASCAL ProcessFile(HANDLE hArcData,int Operation,char *DestPath,char *DestName,wchar *DestPathW,wchar *DestNameW)
 {
   DataSet *Data=(DataSet *)hArcData;
-  //try
-  //{
+  try {
     Data->Cmd.DllError=0;
     if (Data->OpenMode==RAR_OM_LIST || Data->OpenMode==RAR_OM_LIST_INCSPLIT ||
         Operation==RAR_SKIP && !Data->Arc.Solid)
@@ -288,11 +287,11 @@ int PASCAL ProcessFile(HANDLE hArcData,int Operation,char *DestPath,char *DestNa
       }
       Data->Arc.Seek(Data->Arc.CurBlockPos,SEEK_SET);
     }
-  //}
-  /*catch (int ErrCode)
+  }
+  catch (int ErrCode)
   {
     return(RarErrorToDll(ErrCode));
-  }*/
+  }
   return(Data->Cmd.DllError);
 }
 

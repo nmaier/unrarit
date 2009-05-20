@@ -8,30 +8,30 @@ namespace UnRarIt.Archive.Rar
     internal class RarArchiveX64SSE4 : RarArchive
     {
         [DllImportAttribute("unrar_x64_SSE4.dll", EntryPoint = "RARCloseArchive", CallingConvention = CallingConvention.StdCall)]
-        private static extern RarErrors CloseArchiveImpl(IntPtr hArcData);
+        private static extern RarStatus CloseArchiveImpl(IntPtr hArcData);
 
         [DllImportAttribute("unrar_x64_SSE4.dll", EntryPoint = "RAROpenArchiveEx", CallingConvention = CallingConvention.StdCall)]
         protected static extern IntPtr OpenArchiveImpl(ref RAROpenArchiveDataEx ArchiveData);
 
         [DllImportAttribute("unrar_x64_SSE4.dll", EntryPoint = "RARReadHeaderEx", CallingConvention = CallingConvention.StdCall)]
-        protected static extern RarErrors GetHeaderImpl(IntPtr hArcData, ref Header HeaderData);
+        protected static extern RarStatus GetHeaderImpl(IntPtr hArcData, ref Header HeaderData);
 
         [DllImportAttribute("unrar_x64_SSE4.dll", EntryPoint = "RARProcessFileW", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        protected static extern RarErrors ProcessFileImpl(IntPtr hArcData, RarOperation Operation, string DestPath, string DestName);
+        protected static extern RarStatus ProcessFileImpl(IntPtr hArcData, RarOperation Operation, string DestPath, string DestName);
 
         [DllImportAttribute("unrar_x64_SSE4.dll", EntryPoint = "RARGetDllVersion", CallingConvention = CallingConvention.StdCall)]
-        public static extern RarErrors GetVersionImpl();
+        public static extern RarStatus GetVersionImpl();
 
         [DllImportAttribute("unrar_x64_SSE4.dll", EntryPoint = "RARSetPassword", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        protected static extern RarErrors SetPasswordImpl(IntPtr hArcData, string Password);
+        protected static extern RarStatus SetPasswordImpl(IntPtr hArcData, string Password);
 
         [DllImportAttribute("unrar_x64_SSE4.dll", EntryPoint = "RARSetCallback", CallingConvention = CallingConvention.StdCall)]
-        protected static extern void SetCallbackImpl(IntPtr hArcData, UnRarCallback callback, int UserData);
+        protected static extern void SetCallbackImpl(IntPtr hArcData, UnRarCallback callback, IntPtr UserData);
 
 
-        protected override RarErrors CloseArchive(IntPtr hArcData)
+        protected override RarStatus CloseArchive()
         {
-            return CloseArchiveImpl(hArcData);
+            return CloseArchiveImpl(handle);
         }
 
         protected override IntPtr OpenArchive(ref RarArchive.RAROpenArchiveDataEx ArchiveData)
@@ -39,29 +39,29 @@ namespace UnRarIt.Archive.Rar
             return OpenArchiveImpl(ref ArchiveData);
         }
 
-        protected override RarErrors GetHeader(IntPtr hArcData, ref RarArchive.Header HeaderData)
+        public override RarStatus GetHeader(ref RarArchive.Header HeaderData)
         {
-            return GetHeaderImpl(hArcData, ref HeaderData);
+            return GetHeaderImpl(handle, ref HeaderData);
         }
 
-        protected override RarErrors ProcessFile(IntPtr hArcData, RarArchive.RarOperation Operation, string DestPath, string DestName)
+        public override RarStatus ProcessFile(RarOperation Operation, string DestPath, string DestName)
         {
-            return ProcessFileImpl(hArcData, Operation, DestPath, DestName);
+            return ProcessFileImpl(handle, Operation, DestPath, DestName);
         }
 
-        public override RarErrors GetVersion()
+        public override RarStatus GetVersion()
         {
             return GetVersionImpl();
         }
 
-        protected override RarErrors SetPassword(IntPtr hArcData, string Password)
+        public override RarStatus SetPassword(string Password)
         {
-            return SetPasswordImpl(hArcData, Password);
+            return SetPasswordImpl(handle, Password);
         }
 
-        protected override void SetCallback(IntPtr hArcData, UnRarCallback callback, int UserData)
+        protected override void SetCallback(UnRarCallback callback, IntPtr UserData)
         {
-            SetCallbackImpl(hArcData, callback, UserData);
+            SetCallbackImpl(handle, callback, UserData);
         }
 
         public RarArchiveX64SSE4(string FileName, RarOpenMode Mode, UnRarCallback callback) : base(FileName, Mode, callback) { }

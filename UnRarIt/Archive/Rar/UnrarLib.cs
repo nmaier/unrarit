@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.IO;
 using UnRarIt.Interop;
+using System.Windows.Forms;
 
 namespace UnRarIt.Archive.Rar
 {
@@ -54,8 +55,12 @@ namespace UnRarIt.Archive.Rar
         public event PasswordAttemptHandler PasswordAttempt;
         public event ExtractFileHandler ExtractFile;
 
+        RarArchive.Header header = new RarArchive.Header();
+        RarArchive.UnRarCallback callback;
+
         public RarArchiveFile(string aFileName)
         {
+            callback = new RarArchive.UnRarCallback(Callback);
             archive = new FileInfo(aFileName);
             if (!archive.Exists)
             {
@@ -65,24 +70,22 @@ namespace UnRarIt.Archive.Rar
         public void Open(IEnumerator<string> aPasswords)
         {
             passwords = aPasswords;
-            RarErrors status;
-            RarArchive.UnRarCallback callback = new RarArchive.UnRarCallback(Callback);
+            RarStatus status;
 
             for (; ; )
             {
-                using (RarArchive ra = RarArchive.Open(archive.FullName, RarArchive.RarOpenMode.LIST, callback))
+                using (RarArchive ra = RarArchive.Open(archive.FullName, RarOpenMode.LIST, callback))
                 {
-                    RarArchive.Header header = new RarArchive.Header();
-                    status = ra.ReadHeader(ref header);
-                    if (status != RarErrors.SUCCESS && status != RarErrors.END_ARCHIVE)
+                    status = ra.GetHeader(ref header);
+                    if (status != RarStatus.SUCCESS && status != RarStatus.END_ARCHIVE)
                     {
                         if (string.IsNullOrEmpty(password))
                         {
-                            throw new RarException(RarErrors.MISSING_PASSWORD);
+                            throw new RarException(RarStatus.MISSING_PASSWORD);
                         }
                         continue;
                     }
-                    for (; status != RarErrors.END_ARCHIVE; status = ra.ReadHeader(ref header))
+                    for (; status != RarStatus.END_ARCHIVE; status = ra.GetHeader(ref header))
                     {
                         RarArchive.TryResult(status);
                         if ((header.Flags & 0x1) == 0x1)
@@ -100,7 +103,7 @@ namespace UnRarIt.Archive.Rar
                         ulong unpacked = ((ulong)header.UnpSizeHigh << 32) + header.UnpSize;
                         bool isEnc = (header.Flags & 0x04) == 0x04;
                         items[header.FileName] = new RarItemInfo(header.FileName, isEnc, packed, unpacked, header.FileCRC, FromMSDOSTime(header.FileTime), header.UnpVer, header.Method, header.FileAttr);
-                        RarArchive.TryResult(ra.ProcessFile(RarArchive.RarOperation.SKIP, null, null));
+                        RarArchive.TryResult(ra.ProcessFile(RarOperation.SKIP, null, null));
                     }
                 }
                 break;
@@ -133,17 +136,16 @@ namespace UnRarIt.Archive.Rar
             {
                 for (; ; )
                 {
-                    using (RarArchive ra = RarArchive.Open(archive.FullName, RarArchive.RarOpenMode.EXTRACT, callback))
+                    using (RarArchive ra = RarArchive.Open(archive.FullName, RarOpenMode.EXTRACT, callback))
                     {
-                        RarArchive.Header header = new RarArchive.Header();
-                        status = ra.ReadHeader(ref header);
+                        status = ra.GetHeader(ref header);
                         bool ok = false;
-                        for (; status != RarErrors.END_ARCHIVE; status = ra.ReadHeader(ref header))
+                        for (; status != RarStatus.END_ARCHIVE; status = ra.GetHeader(ref header))
                         {
                             RarArchive.TryResult(status);
                             bool rightFile = header.FileName == itemToCrack.Name;
-                            status = ra.ProcessFile(rightFile ? RarArchive.RarOperation.TEST : RarArchive.RarOperation.SKIP, null, null);
-                            if (status != RarErrors.SUCCESS)
+                            status = ra.ProcessFile(rightFile ? RarOperation.TEST : RarOperation.SKIP, null, null);
+                            if (status != RarStatus.SUCCESS)
                             {
                                 if (!rightFile)
                                 {
@@ -151,7 +153,7 @@ namespace UnRarIt.Archive.Rar
                                 }
                                 if (string.IsNullOrEmpty(password))
                                 {
-                                    throw new RarException(RarErrors.MISSING_PASSWORD);
+                                    throw new RarException(RarStatus.MISSING_PASSWORD);
                                 }
                                 break;
                             }
@@ -177,18 +179,16 @@ namespace UnRarIt.Archive.Rar
         }
         public void Extract()
         {
-            RarErrors status;
-            RarArchive.UnRarCallback callback = new RarArchive.UnRarCallback(Callback);
+            RarStatus status;
 
-            using (RarArchive ra = RarArchive.Open(archive.FullName, RarArchive.RarOpenMode.EXTRACT, callback))
+            using (RarArchive ra = RarArchive.Open(archive.FullName, RarOpenMode.EXTRACT, callback))
             {
-                RarArchive.Header header = new RarArchive.Header();
-                if (!string.IsNullOrEmpty(password))
+                /*if (!string.IsNullOrEmpty(password))
                 {
                     RarArchive.TryResult(ra.SetPassword(password));
-                }
-                status = ra.ReadHeader(ref header);
-                for (; status != RarErrors.END_ARCHIVE; status = ra.ReadHeader(ref header))
+                }*/
+                status = ra.GetHeader(ref header);
+                for (; status != RarStatus.END_ARCHIVE; status = ra.GetHeader(ref header))
                 {
                     RarArchive.TryResult(status);
                     if (!items.ContainsKey(header.FileName))
@@ -198,7 +198,7 @@ namespace UnRarIt.Archive.Rar
                     RarItemInfo info = items[header.FileName] as RarItemInfo;
                     if (info == null || info.Destination == null)
                     {
-                        RarArchive.TryResult(ra.ProcessFile(RarArchive.RarOperation.SKIP, null, null));
+                        RarArchive.TryResult(ra.ProcessFile(RarOperation.SKIP, null, null));
                     }
                     else
                     {
@@ -216,73 +216,85 @@ namespace UnRarIt.Archive.Rar
                         {
                             info.Destination.Directory.Create();
                         }
-                        RarArchive.TryResult(ra.ProcessFile(RarArchive.RarOperation.EXTRACT, null, info.Destination.FullName));
+                        RarArchive.TryResult(ra.ProcessFile(RarOperation.EXTRACT, null, info.Destination.FullName));
                     }
                 }
             }
 
         }
 
-        int Callback(RarArchive.RarMessage msg, int UserData, IntPtr WParam, int LParam)
+        int Callback(RarMessage msg, IntPtr UserData, IntPtr WParam, IntPtr LParam)
         {
-            switch (msg)
+            try
             {
-                case RarArchive.RarMessage.CHANGEVOLUME:
-                    if (LParam == 0)
-                    {
-                        // Volume missing, abort
-                        return -1;
-                    }
-                    // Notification, continue
-                    return 1;
-
-                case RarArchive.RarMessage.PROCESSDATA:
-                    // continue
-                    return 1;
-
-                case RarArchive.RarMessage.NEEDPASSWORD:
-                    if (passwords == null)
-                    {
-                        return -1;
-                    }
-                    if (passwords.MoveNext())
-                    {
-                        password = passwords.Current;
-                        PasswordEventArgs args = new PasswordEventArgs(password);
-                        if (PasswordAttempt != null)
+                switch (msg)
+                {
+                    case RarMessage.CHANGEVOLUME:
+                        if (LParam == IntPtr.Zero)
                         {
-                            PasswordAttempt(this, args);
+                            // Volume missing, abort
+                            return -1;
                         }
-                        if (!args.ContinueOperation)
+                        // Notification, continue
+                        return 1;
+
+                    case RarMessage.PROCESSDATA:
+                        // continue
+                        return 1;
+
+                    case RarMessage.NEEDPASSWORD:
+                        if (passwords == null)
+                        {
+                            if (!string.IsNullOrEmpty(password)) {
+                                CopyPasswordTo(WParam, LParam, password);
+                                return 1;
+                            }
+                            return -1;
+                        }
+                        if (passwords.MoveNext())
+                        {
+                            password = passwords.Current;
+                            PasswordEventArgs args = new PasswordEventArgs(password);
+                            if (PasswordAttempt != null)
+                            {
+                                PasswordAttempt(this, args);
+                            }
+                            if (!args.ContinueOperation)
+                            {
+                                password = string.Empty;
+                            }
+                            CopyPasswordTo(WParam, LParam, password);
+                            return 1;
+                        }
+                        PasswordEventArgs req = new PasswordEventArgs();
+                        if (PasswordRequired != null)
+                        {
+                            PasswordRequired(this, req);
+                        }
+
+                        if (req.ContinueOperation)
+                        {
+                            password = req.Password;
+                        }
+                        else
                         {
                             password = string.Empty;
                         }
                         CopyPasswordTo(WParam, LParam, password);
                         return 1;
-                    }
-                    PasswordEventArgs req = new PasswordEventArgs();
-                    if (PasswordRequired != null)
-                    {
-                        PasswordRequired(this, req);
-                    }
-
-                    if (req.ContinueOperation)
-                    {
-                        password = req.Password;
-                    }
-                    else
-                    {
-                        password = string.Empty;
-                    }
-                    CopyPasswordTo(WParam, LParam, password);
-                    return 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.StackTrace, ex.Message);
+                return -1;
             }
             return 1;
         }
 
-        static void CopyPasswordTo(IntPtr WParam, int LParam, string Password)
+        static void CopyPasswordTo(IntPtr WParam, IntPtr LParam, string Password)
         {
-            int length = Math.Min(LParam - 1, Password.Length);
+            int length = Math.Min(LParam.ToInt32() - 1, Password.Length);
             for (int i = 0; i < length; ++i)
             {
                 Marshal.WriteByte(WParam, i, (byte)Password[i]);

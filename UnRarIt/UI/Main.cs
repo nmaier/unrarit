@@ -138,8 +138,8 @@ namespace UnRarIt
         private void AddFiles(string[] aFiles)
         {
             Dictionary<string, ArchiveItem> seen = new Dictionary<string, ArchiveItem>();
-            List<KeyValuePair<string, string>> parts = new List<KeyValuePair<string,string>>();
-            
+            List<KeyValuePair<string, string>> parts = new List<KeyValuePair<string, string>>();
+
             Files.BeginUpdate();
             foreach (ArchiveItem i in Files.Items)
             {
@@ -191,7 +191,8 @@ namespace UnRarIt
                     Console.Error.WriteLine(ex);
                 }
             }
-            foreach (KeyValuePair<string,string> part in parts) {
+            foreach (KeyValuePair<string, string> part in parts)
+            {
                 if (!seen.ContainsKey(part.Key))
                 {
                     continue;
@@ -346,14 +347,10 @@ namespace UnRarIt
 
             int threads = Math.Min(Environment.ProcessorCount, 4);
 
-            for (; !aborted; )
+            for (; ; )
             {
-                while (runningTasks.Count < threads)
+                while (!aborted && runningTasks.Count < threads && taskEnumerator.MoveNext())
                 {
-                    if (!taskEnumerator.MoveNext())
-                    {
-                        break;
-                    }
                     Task task = taskEnumerator.Current;
                     task.Item.StateImageIndex = 3;
                     task.Item.Status = "Processing...";
@@ -380,7 +377,7 @@ namespace UnRarIt
                         task.Item.StateImageIndex = 2;
                         Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 
-                        break;
+                        continue;
                     }
                     if (string.IsNullOrEmpty(task.Result))
                     {
@@ -403,13 +400,14 @@ namespace UnRarIt
                             string.IsNullOrEmpty(task.File.Password) ? "" : String.Format(", {0}", task.File.Password)
                             );
                         task.Item.StateImageIndex = 1;
+                        AdjustHeaders();
                     }
                     else
                     {
                         task.Item.Status = String.Format("Error, {0}", task.Result.ToString());
                         task.Item.StateImageIndex = 2;
+                        AdjustHeaders();
                     }
-                    AdjustHeaders();
                     Progress.Increment(1);
                 }
                 Application.DoEvents();
@@ -557,6 +555,7 @@ namespace UnRarIt
             }
             catch (Exception ex)
             {
+                //MessageBox.Show(ex.StackTrace, ex.Message);
                 task.Result = ex.Message;
             }
             task.Event.Set();

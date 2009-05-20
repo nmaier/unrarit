@@ -3,7 +3,7 @@ using UnRarIt.Interop;
 using System.IO;
 namespace UnRarIt.Archive.Rar
 {
-    public enum RarErrors : int
+    public enum RarStatus : int
     {
         SUCCESS = 0,
         END_ARCHIVE = 10,
@@ -18,17 +18,45 @@ namespace UnRarIt.Archive.Rar
         EWRITE = 19,
         SMALL_BUF = 20,
         UNKNOWN = 21,
-        MISSING_PASSWORD = 22
+        MISSING_PASSWORD = 22,
+        USER_BREAK = 255
+    }
+
+    internal enum RarOpenMode : uint
+    {
+        LIST = 0,
+        EXTRACT = 1,
+        LIST_INCSPLIT = 2,
+    }
+
+    internal enum RarOperation : int
+    {
+        SKIP = 0,
+        TEST = 1,
+        EXTRACT = 2
+    }
+
+    internal enum RarMessage : uint
+    {
+        CHANGEVOLUME = 0,
+        PROCESSDATA = 1,
+        NEEDPASSWORD = 2
+    }
+
+    internal enum RarVolumeMsg : uint
+    {
+        ASK = 0,
+        NOTIFY = 1
     }
 
     public class RarException : Exception
     {
-        RarErrors result;
-        public RarErrors Result
+        RarStatus result;
+        public RarStatus Result
         {
             get { return result; }
         }
-        public RarException(RarErrors aResult)
+        public RarException(RarStatus aResult)
             : base(aResult.ToString())
         {
             result = aResult;
