@@ -312,6 +312,7 @@ namespace UnRarIt
                     task.Item.StateImageIndex = 3;
                     task.Item.SubItems[2].Text = "Processing...";
                     Thread thread = new Thread(HandleFile);
+                    thread.Priority = ThreadPriority.BelowNormal;
                     thread.Start(task);
                     runningTasks[task.Event] = task;
                 }
