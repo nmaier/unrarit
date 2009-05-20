@@ -187,7 +187,7 @@ namespace UnRarIt
                     {
                         continue;
                     }
-                    if (seen.ContainsKey(info.FullName))
+                    if (seen.ContainsKey(info.FullName.ToLower()))
                     {
                         continue;
                     }
@@ -550,7 +550,7 @@ namespace UnRarIt
                         basePath = tmpPath;
                     }
                 }
-                else
+                else if (!string.IsNullOrEmpty(minPath))
                 {
                     minPath = Path.GetDirectoryName(minPath);
                 }
@@ -562,7 +562,7 @@ namespace UnRarIt
                     }
 
                     string name = info.Name;
-                    if (!string.IsNullOrEmpty(name))
+                    if (!string.IsNullOrEmpty(minPath))
                     {
                         name = name.Substring(minPath.Length + 1);
                     }
@@ -649,7 +649,7 @@ namespace UnRarIt
                     break;
             }
         }
-        
+
         private OverwriteAction OverwritePrompt(Task task, FileInfo Dest, IArchiveEntry Entry)
         {
             overwritePromptMutex.WaitOne();

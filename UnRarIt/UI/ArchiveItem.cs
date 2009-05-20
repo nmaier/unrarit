@@ -11,10 +11,9 @@ namespace UnRarIt
     {
         internal static ImageList Icons = new ImageList();
         private static IFileIcon FileIcon = new FileIconWin();
-
         private static Properties.Settings Config = Properties.Settings.Default;
 
-        Dictionary<FileInfo, bool> parts = new Dictionary<FileInfo, bool>();
+        Dictionary<string, FileInfo> parts = new Dictionary<string, FileInfo>();
         FileInfo file = null;
         public ArchiveItem(string aFileName)
         {
@@ -39,7 +38,7 @@ namespace UnRarIt
             {
                 ulong size = 0;
                 size += (ulong)file.Length;
-                foreach (FileInfo part in parts.Keys)
+                foreach (FileInfo part in parts.Values)
                 {
                     if (part.Exists)
                     {
@@ -97,7 +96,7 @@ namespace UnRarIt
             {
                 return;
             }
-            parts[pf] = true;
+            parts[pf.FullName.ToLower()] = pf;
             Invalidate();
         }
 
@@ -108,11 +107,12 @@ namespace UnRarIt
                 case 1:
                     file = Rename(file);
                     {
-                        Dictionary<FileInfo, bool> oldParts = parts;
-                        parts = new Dictionary<FileInfo, bool>();
-                        foreach (FileInfo part in oldParts.Keys)
+                        Dictionary<string, FileInfo> oldParts = parts;
+                        parts = new Dictionary<string, FileInfo>();
+                        foreach (FileInfo part in oldParts.Values)
                         {
-                            parts[Rename(part)] = true;
+                            FileInfo newPart = Rename(part);
+                            parts[newPart.FullName.ToLower()] = newPart;
                         }
                     }
                     break;
@@ -129,7 +129,7 @@ namespace UnRarIt
             {
                 file.Delete();
             }
-            foreach (FileInfo part in parts.Keys)
+            foreach (FileInfo part in parts.Values)
             {
                 if (part.Exists)
                 {
