@@ -157,7 +157,10 @@ namespace UnRarIt.Archive.Rar
                             }
                             else
                             {
-                                ok = rightFile;
+                                if (ok = rightFile)
+                                {
+                                    break;
+                                }
                             }
                         }
                         if (ok)
