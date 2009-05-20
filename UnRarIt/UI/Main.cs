@@ -213,6 +213,7 @@ namespace UnRarIt
 
         class Task
         {
+            public AutoResetEvent Event = new AutoResetEvent(false);
             private Main Owner;
             public ListViewItem Item;
             public IArchiveFile File;
@@ -264,9 +265,7 @@ namespace UnRarIt
             Progress.Maximum = Files.Items.Count;
             Progress.Value = 0;
 
-            List<WaitHandle> handles = new List<WaitHandle>();
             List<Task> tasks = new List<Task>();
-
 
             foreach (ListViewItem i in Files.Items)
             {
@@ -295,9 +294,82 @@ namespace UnRarIt
                     tasks.Add(new Task(this, i, new ZipArchiveFile(i.Text)));
                 }
             }
+
+            IEnumerator<Task> taskEnumerator = tasks.GetEnumerator();
+            Dictionary<AutoResetEvent, Task> runningTasks = new Dictionary<AutoResetEvent, Task>();
+
+            for (; !aborted; )
+            {
+                while (runningTasks.Count < 3)
+                {
+                    if (!taskEnumerator.MoveNext())
+                    {
+                        break;
+                    }
+                    Task task = taskEnumerator.Current;
+                    task.Item.StateImageIndex = 3;
+                    task.Item.SubItems[2].Text = "Processing...";
+                    Thread thread = new Thread(HandleFile);
+                    thread.Start(task);
+                    runningTasks[task.Event] = task;
+                }
+                if (runningTasks.Count == 0)
+                {
+                    break;
+                }
+                AutoResetEvent[] handles = new List<AutoResetEvent>(runningTasks.Keys).ToArray();
+                int idx = WaitHandle.WaitAny(handles, 100);
+                if (idx != WaitHandle.WaitTimeout)
+                {
+                    AutoResetEvent evt = handles[idx];
+                    Task task = runningTasks[evt];
+                    runningTasks.Remove(evt);
+                    if (aborted)
+                    {
+                        task.Item.SubItems[2].Text = String.Format("Aborted");
+                        task.Item.StateImageIndex = 2;
+                        Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+
+                        break;
+                    }
+                    if (string.IsNullOrEmpty(task.Result))
+                    {
+                        if (!string.IsNullOrEmpty(task.File.Password))
+                        {
+                            passwords.SetGood(task.File.Password);
+                        }
+                        switch (Config.SuccessAction)
+                        {
+                            case 1:
+                                task.File.Archive.MoveTo(Reimplement.CombinePath(task.File.Archive.Directory.FullName, String.Format("unrarit_{0}", task.File.Archive.Name)));
+                                break;
+                            case 2:
+                                task.File.Archive.Delete();
+                                break;
+                        }
+                        task.Item.Checked = true;
+                        task.Item.SubItems[2].Text = String.Format("Done, {0} files, {1}{2}",
+                            task.ExtractedFiles,
+                            ToFormatedSize(task.UnpackedSize),
+                            string.IsNullOrEmpty(task.File.Password) ? "" : String.Format(", {0}", task.File.Password)
+                            );
+                        task.Item.StateImageIndex = 1;
+                    }
+                    else
+                    {
+                        task.Item.SubItems[2].Text = String.Format("Error, {0}", task.Result.ToString());
+                        task.Item.StateImageIndex = 2;
+                    }
+                    Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    Progress.Increment(1);
+                }
+                Application.DoEvents();
+            }
+
+            /*
             foreach (Task task in tasks)
             {
-                task.Item.StateImageIndex = 3;
+                task.Item.StateImageIndex = 1;
 
                 Thread thread = new Thread(HandleFile);
                 thread.Start(task);
@@ -345,6 +417,7 @@ namespace UnRarIt
                 Files.Columns[2].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
                 Progress.Increment(1);
             }
+            */
 
             if (!aborted)
             {
@@ -490,6 +563,7 @@ namespace UnRarIt
             {
                 task.Result = ex.Message;
             }
+            task.Event.Set();
         }
 
         OverwriteAction actionRemembered = OverwriteAction.Unspecified;
