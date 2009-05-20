@@ -34,7 +34,7 @@ namespace UnRarIt
             RegexOptions.IgnoreCase | RegexOptions.Compiled
             );
         private static Regex skipper = new Regex
-            (@"^\._|\bthumbs.db$|\b__MACOSX\b|\bds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$",
+            (@"^\._|\bthumbs.db$|\b__MACOSX\b|\bds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf|url|lnk)$",
             RegexOptions.IgnoreCase | RegexOptions.Compiled
             );
 
@@ -780,6 +780,18 @@ namespace UnRarIt
                 item.StateImageIndex = 0;
             }
             Files.EndUpdate();
+        }
+
+        private void CtxDeleteFiles_Click(object sender, EventArgs e)
+        {
+            Files.BeginUpdate();
+            foreach (ArchiveItem item in Files.SelectedItems)
+            {
+                item.DeleteFiles();
+                item.Remove();
+            }
+            Files.EndUpdate();
+            AdjustHeaders();
         }
     }
 }

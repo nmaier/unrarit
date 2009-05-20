@@ -156,6 +156,9 @@
     <None Include="Resources\new.png" />
     <None Include="Resources\preferences.png" />
     <None Include="Resources\run.png" />
+    <Content Include="Resources\clearselected.png" />
+    <Content Include="Resources\deletefiles.png" />
+    <Content Include="Resources\clearlist.png" />
     <Content Include="UI\unrarit.ico" />
   </ItemGroup>
   <ItemGroup>

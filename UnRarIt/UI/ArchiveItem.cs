@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
-using UnRarIt.Interop;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using UnRarIt.Interop;
 
 namespace UnRarIt
 {
@@ -51,7 +50,7 @@ namespace UnRarIt
             }
             else
             {
-                FileSize = "n/a";
+                FileSize = "missing";
             }
         }
         private new string Text
@@ -118,23 +117,29 @@ namespace UnRarIt
                     }
                     break;
                 case 2:
-                    if (file.Exists)
-                    {
-                        file.Delete();
-                    }
-                    foreach (FileInfo part in parts.Keys)
-                    {
-                        if (part.Exists)
-                        {
-                            part.Delete();
-                        }
-                    }
-                    parts.Clear();
+                    DeleteFiles();
                     break;
             }
             Invalidate();
         }
-        private static Regex renamer = new Regex("^unrarit_");
+
+        internal void DeleteFiles()
+        {
+            if (file.Exists)
+            {
+                file.Delete();
+            }
+            foreach (FileInfo part in parts.Keys)
+            {
+                if (part.Exists)
+                {
+                    part.Delete();
+                }
+            }
+            parts.Clear();
+        }
+
+        private static Regex renamer = new Regex("^unrarit_", RegexOptions.Compiled);
         internal static FileInfo Rename(FileInfo aFile)
         {
             if (renamer.IsMatch(aFile.Name))

@@ -67,6 +67,27 @@ namespace UnRarIt.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap clearlist {
+            get {
+                object obj = ResourceManager.GetObject("clearlist", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap clearselected {
+            get {
+                object obj = ResourceManager.GetObject("clearselected", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap deletefiles {
+            get {
+                object obj = ResourceManager.GetObject("deletefiles", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap done {
             get {
                 object obj = ResourceManager.GetObject("done", resourceCulture);
