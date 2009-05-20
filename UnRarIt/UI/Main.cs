@@ -16,11 +16,33 @@ namespace UnRarIt
     public partial class Main : Form
     {
         private static Properties.Settings Config = Properties.Settings.Default;
+        private static PasswordList passwords = new PasswordList();
+        private static Mutex overwritePromptMutex = new Mutex();
+
+        private static Regex[] partFiles = new Regex[] {
+            new Regex(
+                @"(part0*[2-9]\d*)\.(?:rar|zip)$",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled
+                ),
+            new Regex(
+                @"\.(r|z)\d{2,}$", 
+                RegexOptions.IgnoreCase | RegexOptions.Compiled
+                )
+            };
+        private static Regex trimmer = new Regex(
+            @"^[\s_-]+|^unrarit_|(?:\.part\d+)?\.[r|z].{2}$|[\s_-]+$",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled
+            );
+        private static Regex skipper = new Regex
+            (@"^\._|\bthumbs.db$|\b__MACOSX\b|\bds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled
+            );
+
         internal static string ToFormatedSize(long aSize)
         {
             return ToFormatedSize((ulong)aSize);
         }
-        private static string ToFormatedSize(ulong aSize)
+        internal static string ToFormatedSize(ulong aSize)
         {
             if (aSize <= 900)
             {
@@ -58,7 +80,6 @@ namespace UnRarIt
         private bool running = false;
         private bool aborted = false;
         private bool auto;
-        private PasswordList passwords = new PasswordList();
 
         public Main(bool aAuto, string dir, string[] args)
         {
@@ -75,7 +96,7 @@ namespace UnRarIt
             StateIcons.Images.Add(Properties.Resources.error);
             StateIcons.Images.Add(Properties.Resources.run);
 
-            
+
             Text = String.Format("{0} - {1}bit - {2}", Text, CpuInfo.isX64 ? 64 : 32, CpuInfo.hasSSE3 ? "SSE3/4" : "Generic");
 
             if (!(UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text)))
@@ -105,7 +126,7 @@ namespace UnRarIt
             {
                 style = ColumnHeaderAutoResizeStyle.HeaderSize;
             }
-            foreach (ColumnHeader h in new ColumnHeader[] { columnFile, columnSize})
+            foreach (ColumnHeader h in new ColumnHeader[] { columnFile, columnSize })
             {
                 h.AutoResize(style);
             }
@@ -131,11 +152,6 @@ namespace UnRarIt
             AddFiles(dropped);
 
         }
-
-        private static Regex[] partFiles = new Regex[] {
-            new Regex(@"(part0*[2-9]\d*)\.(?:rar|zip)$", RegexOptions.IgnoreCase),
-            new Regex(@"\.(r|z)\d{2,}$", RegexOptions.IgnoreCase)
-            };
 
         private void AddFiles(string[] aFiles)
         {
@@ -221,7 +237,7 @@ namespace UnRarIt
                     // old format
                     parts.Add(new KeyValuePair<string, string>(
                         Reimplement.CombinePath(info.DirectoryName.ToLower(), Path.GetFileNameWithoutExtension(f) + (t[0] == 'r' ? ".rar" : ".zip")),
-                        info.FullName.ToLower()
+                        info.FullName
                         ));
                 }
                 else
@@ -229,7 +245,7 @@ namespace UnRarIt
                     // new format
                     parts.Add(new KeyValuePair<string, string>(
                         f.Replace(t, "part1"),
-                        info.FullName.ToLower()
+                        info.FullName
                         ));
                 }
                 return true;
@@ -242,12 +258,6 @@ namespace UnRarIt
             e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
         }
 
-        private void Files_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-
         private void UnRarIt_Click(object sender, EventArgs e)
         {
             Run();
@@ -258,44 +268,70 @@ namespace UnRarIt
             aborted = true;
         }
 
-        class Task
+        private class Task
         {
-            public AutoResetEvent Event = new AutoResetEvent(false);
-            private Main Owner;
-            public ArchiveItem Item;
-            public IArchiveFile File;
+            private Main owner;
+
+            private ulong unpackedSize = 0;
+            public ulong UnpackedSize
+            {
+                get { return unpackedSize; }
+            }
+
+            private ulong extractedFiles = 0;
+            public ulong ExtractedFiles
+            {
+                get { return extractedFiles; }
+            }
+
+            private AutoResetEvent signal = new AutoResetEvent(false);
+            public AutoResetEvent Signal
+            {
+                get { return signal; }
+            }
+
+            private ArchiveItem item;
+            public ArchiveItem Item
+            {
+                get { return item; }
+            }
+
+            private IArchiveFile file;
+            public IArchiveFile File
+            {
+                get { return file; }
+            }
+
             public string Result = string.Empty;
             public OverwriteAction Action = OverwriteAction.Unspecified;
 
             public Task(Main aOwner, ArchiveItem aItem, IArchiveFile aFile)
             {
-                File = aFile;
-                Item = aItem;
-                Owner = aOwner;
-                File.ExtractFile += OnExtractFile;
-                File.PasswordAttempt += OnPasswordAttempt;
+                file = aFile;
+                item = aItem;
+                owner = aOwner;
+                file.ExtractFile += OnExtractFile;
+                file.PasswordAttempt += OnPasswordAttempt;
             }
 
-            public ulong UnpackedSize = 0;
-            public ulong ExtractedFiles = 0;
 
             private void OnExtractFile(object sender, ExtractFileEventArgs e)
             {
-                Owner.BeginInvoke(
+                owner.BeginInvoke(
                     new SetStatus(delegate(string status) { Item.SubStatus = status; }),
                     String.Format("Extracting {0}", e.Item.Name)
                     );
-                UnpackedSize += e.Item.Size;
-                ExtractedFiles++;
-                e.ContinueOperation = !Owner.aborted;
+                unpackedSize += e.Item.Size;
+                extractedFiles++;
+                e.ContinueOperation = !owner.aborted;
             }
             private void OnPasswordAttempt(object sender, PasswordEventArgs e)
             {
-                Owner.BeginInvoke(
+                owner.BeginInvoke(
                     new SetStatus(delegate(string status) { Item.SubStatus = status; }),
                     String.Format("Password: {0}", e.Password)
                     );
-                e.ContinueOperation = !Owner.aborted;
+                e.ContinueOperation = !owner.aborted;
             }
         }
 
@@ -359,7 +395,7 @@ namespace UnRarIt
                     Thread thread = new Thread(HandleFile);
                     thread.Priority = ThreadPriority.BelowNormal;
                     thread.Start(task);
-                    runningTasks[task.Event] = task;
+                    runningTasks[task.Signal] = task;
                 }
                 if (runningTasks.Count == 0)
                 {
@@ -483,14 +519,13 @@ namespace UnRarIt
                     new SetStatus(delegate(string status) { task.Item.SubStatus = status; }),
                     String.Format("Extracting: {0}...", task.File.Archive.Name)
                 );
-                Regex skip = new Regex(@"\bthumbs.db$|\b__MACOSX\b|\bds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf)$", RegexOptions.IgnoreCase);
                 List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
 
                 string minPath = null;
                 uint items = 0;
                 foreach (IArchiveEntry info in task.File)
                 {
-                    if (skip.IsMatch(info.Name))
+                    if (skipper.IsMatch(info.Name))
                     {
                         continue;
                     }
@@ -508,11 +543,16 @@ namespace UnRarIt
                 string basePath = string.Empty;
                 if (items >= Config.OwnDirectoryLimit && string.IsNullOrEmpty(minPath))
                 {
-                    basePath = new Regex(@"(?:\.part\d+)?\.[r|z].{2}$", RegexOptions.IgnoreCase).Replace(task.File.Archive.Name, "");
+                    basePath = trimmer.Replace(task.File.Archive.Name, "");
+                    string tmpPath;
+                    while ((tmpPath = trimmer.Replace(basePath, "")) != basePath)
+                    {
+                        basePath = tmpPath;
+                    }
                 }
                 foreach (IArchiveEntry info in task.File)
                 {
-                    if (skip.IsMatch(info.Name))
+                    if (skipper.IsMatch(info.Name))
                     {
                         continue;
                     }
@@ -557,7 +597,7 @@ namespace UnRarIt
                 //MessageBox.Show(ex.StackTrace, ex.Message);
                 task.Result = ex.Message;
             }
-            task.Event.Set();
+            task.Signal.Set();
         }
 
         OverwriteAction actionRemembered = OverwriteAction.Unspecified;
@@ -599,7 +639,7 @@ namespace UnRarIt
                     break;
             }
         }
-        Mutex overwritePromptMutex = new Mutex();
+        
         private OverwriteAction OverwritePrompt(Task task, FileInfo Dest, IArchiveEntry Entry)
         {
             overwritePromptMutex.WaitOne();

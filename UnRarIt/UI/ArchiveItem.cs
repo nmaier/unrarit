@@ -15,7 +15,7 @@ namespace UnRarIt
 
         private static Properties.Settings Config = Properties.Settings.Default;
 
-        Dictionary<string, bool> parts = new Dictionary<string, bool>();
+        Dictionary<FileInfo, bool> parts = new Dictionary<FileInfo, bool>();
         FileInfo file = null;
         public ArchiveItem(string aFileName)
         {
@@ -38,7 +38,16 @@ namespace UnRarIt
 
             if (file.Exists)
             {
-                FileSize = Main.ToFormatedSize(file.Length);
+                ulong size = 0;
+                size += (ulong)file.Length;
+                foreach (FileInfo part in parts.Keys)
+                {
+                    if (part.Exists)
+                    {
+                        size += (ulong)part.Length;
+                    }
+                }
+                FileSize = Main.ToFormatedSize(size);
             }
             else
             {
@@ -84,7 +93,12 @@ namespace UnRarIt
 
         internal void AddPart(string Part)
         {
-            parts[Part] = true;
+            FileInfo pf = new FileInfo(Part);
+            if (!pf.Exists)
+            {
+                return;
+            }
+            parts[pf] = true;
             Invalidate();
         }
 
@@ -93,21 +107,27 @@ namespace UnRarIt
             switch (Config.SuccessAction)
             {
                 case 1:
-                    file = Rename(file.FullName);
+                    file = Rename(file);
                     {
-                        Dictionary<string, bool> oldParts = parts;
-                        parts = new Dictionary<string, bool>();
-                        foreach (string part in oldParts.Keys)
+                        Dictionary<FileInfo, bool> oldParts = parts;
+                        parts = new Dictionary<FileInfo, bool>();
+                        foreach (FileInfo part in oldParts.Keys)
                         {
-                            parts[Rename(part).FullName] = true;
+                            parts[Rename(part)] = true;
                         }
                     }
                     break;
                 case 2:
-                    file.Delete();
-                    foreach (string part in parts.Keys)
+                    if (file.Exists)
                     {
-                        new FileInfo(part).Delete();
+                        file.Delete();
+                    }
+                    foreach (FileInfo part in parts.Keys)
+                    {
+                        if (part.Exists)
+                        {
+                            part.Delete();
+                        }
                     }
                     parts.Clear();
                     break;
@@ -115,15 +135,14 @@ namespace UnRarIt
             Invalidate();
         }
         private static Regex renamer = new Regex("^unrarit_");
-        internal static FileInfo Rename(string aFile)
+        internal static FileInfo Rename(FileInfo aFile)
         {
-            FileInfo fi = new FileInfo(aFile);
-            if (renamer.IsMatch(fi.Name))
+            if (renamer.IsMatch(aFile.Name))
             {
-                return fi;
+                return aFile;
             }
-            fi.MoveTo(Reimplement.CombinePath(fi.Directory.FullName, String.Format("unrarit_{0}", fi.Name)));
-            return fi;
+            aFile.MoveTo(Reimplement.CombinePath(aFile.Directory.FullName, String.Format("unrarit_{0}", aFile.Name)));
+            return aFile;
         }
 
     }

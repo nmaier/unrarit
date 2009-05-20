@@ -100,7 +100,6 @@
             this.Files.TabIndex = 0;
             this.Files.UseCompatibleStateImageBehavior = false;
             this.Files.View = System.Windows.Forms.View.Details;
-            this.Files.SelectedIndexChanged += new System.EventHandler(this.Files_SelectedIndexChanged);
             this.Files.DragDrop += new System.Windows.Forms.DragEventHandler(this.Files_DragDrop);
             this.Files.DragEnter += new System.Windows.Forms.DragEventHandler(this.Files_DragEnter);
             // 
