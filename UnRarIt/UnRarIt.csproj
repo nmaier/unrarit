@@ -162,7 +162,7 @@
     <Content Include="UI\unrarit.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GetOptRedox\GetOptNet.csproj">
+    <ProjectReference Include="..\GetOptNet\GetOptNet.csproj">
       <Project>{ABF98F9F-CF28-4242-9459-B10AAA00E305}</Project>
       <Name>GetOptNet</Name>
     </ProjectReference>
