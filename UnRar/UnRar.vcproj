@@ -218,9 +218,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libirc.lib  crt\intel\libcmt.lib crt\intel\libcpmt.lib"
 				OutputFile="$(OutDir)/$(ProjectName)_$(PlatFormName)_$(ConfigurationName).dll"
 				LinkIncremental="1"
+				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
 				GenerateDebugInformation="false"
 				TargetMachine="1"
@@ -299,9 +300,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libirc.lib  crt\amd64\libcmt.lib crt\amd64\libcpmt.lib"
 				OutputFile="$(OutDir)/$(ProjectName)_$(PlatFormName)_$(ConfigurationName).dll"
 				LinkIncremental="1"
+				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
 				GenerateDebugInformation="true"
 				TargetMachine="17"
@@ -378,9 +380,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libirc.lib  crt\intel\libcmt.lib crt\intel\libcpmt.lib"
 				OutputFile="$(OutDir)/$(ProjectName)_$(PlatFormName)_$(ConfigurationName).dll"
 				LinkIncremental="1"
+				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
 				GenerateDebugInformation="false"
 				TargetMachine="1"
@@ -460,9 +463,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libirc.lib  crt\amd64\libcmt.lib crt\amd64\libcpmt.lib"
 				OutputFile="$(OutDir)/$(ProjectName)_$(PlatFormName)_$(ConfigurationName).dll"
 				LinkIncremental="1"
+				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="dll.def"
 				GenerateDebugInformation="true"
 				TargetMachine="17"

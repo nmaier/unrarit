@@ -42,8 +42,8 @@ int stricmpw(const wchar *s1,const wchar *s2);
 int strnicmpw(const wchar *s1,const wchar *s2,size_t n);*/
 #define strcmpw wcscmp
 #define strncmpw wcsncmp
-#define stricmpw wcsicmp
-#define strnicmpw wcsnicmp
+#define stricmpw _wcsicmp
+#define strnicmpw _wcsnicmp
 
 /*wchar *strchrw(const wchar *s,int c);
 wchar* strrchrw(const wchar *s,int c);
