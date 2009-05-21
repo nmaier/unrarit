@@ -561,6 +561,7 @@ namespace UnRarIt
                 {
                     minPath = Path.GetDirectoryName(minPath);
                 }
+                bool shouldExtract = false;
                 foreach (IArchiveEntry info in task.File)
                 {
                     if (skipper.IsMatch(info.Name))
@@ -580,30 +581,37 @@ namespace UnRarIt
                         {
                             case 1:
                                 info.Destination = dest;
+                                shouldExtract = true;
                                 break;
                             case 2:
                                 switch (OverwritePrompt(task, dest, info))
                                 {
                                     case OverwriteAction.Overwrite:
                                         info.Destination = dest;
+                                        shouldExtract = true;
                                         break;
                                     case OverwriteAction.Rename:
                                         info.Destination = MakeUnique(dest);
+                                        shouldExtract = true;
                                         break;
                                 }
                                 break;
                             case 3:
                                 info.Destination = MakeUnique(dest);
+                                shouldExtract = true;
                                 break;
                         }
                     }
                     else
                     {
+                        shouldExtract = true;
                         info.Destination = dest;
                     }
-
                 }
-                task.File.Extract();
+                if (shouldExtract)
+                {
+                    task.File.Extract();
+                }
             }
             catch (RarException ex)
             {
@@ -809,6 +817,29 @@ namespace UnRarIt
             }
             Files.EndUpdate();
             AdjustHeaders();
+        }
+
+        private void Files_KeyPress(object sender, KeyPressEventArgs e)
+        {
+        }
+
+        private void Files_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.A:
+                        Files.BeginUpdate();
+                        foreach (ListViewItem i in Files.Items)
+                        {
+                            i.Selected = true;
+                        }
+                        Files.EndUpdate();
+                        e.Handled = true;
+                        break;
+                }
+            }
         }
     }
 }
