@@ -21,7 +21,7 @@ namespace UnRarIt
 
         private static Regex[] partFiles = new Regex[] {
             new Regex(
-                @"(part0*[2-9]\d*)\.(?:rar|zip)$",
+                @"(part(\d+))\.(?:rar|zip)$",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled
                 ),
             new Regex(
@@ -242,11 +242,18 @@ namespace UnRarIt
                 }
                 else
                 {
+                    string val = m.Groups[2].Value;
+                    uint i = 0;
+                    if (!uint.TryParse(val, out i) || i == 1)
+                    {
+                        return false;
+                    }
                     // new format
-                    parts.Add(new KeyValuePair<string, string>(
-                        f.Replace(t, "part1"),
-                        info.FullName
-                        ));
+                    string basePart = f.Replace(t, String.Format(
+                        "part{0}",
+                        1.ToString(new string('0', val.Length))
+                    ));
+                    parts.Add(new KeyValuePair<string, string>(basePart, info.FullName));
                 }
                 return true;
             }

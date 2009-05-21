@@ -86,68 +86,40 @@ namespace UnRarIt
         #region PasswordEnumerator
         class PassWordEnumerator : IEnumerator<string>
         {
-            List<string> lastGood = new List<string>();
-            IEnumerator<Password> enumerator;
-            IEnumerator<string> lgEnumerator;
-            public PassWordEnumerator(IEnumerable<string> aLastGood, IEnumerator<Password> aEnumerator)
+            List<string> passwords = new List<string>();
+            IEnumerator<string> enumerator;
+            public PassWordEnumerator(IEnumerable<string> aLastGood, IEnumerable<Password> aGeneral)
             {
-
-                enumerator = aEnumerator;
-                lastGood.AddRange(aLastGood);
-                Reset();
+                // Cannot not use the IEnumerators here.
+                // Seems they aren't per instance
+                passwords.AddRange(aLastGood);
+                foreach (Password p in aGeneral)
+                {
+                    passwords.Add(p.Pass);
+                }
+                enumerator = passwords.GetEnumerator();
             }
             public bool MoveNext()
             {
-                if (lgEnumerator != null)
-                {
-                    if (lgEnumerator.MoveNext())
-                    {
-                        return true;
-                    }
-                    lgEnumerator.Dispose();
-                    lgEnumerator = null;
-                }
                 return enumerator.MoveNext();
             }
             public void Reset()
             {
                 enumerator.Reset();
-                if (lgEnumerator != null)
-                {
-                    lgEnumerator.Dispose();
-                    lgEnumerator = null;
-                }
-                lgEnumerator = lastGood.GetEnumerator();
             }
             public void Dispose()
             {
-                if (lgEnumerator != null)
-                {
-                    lgEnumerator.Dispose();
-                }
                 enumerator.Dispose();
+                passwords = null;
+                enumerator = null;
             }
             public object Current
             {
-                get
-                {
-                    if (lgEnumerator != null)
-                    {
-                        return lgEnumerator.Current;
-                    }
-                    return enumerator.Current.Pass;
-                }
+                get { return enumerator.Current; }
             }
             string IEnumerator<string>.Current
             {
-                get
-                {
-                    if (lgEnumerator != null)
-                    {
-                        return lgEnumerator.Current;
-                    }
-                    return enumerator.Current.Pass;
-                }
+                get { return enumerator.Current; }
             }
         }
         #endregion
@@ -289,11 +261,11 @@ namespace UnRarIt
 
         IEnumerator<string> IEnumerable<string>.GetEnumerator()
         {
-            return new PassWordEnumerator(used.Keys, passwords.GetEnumerator());
+            return new PassWordEnumerator(used.Keys, passwords);
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new PassWordEnumerator(used.Keys, passwords.GetEnumerator());
+            return new PassWordEnumerator(used.Keys, passwords);
         }
 
 
