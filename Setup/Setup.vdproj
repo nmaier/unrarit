@@ -21,13 +21,25 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_15F9696F734078EFD0AD3AE43AB01233"
+        "MsmKey" = "8:_0ACB5BB8F10C4B10AA7BEDA122F0CABE"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0B32E6B58CBFF3B1F21874D678C2D41B"
         "OwnerKey" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_531B8B254B674C87A5DF00AB551A0103"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -82,7 +94,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_15F9696F734078EFD0AD3AE43AB01233"
+        "OwnerKey" = "8:_0B32E6B58CBFF3B1F21874D678C2D41B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -116,6 +128,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5.SP1"
+                    {
+                    "Name" = "8:.NET Framework 3.5 SP1"
+                    "ProductCode" = "8:Microsoft.Net.Framework.3.5.SP1"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -203,14 +228,34 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_15F9696F734078EFD0AD3AE43AB01233"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0ACB5BB8F10C4B10AA7BEDA122F0CABE"
+            {
+            "SourcePath" = "8:..\\7z\\bin\\X86\\Format7zF\\7z.dll"
+            "TargetName" = "8:7z_Win32.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0B32E6B58CBFF3B1F21874D678C2D41B"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:GetOptNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_15F9696F734078EFD0AD3AE43AB01233"
+                    "_0B32E6B58CBFF3B1F21874D678C2D41B"
                     {
                     "Name" = "8:GetOptNet.dll"
                     "Attributes" = "3:512"
@@ -232,6 +277,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_531B8B254B674C87A5DF00AB551A0103"
+            {
+            "SourcePath" = "8:..\\7z\\bin\\AMD64\\Format7zF\\7z.dll"
+            "TargetName" = "8:7z_x64.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_78163C66F4AB8E1AE3D10B2C2FB7A059"
@@ -453,7 +518,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UnRarIt.Net"
         "ProductCode" = "8:{804417B8-54FE-4000-859D-25E9AEE9331E}"
-        "PackageCode" = "8:{0FE28479-DDA0-4E93-B476-567403CDC6C0}"
+        "PackageCode" = "8:{072AC7B3-E899-4FA6-9B4B-F69C02F9788C}"
         "UpgradeCode" = "8:{AF6374D3-725E-4BC2-9C06-722794CDAD33}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"

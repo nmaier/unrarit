@@ -7,6 +7,13 @@ using UnRarIt.Interop;
 
 namespace UnRarIt
 {
+    internal enum ArchiveFormat
+    {
+        Zip,
+        Rar,
+        SevenZip
+    }
+
     internal class ArchiveItem : ListViewItem
     {
         internal static ImageList Icons = new ImageList();
@@ -15,8 +22,11 @@ namespace UnRarIt
 
         Dictionary<string, FileInfo> parts = new Dictionary<string, FileInfo>();
         FileInfo file = null;
-        public ArchiveItem(string aFileName)
+        ArchiveFormat format;
+
+        public ArchiveItem(string aFileName, ArchiveFormat aFormat)
         {
+            format = aFormat;
             SubItems.Add(string.Empty);
             SubItems.Add("Ready...");
             file = new FileInfo(aFileName);
@@ -28,6 +38,11 @@ namespace UnRarIt
             StateImageIndex = 0;
 
             Invalidate();
+        }
+
+        internal ArchiveFormat Format
+        {
+            get { return format; }
         }
 
         protected void Invalidate()

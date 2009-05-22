@@ -30,7 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Rar-Archives", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("7zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.Files = new System.Windows.Forms.ListView();
             this.columnFile = new System.Windows.Forms.ColumnHeader();
@@ -89,11 +90,14 @@
             this.Files.ContextMenuStrip = this.FilesCtx;
             listViewGroup1.Header = "Rar-Archives";
             listViewGroup1.Name = "GroupRar";
-            listViewGroup2.Header = "Zip-Archives";
-            listViewGroup2.Name = "GroupZip";
+            listViewGroup2.Header = "7zip-Archives";
+            listViewGroup2.Name = "GroupSevenZip";
+            listViewGroup3.Header = "Zip-Archives";
+            listViewGroup3.Name = "GroupZip";
             this.Files.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
             listViewGroup1,
-            listViewGroup2});
+            listViewGroup2,
+            listViewGroup3});
             this.Files.Location = new System.Drawing.Point(12, 27);
             this.Files.Name = "Files";
             this.Files.Size = new System.Drawing.Size(758, 408);

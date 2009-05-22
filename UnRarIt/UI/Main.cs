@@ -10,6 +10,7 @@ using UnRarIt.Archive;
 using UnRarIt.Archive.Rar;
 using UnRarIt.Archive.Zip;
 using UnRarIt.Interop;
+using UnRarIt.Archive.SevenZip;
 
 namespace UnRarIt
 {
@@ -30,7 +31,7 @@ namespace UnRarIt
                 )
             };
         private static Regex trimmer = new Regex(
-            @"^[\s_-]+|^unrarit_|(?:\.part\d+)?\.[r|z].{2}$|[\s_-]+$",
+            @"^[\s_-]+|^unrarit_|(?:\.part\d+)?\.(?:[r|z].{2}|7z)$|[\s_-]+$",
             RegexOptions.IgnoreCase | RegexOptions.Compiled
             );
         private static Regex skipper = new Regex
@@ -183,25 +184,33 @@ namespace UnRarIt
                     }
 
                     string ext = info.Extension.ToLower();
-                    if (ext != ".rar" && ext != ".zip")
-                    {
-                        continue;
-                    }
                     if (seen.ContainsKey(info.FullName.ToLower()))
                     {
                         continue;
                     }
 
-                    ArchiveItem item = new ArchiveItem(info.FullName);
-                    seen[info.FullName.ToLower()] = item;
+                    ArchiveItem item;
                     if (ext == ".zip")
                     {
+                        item = new ArchiveItem(info.FullName, ArchiveFormat.Zip);
                         item.Group = Files.Groups["GroupZip"];
+                    }
+                    else if (ext == ".7z")
+                    {
+                        item = new ArchiveItem(info.FullName, ArchiveFormat.SevenZip);
+                        item.Group = Files.Groups["GroupSevenZip"];
+                    }
+                    else if (ext == ".zip")
+                    {
+                        item = new ArchiveItem(info.FullName, ArchiveFormat.Rar);
+                        item.Group = Files.Groups["GroupRar"];
                     }
                     else
                     {
-                        item.Group = Files.Groups["GroupRar"];
+                        continue;
                     }
+                    seen[info.FullName.ToLower()] = item;
+
                     Files.Items.Add(item);
                 }
                 catch (Exception ex)
@@ -377,13 +386,17 @@ namespace UnRarIt
                 }
 
 
-                if (i.Group.Name == "GroupRar")
+                switch (i.Format)
                 {
-                    tasks.Add(new Task(this, i, new RarArchiveFile(i.FileName)));
-                }
-                else
-                {
-                    tasks.Add(new Task(this, i, new ZipArchiveFile(i.FileName)));
+                    case ArchiveFormat.Rar:
+                        tasks.Add(new Task(this, i, new RarArchiveFile(i.FileName)));
+                        break;
+                    case ArchiveFormat.Zip:
+                        tasks.Add(new Task(this, i, new ZipArchiveFile(i.FileName)));
+                        break;
+                    case ArchiveFormat.SevenZip:
+                        tasks.Add(new Task(this, i, new SevenZipArchiveFile(i.FileName)));
+                        break;
                 }
             }
 
@@ -617,11 +630,12 @@ namespace UnRarIt
             {
                 task.Result = ex.Result.ToString();
             }
-            catch (Exception ex)
-            {
-                //MessageBox.Show(ex.StackTrace, ex.Message);
-                task.Result = ex.Message;
-            }
+            //catch (Exception ex)
+            //{
+            //    //MessageBox.Show(ex.StackTrace, ex.Message);
+            //    task.Result = ex.Message;
+            //    throw;
+            //}
             task.Signal.Set();
         }
 
