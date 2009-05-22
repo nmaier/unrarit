@@ -200,7 +200,7 @@ namespace UnRarIt
                         item = new ArchiveItem(info.FullName, ArchiveFormat.SevenZip);
                         item.Group = Files.Groups["GroupSevenZip"];
                     }
-                    else if (ext == ".zip")
+                    else if (ext == ".rar")
                     {
                         item = new ArchiveItem(info.FullName, ArchiveFormat.Rar);
                         item.Group = Files.Groups["GroupRar"];
