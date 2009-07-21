@@ -15,22 +15,19 @@ namespace UnRarIt.Archive.SevenZip
         [DllImport("7z_x64.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_64(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 
-
-        private static Guid FormatSevenZip = new Guid("23170f69-40c1-278a-1000-000110070000");
-
         private IInArchive inArchive = null;
         private SevenZipStream stream;
-        internal SevenZipArchive(FileInfo aFile, IArchiveOpenCallback callback)
+        internal SevenZipArchive(FileInfo aFile, IArchiveOpenCallback callback, Guid format)
         {
             Guid Interface = typeof(IInArchive).GUID;
             object result;
             if (CpuInfo.isX64)
             {
-                CreateObject_64(ref FormatSevenZip, ref Interface, out result);
+                CreateObject_64(ref format, ref Interface, out result);
             }
             else
             {
-                CreateObject_32(ref FormatSevenZip, ref Interface, out result);
+                CreateObject_32(ref format, ref Interface, out result);
             }
             if (result == null)
             {

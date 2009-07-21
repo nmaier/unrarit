@@ -216,11 +216,12 @@
             this.Progress.Name = "Progress";
             this.Progress.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
             this.Progress.Size = new System.Drawing.Size(504, 16);
+            this.Progress.Visible = false;
             // 
             // Details
             // 
             this.Details.Name = "Details";
-            this.Details.Size = new System.Drawing.Size(261, 17);
+            this.Details.Size = new System.Drawing.Size(230, 17);
             this.Details.Spring = true;
             this.Details.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 

@@ -8,9 +8,8 @@ using System.Threading;
 using System.Windows.Forms;
 using UnRarIt.Archive;
 using UnRarIt.Archive.Rar;
-using UnRarIt.Archive.Zip;
-using UnRarIt.Interop;
 using UnRarIt.Archive.SevenZip;
+using UnRarIt.Interop;
 
 namespace UnRarIt
 {
@@ -363,6 +362,7 @@ namespace UnRarIt
             UnrarIt.Click += Abort_Click;
             UnrarIt.Click -= UnRarIt_Click;
 
+            Progress.Visible = true;
             Progress.Maximum = Files.Items.Count;
             Progress.Value = 0;
 
@@ -392,10 +392,10 @@ namespace UnRarIt
                         tasks.Add(new Task(this, i, new RarArchiveFile(i.FileName)));
                         break;
                     case ArchiveFormat.Zip:
-                        tasks.Add(new Task(this, i, new ZipArchiveFile(i.FileName)));
+                        tasks.Add(new Task(this, i, new SevenZipArchiveFile(i.FileName, SevenZipArchiveFile.FormatZip)));
                         break;
                     case ArchiveFormat.SevenZip:
-                        tasks.Add(new Task(this, i, new SevenZipArchiveFile(i.FileName)));
+                        tasks.Add(new Task(this, i, new SevenZipArchiveFile(i.FileName, SevenZipArchiveFile.FormatSevenZip)));
                         break;
                 }
             }
@@ -460,7 +460,11 @@ namespace UnRarIt
                     }
                     else
                     {
-                        task.Item.Status = String.Format("Error, {0}", task.Result.ToString());
+                        task.Item.Status = String.Format(
+                            "Error, {0}{1}",
+                            task.Result.ToString(),
+                            string.IsNullOrEmpty(task.File.Password) ? "" : String.Format(", {0}", task.File.Password)
+                            );
                         task.Item.StateImageIndex = 2;
                         AdjustHeaders();
                     }
@@ -501,6 +505,7 @@ namespace UnRarIt
 
             Details.Text = "";
             Progress.Value = 0;
+            Progress.Visible = false;
             BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = UnrarIt.Enabled = AddPassword.Enabled = true;
             running = false;
             UnrarIt.Text = "Unrar!";
@@ -630,12 +635,10 @@ namespace UnRarIt
             {
                 task.Result = ex.Result.ToString();
             }
-            //catch (Exception ex)
-            //{
-            //    //MessageBox.Show(ex.StackTrace, ex.Message);
-            //    task.Result = ex.Message;
-            //    throw;
-            //}
+            catch (Exception ex)
+            {
+                task.Result = ex.Message;
+            }
             task.Signal.Set();
         }
 

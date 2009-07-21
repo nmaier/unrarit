@@ -8,6 +8,13 @@ namespace UnRarIt
         public AddPasswordForm()
         {
             InitializeComponent();
+
+            string cb = Clipboard.GetText().Trim();
+            if (!string.IsNullOrEmpty(cb))
+            {
+                Password.Text = cb;
+                Password.SelectAll();
+            }
         }
 
         private void Password_TextChanged(object sender, EventArgs e)

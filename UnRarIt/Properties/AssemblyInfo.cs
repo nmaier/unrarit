@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("UnRarIt.Net")]
-[assembly: AssemblyDescription("Build with the original UnRarIt in mind, which unfortunately was quite buggy.\r\n\r\nMakes use of unrar.dll and #ZipLib, which use different licenses and are copyrighted.\r\nMakes use of 7-zip, which is under LGPL and hence free to use, modify and distribute. See <http://7-zip.org/>")]
+[assembly: AssemblyDescription("Build with the original UnRarIt in mind, which unfortunately was quite buggy.\r\n\r\nMakes use of unrar.dll and 7zip, which use different licenses and are copyrighted.\r\nMakes use of 7-zip, which is under LGPL and hence free to use, modify and distribute. See <http://7-zip.org/>")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Nils Maier")]
 [assembly: AssemblyProduct("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.2.0.0")]
+[assembly: AssemblyFileVersion("1.2.0.0")]

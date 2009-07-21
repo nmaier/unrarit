@@ -16,12 +16,18 @@ namespace UnRarIt.Archive.SevenZip
 
     public class SevenZipArchiveFile : IArchiveFile, IArchiveOpenCallback, IProgress, IGetPassword
     {
+        public static Guid FormatSevenZip = new Guid("23170f69-40c1-278a-1000-000110070000");
+        public static Guid FormatZip = new Guid("23170f69-40c1-278a-1000-000110010000");
+
+
         Dictionary<string, IArchiveEntry> items = new Dictionary<string, IArchiveEntry>();
         string password = string.Empty;
         IEnumerator<string> passwords;
         FileInfo archive;
-        public SevenZipArchiveFile(string aArchive)
+        Guid format;
+        public SevenZipArchiveFile(string aArchive, Guid aFormat)
         {
+            format = aFormat;
             archive = new FileInfo(aArchive);
             if (!archive.Exists)
             {
@@ -124,7 +130,7 @@ namespace UnRarIt.Archive.SevenZip
 
         public void Extract()
         {
-            using (SevenZipArchive ar = new SevenZipArchive(archive, this))
+            using (SevenZipArchive ar = new SevenZipArchive(archive, this, format))
             {
                 List<uint> indices = new List<uint>();
                 Dictionary<uint, IArchiveEntry> files = new Dictionary<uint, IArchiveEntry>();
@@ -165,7 +171,7 @@ namespace UnRarIt.Archive.SevenZip
             {
                 try
                 {
-                    using (SevenZipArchive ar = new SevenZipArchive(archive, this))
+                    using (SevenZipArchive ar = new SevenZipArchive(archive, this, format))
                     {
                         IArchiveEntry minCrypted = null;
                         uint minIndex = 0;
