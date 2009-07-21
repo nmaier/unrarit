@@ -15,6 +15,6 @@ static IOutArchive *CreateArcOut() { return new NArchive::NSplit::CHandler;  }
 */
 
 static CArcInfo g_ArcInfo =
-{ L"Split", L"001", 0, 0xEA, { 0 }, 0, false, CreateArc, 0 };
+{ L"Split", L"000 001 002", 0, 0xEA, { 0 }, 0, false, CreateArc, 0 };
 
 REGISTER_ARC(Split)

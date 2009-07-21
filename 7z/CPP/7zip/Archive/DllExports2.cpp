@@ -32,7 +32,7 @@ static bool IsItWindowsNT()
 #endif
 #endif
 
-extern "C"
+EXTERN_C __declspec(dllexport) 
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
 {
   if (dwReason == DLL_PROCESS_ATTACH)
@@ -58,7 +58,7 @@ DEFINE_GUID(CLSID_CCodec,
 STDAPI CreateCoder(const GUID *clsid, const GUID *iid, void **outObject);
 STDAPI CreateArchiver(const GUID *classID, const GUID *iid, void **outObject);
 
-STDAPI CreateObject(const GUID *clsid, const GUID *iid, void **outObject)
+EXTERN_C __declspec(dllexport) HRESULT WINAPI CreateObject(const GUID *clsid, const GUID *iid, void **outObject)
 {
   // COM_TRY_BEGIN
   *outObject = 0;
@@ -73,7 +73,7 @@ STDAPI CreateObject(const GUID *clsid, const GUID *iid, void **outObject)
   // COM_TRY_END
 }
 
-STDAPI SetLargePageMode()
+EXTERN_C __declspec(dllexport) HRESULT WINAPI SetLargePageMode()
 {
   #if defined(_WIN32) && defined(_7ZIP_LARGE_PAGES)
   SetLargePageSize();

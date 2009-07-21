@@ -1,3 +1,4 @@
+CPP = icl
 !IFDEF CPU
 !IFNDEF NO_BUFFEROVERFLOWU
 LIBS = $(LIBS) bufferoverflowU.lib
@@ -37,8 +38,8 @@ CFLAGS = $(CFLAGS) -W4 -GS- -Zc:forScope
 CFLAGS = $(CFLAGS) -W3
 !ENDIF
 
-CFLAGS_O1 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -GS
-CFLAGS_O2 = $(CFLAGS) -Ox -Oi -Ot -GT -GF 
+CFLAGS_O1 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Og -Qipo -Ob2 -GS
+CFLAGS_O2 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Qipo -Ob2 -Og 
 
 LFLAGS = $(LFLAGS) -nologo -OPT:NOWIN98 -OPT:REF -OPT:ICF
 
@@ -46,7 +47,7 @@ LFLAGS = $(LFLAGS) -nologo -OPT:NOWIN98 -OPT:REF -OPT:ICF
 LFLAGS = $(LFLAGS) -DLL -DEF:$(DEF_FILE)
 !ENDIF
 
-PROGDIR = E:\MSVC\UnRarIt\7z\bin\$O\$(PROJ)
+PROGDIR = E:\MSVC\UnRarIt\7zicc\bin\$O\$(PROJ)
 PROGPATH = $(PROGDIR)\$(PROG)
 
 COMPL_O1   = $(CPP) $(CFLAGS_O1) $**
@@ -66,7 +67,7 @@ $(PROGDIR):
 	if not exist "$(PROGDIR)" mkdir "$(PROGDIR)"
 
 $(PROGPATH): $O  $(PROGDIR) $(OBJS) $(DEF_FILE) 
-	link $(LFLAGS) -out:$(PROGPATH) $(OBJS) $(LIBS) /DEBUG /PDB:$(PROGDIR)\$(*B).pdb /MAP:$(PROGDIR)\$(*B).map /MAPINFO:EXPORTS ../../../../crt/$(CRT)/libcmt.lib ../../../../crt/$(CRT)/libcpmt.lib /NODEFAULTLIB:libc.lib /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcpmt.lib
+	xilink $(LFLAGS) -out:$(PROGPATH) $(OBJS) $(LIBS) /DEBUG /PDB:$(PROGDIR)\$(*B).pdb /MAP:$(PROGDIR)\$(*B).map /MAPINFO:EXPORTS ../../../../crt/$(CRT)/libcmt.lib ../../../../crt/$(CRT)/libcpmt.lib /NODEFAULTLIB:libc.lib /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcpmt.lib
 $O\resource.res: $(*B).rc
 	rc -fo$@ $**
 $O\StdAfx.obj: $(*B).cpp

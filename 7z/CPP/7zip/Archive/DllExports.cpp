@@ -24,8 +24,8 @@ static bool IsItWindowsNT()
 }
 #endif
 
-extern "C"
-BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
+EXTERN_C __declspec(dllexport) 
+BOOL WINAPI __declspec(dllexport) DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
 {
   if (dwReason == DLL_PROCESS_ATTACH)
   {
@@ -40,14 +40,14 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
 DEFINE_GUID(CLSID_CArchiveHandler,
 0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x10, 0x00, 0x00, 0x00);
 
-STDAPI CreateArchiver(const GUID *classID, const GUID *iid, void **outObject);
+STDAPI __declspec(dllexport) CreateArchiver(const GUID *classID, const GUID *iid, void **outObject);
 
-STDAPI CreateObject(const GUID *clsid, const GUID *iid, void **outObject)
+EXTERN_C __declspec(dllexport) HRESULT WINAPI CreateObject(const GUID *clsid, const GUID *iid, void **outObject)
 {
   return CreateArchiver(clsid, iid, outObject);
 }
 
-STDAPI SetLargePageMode()
+EXTERN_C __declspec(dllexport) HRESULT WINAPI SetLargePageMode()
 {
   #if defined(_WIN32) && defined(_7ZIP_LARGE_PAGES)
   SetLargePageSize();

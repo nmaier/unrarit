@@ -113,7 +113,7 @@ STDAPI CreateCoder(const GUID *clsid, const GUID *iid, void **outObject)
   return CreateCoder2(encode, codecIndex, iid, outObject);
 }
 
-STDAPI GetMethodProperty(UInt32 codecIndex, PROPID propID, PROPVARIANT *value)
+EXTERN_C __declspec(dllexport) HRESULT WINAPI GetMethodProperty(UInt32 codecIndex, PROPID propID, PROPVARIANT *value)
 {
   ::VariantClear((VARIANTARG *)value);
   const CCodecInfo &codec = *g_Codecs[codecIndex];
@@ -150,7 +150,7 @@ STDAPI GetMethodProperty(UInt32 codecIndex, PROPID propID, PROPVARIANT *value)
   return S_OK;
 }
 
-STDAPI GetNumberOfMethods(UINT32 *numCodecs)
+EXTERN_C __declspec(dllexport) HRESULT WINAPI GetNumberOfMethods(UINT32 *numCodecs)
 {
   *numCodecs = g_NumCodecs;
   return S_OK;

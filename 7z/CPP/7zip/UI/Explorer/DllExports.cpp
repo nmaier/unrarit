@@ -13,7 +13,7 @@
 #include <initguid.h>
 #include <windows.h>
 #include <ShlGuid.h>
-#include <OleCtl.h>
+//#include <OleCtl.h>
 
 #include "Common/ComTry.h"
 #include "Common/StringConvert.h"
@@ -94,7 +94,7 @@ static bool IsItWindowsNT()
   return (versionInfo.dwPlatformId == VER_PLATFORM_WIN32_NT);
 }
 
-extern "C"
+extern "C" __declspec(dllexport)
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID)
 {
   // setlocale(LC_COLLATE, ".ACP");
@@ -119,13 +119,15 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID)
 /////////////////////////////////////////////////////////////////////////////
 // Used to determine whether the DLL can be unloaded by OLE
 
-STDAPI DllCanUnloadNow(void)
+extern "C" __declspec(dllexport)
+HRESULT WINAPI DllCanUnloadNow(void)
 {
   // ODS("In DLLCanUnloadNow\r\n");
   return (g_DllRefCount == 0 ? S_OK : S_FALSE);
 }
 
-STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
+extern "C" __declspec(dllexport)
+HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 {
   // ODS("In DllGetClassObject\r\n");
   *ppv = NULL;
@@ -213,7 +215,8 @@ static BOOL RegisterServer(CLSID clsid, LPCWSTR title)
   return TRUE;
 }
 
-STDAPI DllRegisterServer(void)
+extern "C" __declspec(dllexport)
+HRESULT WINAPI DllRegisterServer(void)
 {
   return RegisterServer(CLSID_CZipContextMenu, kShellExtName) ?  S_OK: SELFREG_E_CLASS;
 }
@@ -243,12 +246,15 @@ static BOOL UnregisterServer(CLSID clsid)
   return TRUE;
 }
 
-STDAPI DllUnregisterServer(void)
+extern "C" __declspec(dllexport)
+HRESULT WINAPI DllUnregisterServer(void)
 {
   return UnregisterServer(CLSID_CZipContextMenu) ? S_OK: SELFREG_E_CLASS;
 }
 
-STDAPI CreateObject(
+
+extern "C" __declspec(dllexport)
+HRESULT WINAPI CreateObject(
     const GUID *classID,
     const GUID *interfaceID,
     void **outObject)
@@ -270,7 +276,8 @@ STDAPI CreateObject(
   COM_TRY_END
 }
 
-STDAPI GetPluginProperty(PROPID propID, PROPVARIANT *value)
+extern "C" __declspec(dllexport)
+HRESULT WINAPI GetPluginProperty(PROPID propID, PROPVARIANT *value)
 {
   ::VariantClear((tagVARIANT *)value);
   switch(propID)

@@ -456,7 +456,7 @@ public:
     {
       Restore();
     }
-    CDisableTimerProcessing& operator=(const CDisableTimerProcessing &) {; }
+    CDisableTimerProcessing& operator=(const CDisableTimerProcessing &) { return *this; }
   };
 
   // bool _passwordIsDefined;

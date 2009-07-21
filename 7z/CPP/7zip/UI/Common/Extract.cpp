@@ -142,7 +142,7 @@ HRESULT DecompressArchives(
       {
         UString s = archivePath.Mid(pos + 1);
         int index = codecs->FindFormatForExtension(s);
-        if (index >= 0 && s == L"001")
+        if (index >= 0 && (s == L"000" || s == L"001"))
         {
           s = archivePath.Left(pos);
           pos = s.ReverseFind(L'.');
