@@ -631,13 +631,13 @@ namespace UnRarIt
                     task.File.Extract();
                 }
             }
-            catch (RarException ex)
+            catch (ArchiveException ex)
             {
-                task.Result = ex.Result.ToString();
+                task.Result = ex.Message;
             }
             catch (Exception ex)
             {
-                task.Result = ex.Message;
+                task.Result = "Unexpected: " + ex.Message;
             }
             task.Signal.Set();
         }

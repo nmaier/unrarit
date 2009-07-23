@@ -49,7 +49,7 @@ namespace UnRarIt.Archive.Rar
         NOTIFY = 1
     }
 
-    public class RarException : Exception
+    public class RarException : ArchiveException
     {
         RarStatus result;
         public RarStatus Result

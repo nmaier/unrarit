@@ -228,7 +228,7 @@ namespace UnRarIt.Archive.SevenZip
                 }
                 catch (IndexOutOfRangeException)
                 {
-                    break;
+                    throw new ArchiveException("Password missing");
                 }
             }
         }

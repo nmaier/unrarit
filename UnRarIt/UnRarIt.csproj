@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Archive\ArchiveException.cs" />
     <Compile Include="Archive\SevenZip\Archive.cs" />
     <Compile Include="Archive\SevenZip\Com.cs" />
     <Compile Include="Archive\SevenZip\Item.cs" />

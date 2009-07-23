@@ -41,13 +41,20 @@ CFLAGS = $(CFLAGS) -W3
 CFLAGS_O1 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Og -Qipo -Ob2 -GS
 CFLAGS_O2 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Qipo -Ob2 -Og 
 
+!IF "$(CPU)" != "IA64"
+!IF "$(CPU)" != "AMD64"
+CFLAGS_O1 = $(CFLAGS_O1) -arch:IA32
+CFLAGS_O2 = $(CFLAGS_O2) -arch:IA32
+!ENDIF
+!ENDIF
+
 LFLAGS = $(LFLAGS) -nologo -OPT:NOWIN98 -OPT:REF -OPT:ICF
 
 !IFDEF DEF_FILE
 LFLAGS = $(LFLAGS) -DLL -DEF:$(DEF_FILE)
 !ENDIF
 
-PROGDIR = E:\MSVC\UnRarIt\7zicc\bin\$O\$(PROJ)
+PROGDIR = E:\MSVC\UnRarIt\7z\bin\$O\$(PROJ)
 PROGPATH = $(PROGDIR)\$(PROG)
 
 COMPL_O1   = $(CPP) $(CFLAGS_O1) $**
