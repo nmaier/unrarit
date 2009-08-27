@@ -1,4 +1,5 @@
-CPP = icl
+LIBS = $(LIBS) oleaut32.lib ole32.lib
+
 !IFDEF CPU
 !IFNDEF NO_BUFFEROVERFLOWU
 LIBS = $(LIBS) bufferoverflowU.lib
@@ -25,6 +26,19 @@ EXTRA_CFLAGS =
 CRT = AMD64
 !ENDIF
 !ENDIF
+
+
+!IFDEF UNDER_CE
+RFLAGS = $(RFLAGS) -dUNDER_CE
+!IFDEF MY_CONSOLE
+LFLAGS = $(LFLAGS) /ENTRY:mainACRTStartup
+!ENDIF
+!ELSE
+LFLAGS = $(LFLAGS) -OPT:NOWIN98
+CFLAGS = $(CFLAGS) -Gr
+LIBS = $(LIBS) user32.lib advapi32.lib shell32.lib
+!ENDIF
+
 
 COMPL_ASM = $(MY_ML) -c -Fo$O/ $**
 
@@ -57,10 +71,10 @@ LFLAGS = $(LFLAGS) -DLL -DEF:$(DEF_FILE)
 PROGDIR = E:\MSVC\UnRarIt\7z\bin\$O\$(PROJ)
 PROGPATH = $(PROGDIR)\$(PROG)
 
-COMPL_O1   = $(CPP) $(CFLAGS_O1) $**
-COMPL_O2   = $(CPP) $(CFLAGS_O2) $**
-COMPL_PCH  = $(CPP) $(CFLAGS_O1) -Yc"StdAfx.h" -Fp$O/a.pch $**
-COMPL      = $(CPP) $(CFLAGS_O1) -Yu"StdAfx.h" -Fp$O/a.pch $**
+COMPL_O1   = $(CC) $(CFLAGS_O1) $**
+COMPL_O2   = $(CC) $(CFLAGS_O2) $**
+COMPL_PCH  = $(CC) $(CFLAGS_O1) -Yc"StdAfx.h" -Fp$O/a.pch $**
+COMPL      = $(CC) $(CFLAGS_O1) -Yu"StdAfx.h" -Fp$O/a.pch $**
 
 all: $(PROGPATH)
 
@@ -76,6 +90,6 @@ $(PROGDIR):
 $(PROGPATH): $O  $(PROGDIR) $(OBJS) $(DEF_FILE) 
 	xilink $(LFLAGS) -out:$(PROGPATH) $(OBJS) $(LIBS) /DEBUG /PDB:$(PROGDIR)\$(*B).pdb /MAP:$(PROGDIR)\$(*B).map /MAPINFO:EXPORTS ../../../../crt/$(CRT)/libcmt.lib ../../../../crt/$(CRT)/libcpmt.lib /NODEFAULTLIB:libc.lib /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcpmt.lib
 $O\resource.res: $(*B).rc
-	rc -fo$@ $**
+	rc $(RFLAGS) -fo$@ $**
 $O\StdAfx.obj: $(*B).cpp
 	$(COMPL_PCH)

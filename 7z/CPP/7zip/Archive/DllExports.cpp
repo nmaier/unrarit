@@ -5,6 +5,8 @@
 #include "../../Common/MyInitGuid.h"
 #include "../../Common/ComTry.h"
 #include "../../Common/Types.h"
+
+#include "../../Windows/NtCheck.h"
 #include "../../Windows/PropVariant.h"
 
 #include "IArchive.h"
@@ -12,27 +14,16 @@
 #include "../IPassword.h"
 
 HINSTANCE g_hInstance;
-#ifndef _UNICODE
-bool g_IsNT = false;
-static bool IsItWindowsNT()
-{
-  OSVERSIONINFO versionInfo;
-  versionInfo.dwOSVersionInfoSize = sizeof(versionInfo);
-  if (!::GetVersionEx(&versionInfo))
-    return false;
-  return (versionInfo.dwPlatformId == VER_PLATFORM_WIN32_NT);
-}
-#endif
 
-EXTERN_C __declspec(dllexport) 
-BOOL WINAPI __declspec(dllexport) DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
+#define NT_CHECK_FAIL_ACTION return FALSE;
+
+extern "C" __declspec(dllexport)
+BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
 {
   if (dwReason == DLL_PROCESS_ATTACH)
   {
     g_hInstance = hInstance;
-    #ifndef _UNICODE
-    g_IsNT = IsItWindowsNT();
-    #endif
+    NT_CHECK;
   }
   return TRUE;
 }

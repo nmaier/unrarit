@@ -1,21 +1,21 @@
-// Encode.cpp
+// 7zEncode.cpp
 
 #include "StdAfx.h"
+
+#include "../../Common/CreateCoder.h"
+#include "../../Common/FilterCoder.h"
+#include "../../Common/LimitedStreams.h"
+#include "../../Common/InOutTempBuffer.h"
+#include "../../Common/ProgressUtils.h"
+#include "../../Common/StreamObjects.h"
 
 #include "7zEncode.h"
 #include "7zSpecStream.h"
 
-#include "../../IPassword.h"
-#include "../../Common/ProgressUtils.h"
-#include "../../Common/LimitedStreams.h"
-#include "../../Common/InOutTempBuffer.h"
-#include "../../Common/StreamObjects.h"
-#include "../../Common/CreateCoder.h"
-#include "../../Common/FilterCoder.h"
-
-static const UInt64 k_AES = 0x06F10701;
-static const UInt64 k_BCJ  = 0x03030103;
+static const UInt64 k_Delta = 0x03;
+static const UInt64 k_BCJ = 0x03030103;
 static const UInt64 k_BCJ2 = 0x0303011B;
+static const UInt64 k_AES = 0x06F10701;
 
 namespace NArchive {
 namespace N7z {
@@ -164,8 +164,7 @@ HRESULT CEncoder::Encode(
   }
   for (i = 1; i < _bindInfo.OutStreams.Size(); i++)
   {
-    CSequentialOutTempBufferImp *tempBufferSpec =
-        new CSequentialOutTempBufferImp;
+    CSequentialOutTempBufferImp *tempBufferSpec = new CSequentialOutTempBufferImp;
     CMyComPtr<ISequentialOutStream> tempBuffer = tempBufferSpec;
     tempBufferSpec->Init(&inOutTempBuffers[i - 1]);
     tempBuffers.Add(tempBuffer);
@@ -240,10 +239,10 @@ HRESULT CEncoder::Encode(
 
   UInt32 progressIndex = mainCoderIndex;
 
-  for (i = 0; i < _codersInfo.Size(); i++)
+  for (i = 0; i + 1 < _codersInfo.Size(); i++)
   {
-    const CCoderInfo &e = _codersInfo[i];
-    if ((e.MethodID == k_BCJ || e.MethodID == k_BCJ2) && i + 1 < _codersInfo.Size())
+    UInt64 m = _codersInfo[i].MethodID;
+    if (m == k_Delta || m == k_BCJ || m == k_BCJ2)
       progressIndex = i + 1;
   }
 
@@ -260,9 +259,7 @@ HRESULT CEncoder::Encode(
   for (i = 1; i < _bindInfo.OutStreams.Size(); i++)
   {
     CInOutTempBuffer &inOutTempBuffer = inOutTempBuffers[i - 1];
-    inOutTempBuffer.FlushWrite();
-    inOutTempBuffer.InitReading();
-    inOutTempBuffer.WriteToStream(outStream);
+    RINOK(inOutTempBuffer.WriteToStream(outStream));
     packSizes.Add(inOutTempBuffer.GetDataSize());
   }
   

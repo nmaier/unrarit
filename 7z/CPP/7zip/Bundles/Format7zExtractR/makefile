@@ -1,7 +1,5 @@
-PROH = Format7zExtractR
 PROG = 7zxr.dll
 DEF_FILE = ../../Archive/Archive2.def
-LIBS = $(LIBS) user32.lib oleaut32.lib
 CFLAGS = $(CFLAGS) -I ../../../ \
   -DEXTRACT_ONLY \
   -DCOMPRESS_MT \
@@ -18,17 +16,14 @@ COMMON_OBJS = \
   $O\Wildcard.obj \
 
 WIN_OBJS = \
-  $O\FileDir.obj \
-  $O\FileFind.obj \
-  $O\FileIO.obj \
   $O\PropVariant.obj \
   $O\Synchronization.obj \
   $O\System.obj \
 
 7ZIP_COMMON_OBJS = \
   $O\CreateCoder.obj \
+  $O\CWrappers.obj \
   $O\InBuffer.obj \
-  $O\InOutTempBuffer.obj \
   $O\FilterCoder.obj \
   $O\LimitedStreams.obj \
   $O\LockedStream.obj \
@@ -77,9 +72,11 @@ COMPRESS_OBJS = \
   $O\BranchMisc.obj \
   $O\BranchRegister.obj \
   $O\ByteSwap.obj \
-  $O\ByteSwapRegister.obj \
   $O\CopyCoder.obj \
   $O\CopyRegister.obj \
+  $O\DeltaFilter.obj \
+  $O\Lzma2Decoder.obj \
+  $O\Lzma2Register.obj \
   $O\LzmaDecoder.obj \
   $O\LzmaRegister.obj \
 
@@ -89,6 +86,8 @@ C_OBJS = \
   $O\Bra.obj \
   $O\Bra86.obj \
   $O\BraIA64.obj \
+  $O\Delta.obj \
+  $O\Lzma2Dec.obj \
   $O\LzmaDec.obj \
   $O\Threads.obj \
 

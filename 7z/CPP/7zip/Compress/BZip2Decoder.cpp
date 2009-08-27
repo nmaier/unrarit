@@ -2,10 +2,7 @@
 
 #include "StdAfx.h"
 
-extern "C"
-{
 #include "../../../C/Alloc.h"
-}
 
 #include "../../Common/Defs.h"
 
@@ -420,14 +417,18 @@ static UInt32 NO_INLINE DecodeBlock2Rand(const UInt32 *tt, UInt32 blockSize, UIn
   return crc.GetDigest();
 }
 
-#ifdef COMPRESS_BZIP2_MT
 
-CDecoder::CDecoder():
-  m_States(0)
+CDecoder::CDecoder()
 {
+  #ifdef COMPRESS_BZIP2_MT
+  m_States = 0;
   m_NumThreadsPrev = 0;
   NumThreads = 1;
+  #endif;
+  _needInStreamInit = true;
 }
+
+#ifdef COMPRESS_BZIP2_MT
 
 CDecoder::~CDecoder()
 {
@@ -583,12 +584,7 @@ HRESULT CDecoder::DecodeFile(bool &isBZ, ICompressProgressInfo *progress)
     CState &state = m_States[0];
     for (;;)
     {
-      if (progress)
-      {
-        UInt64 packSize = m_InStream.GetProcessedSize();
-        UInt64 unpackSize = m_OutStream.GetProcessedSize();
-        RINOK(progress->SetRatioInfo(&packSize, &unpackSize));
-      }
+      RINOK(SetRatioProgress(m_InStream.GetProcessedSize()));
       bool wasFinished;
       UInt32 crc;
       RINOK(ReadSignatures(wasFinished, crc));
@@ -607,46 +603,64 @@ HRESULT CDecoder::DecodeFile(bool &isBZ, ICompressProgressInfo *progress)
         return S_FALSE;
     }
   }
-  return S_OK;
+  return SetRatioProgress(m_InStream.GetProcessedSize());
 }
 
 HRESULT CDecoder::CodeReal(ISequentialInStream *inStream, ISequentialOutStream *outStream,
-    const UInt64 * /* inSize */, const UInt64 * /* outSize */, ICompressProgressInfo *progress)
+    bool &isBZ, ICompressProgressInfo *progress)
 {
+  isBZ = false;
+  try
+  {
+
   if (!m_InStream.Create(kBufferSize))
     return E_OUTOFMEMORY;
   if (!m_OutStream.Create(kBufferSize))
     return E_OUTOFMEMORY;
 
-  m_InStream.SetStream(inStream);
-  m_InStream.Init();
+  if (inStream)
+    m_InStream.SetStream(inStream);
+
+  CDecoderFlusher flusher(this, inStream != NULL);
+
+  if (_needInStreamInit)
+  {
+    m_InStream.Init();
+    _needInStreamInit = false;
+  }
+  _inStart = m_InStream.GetProcessedSize();
+
+  m_InStream.AlignToByte();
 
   m_OutStream.SetStream(outStream);
   m_OutStream.Init();
 
-  CDecoderFlusher flusher(this);
-
-  bool isBZ;
   RINOK(DecodeFile(isBZ, progress));
-  return isBZ ? S_OK: S_FALSE;
-}
+  flusher.NeedFlush = false;
+  return Flush();
 
-STDMETHODIMP CDecoder::Code(ISequentialInStream *inStream, ISequentialOutStream *outStream,
-    const UInt64 *inSize, const UInt64 *outSize, ICompressProgressInfo *progress)
-{
-  try { return CodeReal(inStream, outStream, inSize, outSize, progress); }
+  }
   catch(const CInBufferException &e)  { return e.ErrorCode; }
   catch(const COutBufferException &e) { return e.ErrorCode; }
   catch(...) { return E_FAIL; }
 }
 
-STDMETHODIMP CDecoder::GetInStreamProcessedSize(UInt64 *value)
+STDMETHODIMP CDecoder::Code(ISequentialInStream *inStream, ISequentialOutStream *outStream,
+    const UInt64 * /* inSize */, const UInt64 * /* outSize */, ICompressProgressInfo *progress)
 {
-  if (value == NULL)
-    return E_INVALIDARG;
-  *value = m_InStream.GetProcessedSize();
-  return S_OK;
+  _needInStreamInit = true;
+  bool isBZ;
+  RINOK(CodeReal(inStream, outStream, isBZ, progress));
+  return isBZ ? S_OK : S_FALSE;
 }
+
+HRESULT CDecoder::CodeResume(ISequentialOutStream *outStream, bool &isBZ, ICompressProgressInfo *progress)
+{
+  return CodeReal(NULL, outStream, isBZ, progress);
+}
+
+STDMETHODIMP CDecoder::SetInStream(ISequentialInStream *inStream) { m_InStream.SetStream(inStream); return S_OK; }
+STDMETHODIMP CDecoder::ReleaseInStream() { m_InStream.ReleaseStream(); return S_OK; }
 
 #ifdef COMPRESS_BZIP2_MT
 
@@ -694,7 +708,7 @@ void CState::ThreadFunc()
       nextBlockIndex = 0;
     Decoder->NextBlockIndex = nextBlockIndex;
     UInt32 crc;
-    UInt64 packSize;
+    UInt64 packSize = 0;
     UInt32 blockSize = 0, origPtr = 0;
     bool randMode = false;
 
@@ -747,15 +761,9 @@ void CState::ThreadFunc()
       if (!needFinish)
       {
         if ((randMode ?
-          DecodeBlock2Rand(Counters + 256, blockSize, origPtr, Decoder->m_OutStream) :
-          DecodeBlock2(Counters + 256, blockSize, origPtr, Decoder->m_OutStream)) == crc)
-        {
-          if (Decoder->Progress)
-          {
-            UInt64 unpackSize = Decoder->m_OutStream.GetProcessedSize();
-            res = Decoder->Progress->SetRatioInfo(&packSize, &unpackSize);
-          }
-        }
+            DecodeBlock2Rand(Counters + 256, blockSize, origPtr, Decoder->m_OutStream) :
+            DecodeBlock2(Counters + 256, blockSize, origPtr, Decoder->m_OutStream)) == crc)
+          res = Decoder->SetRatioProgress(packSize);
         else
           res = S_FALSE;
       }
@@ -787,5 +795,14 @@ STDMETHODIMP CDecoder::SetNumberOfThreads(UInt32 numThreads)
   return S_OK;
 }
 #endif
+
+HRESULT CDecoder::SetRatioProgress(UInt64 packSize)
+{
+  if (!Progress)
+    return S_OK;
+  packSize -= _inStart;
+  UInt64 unpackSize = m_OutStream.GetProcessedSize();
+  return Progress->SetRatioInfo(&packSize, &unpackSize);
+}
 
 }}

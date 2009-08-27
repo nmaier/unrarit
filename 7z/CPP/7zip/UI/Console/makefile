@@ -1,14 +1,16 @@
-PROJ = Console
 PROG = 7z.exe
-LIBS = $(LIBS) user32.lib oleaut32.lib advapi32.lib
+MY_CONSOLE = 1
 CFLAGS = $(CFLAGS) -I ../../../  \
   -DCOMPRESS_MT \
-  -DWIN_LONG_PATH \
   -DEXTERNAL_LZMA \
   -DEXTERNAL_CODECS \
   -DBREAK_HANDLER \
   -DBENCH_MT \
-  -D_7ZIP_LARGE_PAGES \
+
+!IFNDEF UNDER_CE
+CFLAGS = $(CFLAGS) -DWIN_LONG_PATH -D_7ZIP_LARGE_PAGES -DSUPPORT_DEVICE_FILE
+!ENDIF
+
 
 CONSOLE_OBJS = \
   $O\ConsoleClose.obj \
@@ -77,6 +79,9 @@ UI_COMMON_OBJS = \
   $O\UpdateProduce.obj \
   $O\WorkDir.obj \
 
+AR_COMMON_OBJS = \
+  $O\OutStreamWithCRC.obj \
+
 LZMA_BENCH_OBJS = \
   $O\LzmaBench.obj \
   $O\LzmaBenchCon.obj \
@@ -94,6 +99,7 @@ OBJS = \
   $(WIN_OBJS) \
   $(7ZIP_COMMON_OBJS) \
   $(UI_COMMON_OBJS) \
+  $(AR_COMMON_OBJS) \
   $O\CopyCoder.obj \
   $(LZMA_BENCH_OBJS) \
   $(C_OBJS) \
@@ -111,6 +117,8 @@ $(WIN_OBJS): ../../../Windows/$(*B).cpp
 $(7ZIP_COMMON_OBJS): ../../Common/$(*B).cpp
 	$(COMPL)
 $(UI_COMMON_OBJS): ../Common/$(*B).cpp
+	$(COMPL)
+$(AR_COMMON_OBJS): ../../Archive/Common/$(*B).cpp
 	$(COMPL)
 $O\CopyCoder.obj: ../../Compress/$(*B).cpp
 	$(COMPL)

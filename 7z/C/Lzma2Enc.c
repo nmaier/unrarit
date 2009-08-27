@@ -181,7 +181,7 @@ static SRes Progress(ICompressProgress *p, UInt64 inSize, UInt64 outSize)
 
 /* ---------- Lzma2 ---------- */
 
-extern struct _CLzma2Enc;
+/*extern struct _CLzma2Enc;*/
 
 typedef struct _CLzma2Enc
 {

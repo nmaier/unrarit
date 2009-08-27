@@ -1,11 +1,8 @@
-PROJ = 7z
 PROG = 7z.dll
 DEF_FILE = ../Archive.def
 CFLAGS = $(CFLAGS) -I ../../../  \
   -DCOMPRESS_MT \
   -DEXTERNAL_CODECS \
-
-LIBS = $(LIBS) oleaut32.lib user32.lib
 
 AR_OBJS = \
   $O\ArchiveExports.obj \
@@ -105,7 +102,7 @@ $(7ZIP_COMMON_OBJS): ../../Common/$(*B).cpp
 	$(COMPL)
 $(AR_COMMON_OBJS): ../Common/$(*B).cpp
 	$(COMPL)
-$O\CopyCoder.obj: ../../Compress/Copy/$(*B).cpp
+$O\CopyCoder.obj: ../../Compress/$(*B).cpp
 	$(COMPL)
 $(C_OBJS): ../../../../C/$(*B).c
 	$(COMPL_O2)

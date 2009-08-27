@@ -2,15 +2,13 @@
 
 #include "StdAfx.h"
 
+#include "../../../../C/7zCrc.h"
+
 #include "../../../Common/AutoPtr.h"
+
 #include "../../Common/StreamObjects.h"
 
 #include "7zOut.h"
-
-extern "C"
-{
-#include "../../../../C/7zCrc.h"
-}
 
 static HRESULT WriteBytes(ISequentialOutStream *stream, const void *data, size_t size)
 {
@@ -141,7 +139,7 @@ void COutArchive::Close()
   Stream.Release();
 }
 
-HRESULT COutArchive::SkeepPrefixArchiveHeader()
+HRESULT COutArchive::SkipPrefixArchiveHeader()
 {
   #ifdef _7Z_VOL
   if (_endMarker)
@@ -543,31 +541,21 @@ void COutArchive::WriteUInt64DefVector(const CUInt64DefVector &v, Byte type)
 
 HRESULT COutArchive::EncodeStream(
     DECL_EXTERNAL_CODECS_LOC_VARS
-    CEncoder &encoder, const Byte *data, size_t dataSize,
+    CEncoder &encoder, const CByteBuffer &data,
     CRecordVector<UInt64> &packSizes, CObjectVector<CFolder> &folders)
 {
-  CSequentialInStreamImp *streamSpec = new CSequentialInStreamImp;
+  CBufInStream *streamSpec = new CBufInStream;
   CMyComPtr<ISequentialInStream> stream = streamSpec;
-  streamSpec->Init(data, dataSize);
+  streamSpec->Init(data, data.GetCapacity());
   CFolder folderItem;
   folderItem.UnpackCRCDefined = true;
-  folderItem.UnpackCRC = CrcCalc(data, dataSize);
-  UInt64 dataSize64 = dataSize;
+  folderItem.UnpackCRC = CrcCalc(data, data.GetCapacity());
+  UInt64 dataSize64 = data.GetCapacity();
   RINOK(encoder.Encode(
       EXTERNAL_CODECS_LOC_VARS
       stream, NULL, &dataSize64, folderItem, SeqStream, packSizes, NULL))
   folders.Add(folderItem);
   return S_OK;
-}
-
-HRESULT COutArchive::EncodeStream(
-    DECL_EXTERNAL_CODECS_LOC_VARS
-    CEncoder &encoder, const CByteBuffer &data,
-    CRecordVector<UInt64> &packSizes, CObjectVector<CFolder> &folders)
-{
-  return EncodeStream(
-      EXTERNAL_CODECS_LOC_VARS
-      encoder, data, data.GetCapacity(), packSizes, folders);
 }
 
 void COutArchive::WriteHeader(
@@ -806,8 +794,8 @@ HRESULT COutArchive::WriteDatabase(
       CObjectVector<CFolder> folders;
       RINOK(EncodeStream(
           EXTERNAL_CODECS_LOC_VARS
-          encoder, (const Byte *)buf,
-          _countSize, packSizes, folders));
+          encoder, buf,
+          packSizes, folders));
 
       _writeToStream = true;
       

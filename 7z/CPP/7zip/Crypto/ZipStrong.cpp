@@ -2,15 +2,12 @@
 
 #include "StdAfx.h"
 
-extern "C"
-{
 #include "../../../C/7zCrc.h"
 #include "../../../C/CpuArch.h"
-}
 
 #include "../Common/StreamUtils.h"
 
-#include "MyAES.h"
+#include "MyAes.h"
 #include "Sha1.h"
 #include "ZipStrong.h"
 

@@ -3,21 +3,24 @@
 #include "StdAfx.h"
 
 #include "../../Common/ComTry.h"
-#include "../../Common/Types.h"
+
 #include "../../Windows/PropVariant.h"
+
 #include "../Common/RegisterArc.h"
 
-#include "IArchive.h"
-#include "../ICoder.h"
-#include "../IPassword.h"
-
-static const unsigned int kNumArcsMax = 32;
+static const unsigned int kNumArcsMax = 48;
 static unsigned int g_NumArcs = 0;
+static unsigned int g_DefaultArcIndex = 0;
 static const CArcInfo *g_Arcs[kNumArcsMax];
 void RegisterArc(const CArcInfo *arcInfo)
 {
   if (g_NumArcs < kNumArcsMax)
+  {
+    const wchar_t *p = arcInfo->Name;
+    if (p[0] == '7' && p[1] == 'z' && p[2] == 0)
+      g_DefaultArcIndex = g_NumArcs;
     g_Arcs[g_NumArcs++] = arcInfo;
+  }
 }
 
 DEFINE_GUID(CLSID_CArchiveHandler,
@@ -120,7 +123,7 @@ EXTERN_C __declspec(dllexport) HRESULT WINAPI GetHandlerProperty2(UInt32 formatI
 
 EXTERN_C __declspec(dllexport) HRESULT WINAPI GetHandlerProperty(PROPID propID, PROPVARIANT *value)
 {
-  return GetHandlerProperty2(0, propID, value);
+  return GetHandlerProperty2(g_DefaultArcIndex, propID, value);
 }
 
 EXTERN_C __declspec(dllexport) HRESULT WINAPI GetNumberOfFormats(UINT32 *numFormats)

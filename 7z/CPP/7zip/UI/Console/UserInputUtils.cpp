@@ -23,13 +23,18 @@ static const char *kHelpQuestionMessage =
 NUserAnswerMode::EEnum ScanUserYesNoAllQuit(CStdOutStream *outStream)
 {
   (*outStream) << kFirstQuestionMessage;
-  for(;;)
+  for (;;)
   {
     (*outStream) << kHelpQuestionMessage;
     AString scannedString = g_StdIn.ScanStringUntilNewLine();
     scannedString.Trim();
-    if(!scannedString.IsEmpty())
-      switch(::MyCharUpper(scannedString[0]))
+    if (!scannedString.IsEmpty())
+      switch(
+        ::MyCharUpper(
+        #ifdef UNDER_CE
+        (wchar_t)
+        #endif
+        scannedString[0]))
       {
         case kYes:
           return NUserAnswerMode::kYes;
@@ -51,6 +56,5 @@ UString GetPassword(CStdOutStream *outStream)
 {
   (*outStream) << "\nEnter password:";
   outStream->Flush();
-  AString oemPassword = g_StdIn.ScanStringUntilNewLine();
-  return MultiByteToUnicodeString(oemPassword, CP_OEMCP);
+  return g_StdIn.ScanUStringUntilNewLine();
 }

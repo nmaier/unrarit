@@ -4,21 +4,15 @@
 
 #include "resource.h"
 
-#include "Common/StringConvert.h"
-#include "Windows/Defs.h"
-#include "Windows/FileDir.h"
-#include "Windows/FileName.h"
-#include "Windows/DLL.h"
 #include "Windows/Thread.h"
 
-#include "IFolder.h"
-#include "RegistryAssociations.h"
-#include "RegistryPlugins.h"
+#include "../Agent/Agent.h"
 
+#include "LangUtils.h"
 #include "OpenCallback.h"
 #include "PluginLoader.h"
-#include "LangUtils.h"
-#include "../Agent/Agent.h"
+#include "RegistryAssociations.h"
+#include "RegistryPlugins.h"
 
 using namespace NWindows;
 using namespace NRegistryAssociations;
@@ -26,6 +20,7 @@ using namespace NRegistryAssociations;
 struct CThreadArchiveOpen
 {
   UString Path;
+  CMyComPtr<IInStream> InStream;
   CMyComPtr<IFolderManager> FolderManager;
   CMyComPtr<IProgress> OpenCallback;
   COpenArchiveCallback *OpenCallbackSpec;
@@ -35,9 +30,12 @@ struct CThreadArchiveOpen
 
   void Process()
   {
-    OpenCallbackSpec->ProgressDialog.WaitCreating();
-    Result = FolderManager->OpenFolderFile(Path, &Folder, OpenCallback);
-    OpenCallbackSpec->ProgressDialog.MyClose();
+    try
+    {
+      CProgressCloser closer(OpenCallbackSpec->ProgressDialog);
+      Result = FolderManager->OpenFolderFile(InStream, Path, &Folder, OpenCallback);
+    }
+    catch(...) { Result = E_FAIL; }
   }
   
   static THREAD_FUNC_DECL MyThreadFunction(void *param)
@@ -47,16 +45,18 @@ struct CThreadArchiveOpen
   }
 };
 
-static int FindPlugin(const CObjectVector<CPluginInfo> &plugins,
-    const UString &pluginName)
+/*
+static int FindPlugin(const CObjectVector<CPluginInfo> &plugins, const UString &pluginName)
 {
   for (int i = 0; i < plugins.Size(); i++)
     if (plugins[i].Name.CompareNoCase(pluginName) == 0)
       return i;
   return -1;
 }
+*/
 
 HRESULT OpenFileFolderPlugin(
+    IInStream *inStream,
     const UString &path,
     HMODULE *module,
     IFolderFolder **resultFolder,
@@ -66,13 +66,7 @@ HRESULT OpenFileFolderPlugin(
   CObjectVector<CPluginInfo> plugins;
   ReadFileFolderPluginInfoList(plugins);
 
-  UString extension;
-  UString name, pureName, dot;
-
-  if(!NFile::NDirectory::GetOnlyName(path, name))
-    return E_FAIL;
-  NFile::NName::SplitNameToPureNameAndExtension(name, pureName, dot, extension);
-
+  UString extension, name, pureName, dot;
 
   int slashPos = path.ReverseFind(WCHAR_PATH_SEPARATOR);
   UString dirPrefix;
@@ -85,6 +79,9 @@ HRESULT OpenFileFolderPlugin(
   else
     fileName = path;
 
+  NFile::NName::SplitNameToPureNameAndExtension(fileName, pureName, dot, extension);
+
+  /*
   if (!extension.IsEmpty())
   {
     CExtInfo extInfo;
@@ -102,6 +99,7 @@ HRESULT OpenFileFolderPlugin(
       }
     }
   }
+  */
 
   for (int i = 0; i < plugins.Size(); i++)
   {
@@ -122,19 +120,26 @@ HRESULT OpenFileFolderPlugin(
     t.OpenCallbackSpec->PasswordIsDefined = encrypted;
     t.OpenCallbackSpec->Password = password;
     t.OpenCallbackSpec->ParentWindow = parentWindow;
-    t.OpenCallbackSpec->LoadFileInfo(dirPrefix, fileName);
 
+    if (inStream)
+      t.OpenCallbackSpec->SetSubArchiveName(fileName);
+    else
+      t.OpenCallbackSpec->LoadFileInfo(dirPrefix, fileName);
+
+    t.InStream = inStream;
     t.Path = path;
 
     UString progressTitle = LangString(IDS_OPENNING, 0x03020283);
     t.OpenCallbackSpec->ProgressDialog.MainWindow = parentWindow;
     t.OpenCallbackSpec->ProgressDialog.MainTitle = LangString(IDS_APP_TITLE, 0x03000000);
     t.OpenCallbackSpec->ProgressDialog.MainAddTitle = progressTitle + UString(L" ");
+    t.OpenCallbackSpec->ProgressDialog.WaitMode = true;
 
-    NWindows::CThread thread;
-    if (thread.Create(CThreadArchiveOpen::MyThreadFunction, &t) != S_OK)
-      throw 271824;
-    t.OpenCallbackSpec->StartProgressDialog(progressTitle);
+    {
+      NWindows::CThread thread;
+      RINOK(thread.Create(CThreadArchiveOpen::MyThreadFunction, &t));
+      t.OpenCallbackSpec->StartProgressDialog(progressTitle, thread);
+    }
 
     if (t.Result == E_ABORT)
       return t.Result;

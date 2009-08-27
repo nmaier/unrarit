@@ -261,6 +261,14 @@ SOURCE=..\..\Compress\CopyRegister.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\Compress\Lzma2Decoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Compress\Lzma2Register.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\Compress\LzmaDecoder.cpp
 # End Source File
 # Begin Source File
@@ -329,11 +337,11 @@ SOURCE=..\..\UI\FileManager\PasswordDialog.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\UI\FileManager\ProgressDialog.cpp
+SOURCE=..\..\UI\FileManager\ProgressDialog2.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\UI\FileManager\ProgressDialog.h
+SOURCE=..\..\UI\FileManager\ProgressDialog2.h
 # End Source File
 # End Group
 # Begin Group "7zip Common"
@@ -786,6 +794,15 @@ SOURCE=..\..\..\..\C\Bra.h
 
 SOURCE=..\..\..\..\C\Bra86.c
 # SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\C\Lzma2Dec.c
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\C\Lzma2Dec.h
 # End Source File
 # Begin Source File
 

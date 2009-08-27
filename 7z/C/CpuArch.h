@@ -66,8 +66,10 @@ about these properties of platform.
 
 #if defined(LITTLE_ENDIAN_UNALIGN) && defined(_WIN64) && (_MSC_VER >= 1300)
 
+#if !defined(__INTEL_COMPILER) && !defined(__x86_64__) && !defined(_M_X64)
 #pragma intrinsic(_byteswap_ulong)
 #pragma intrinsic(_byteswap_uint64)
+#endif
 #define GetBe32(p) _byteswap_ulong(*(const UInt32 *)(const Byte *)(p))
 #define GetBe64(p) _byteswap_uint64(*(const UInt64 *)(const Byte *)(p))
 

@@ -1,6 +1,4 @@
-PROJ = SFXSetup
 PROG = 7zS.sfx
-LIBS = $(LIBS) user32.lib oleaut32.lib shell32.lib ole32.lib comctl32.lib
 CFLAGS = $(CFLAGS) -I ../../../ \
   -DNO_REGISTRY \
   -DEXTRACT_ONLY \

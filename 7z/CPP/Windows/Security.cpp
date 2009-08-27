@@ -121,10 +121,7 @@ bool AddLockMemoryPrivilege()
       != 0)
     return false;
   LSA_UNICODE_STRING userRights;
-  wchar_t s[128];
-  if (wcscpy_s<128>(s, MY__SE_LOCK_MEMORY_NAME) != 0) {
-    return false;
-  }
+  wchar_t s[128] = MY__SE_LOCK_MEMORY_NAME;
   SetLsaString(s, &userRights);
   WCHAR userName[256 + 2];
   DWORD size = 256;

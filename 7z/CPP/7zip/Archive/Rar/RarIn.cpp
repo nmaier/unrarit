@@ -2,19 +2,17 @@
 
 #include "StdAfx.h"
 
+#include "../../../../C/7zCrc.h"
+
 #include "Common/StringConvert.h"
 #include "Common/UTFConvert.h"
 
-#include "RarIn.h"
 #include "../../Common/LimitedStreams.h"
 #include "../../Common/StreamUtils.h"
 
 #include "../Common/FindSignature.h"
 
-extern "C"
-{
-  #include "../../../../C/7zCrc.h"
-}
+#include "RarIn.h"
 
 namespace NArchive {
 namespace NRar {
@@ -374,8 +372,9 @@ void CInArchive::AddToSeekValue(UInt64 addValue)
   m_Position += addValue;
 }
 
-HRESULT CInArchive::GetNextItem(CItemEx &item, ICryptoGetTextPassword *getTextPassword)
+HRESULT CInArchive::GetNextItem(CItemEx &item, ICryptoGetTextPassword *getTextPassword, bool &decryptionError)
 {
+  decryptionError = false;
   if (m_SeekOnArchiveComment)
     SkipArchiveComment();
   for (;;)
@@ -471,8 +470,11 @@ HRESULT CInArchive::GetNextItem(CItemEx &item, ICryptoGetTextPassword *getTextPa
       AddToSeekValue(item.PackSize);  // m_Position points to next header;
       return S_OK;
     }
-    if (m_CryptoMode && m_BlockHeader.HeadSize > (1 << 12))
-      return E_FAIL; // it's for bad passwords
+    if (m_CryptoMode && m_BlockHeader.HeadSize > (1 << 10))
+    {
+      decryptionError = true;
+      return S_FALSE;
+    }
     if ((m_BlockHeader.Flags & NHeader::NBlock::kLongBlock) != 0)
     {
       m_FileHeaderData.EnsureCapacity(7 + 4);
@@ -482,7 +484,10 @@ HRESULT CInArchive::GetNextItem(CItemEx &item, ICryptoGetTextPassword *getTextPa
       UInt32 dataSize = ReadUInt32();
       AddToSeekValue(dataSize);
       if (m_CryptoMode && dataSize > (1 << 27))
-        return E_FAIL; // it's for bad passwords
+      {
+        decryptionError = true;
+        return S_FALSE;
+      }
       m_CryptoPos = m_BlockHeader.HeadSize;
     }
     else
