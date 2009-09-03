@@ -1,4 +1,4 @@
-!IFNDEF CPU
+!IF "$(CPU)" == "x86" || "$(CPU)" == "x86-dbg"
 $O\7zCrcT8U.obj: ../../../../Asm/x86/$(*B).asm
 	$(COMPL_ASM)
 $O\7zCrcT8.obj: ../../../../C/$(*B).c

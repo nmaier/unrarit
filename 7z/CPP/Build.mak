@@ -52,8 +52,13 @@ CFLAGS = $(CFLAGS) -W4 -GS- -Zc:forScope
 CFLAGS = $(CFLAGS) -W3
 !ENDIF
 
+!IF "$(CPU)" == "x86-dbg"
+CFLAGS_O1 = $(CFLAGS) -Od
+CFLAGS_O2 = $(CFLAGS) -Od
+!ELSE
 CFLAGS_O1 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Og -Qipo -Ob2 -GS
 CFLAGS_O2 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Qipo -Ob2 -Og 
+!ENDIF
 
 !IF "$(CPU)" != "IA64"
 !IF "$(CPU)" != "AMD64"
