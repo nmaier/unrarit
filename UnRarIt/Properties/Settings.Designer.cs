@@ -82,5 +82,17 @@ namespace UnRarIt.Properties {
                 this["Dest"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Nesting {
+            get {
+                return ((bool)(this["Nesting"]));
+            }
+            set {
+                this["Nesting"] = value;
+            }
+        }
     }
 }

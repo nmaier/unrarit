@@ -50,6 +50,7 @@ namespace UnRarIt
                     break;
             }
             OwnDirectoryLimit.Value = Config.OwnDirectoryLimit;
+            Nesting.Checked = Config.Nesting;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -102,6 +103,7 @@ namespace UnRarIt
             {
                 Config.EmptyListWhenDone = 2;
             }
+            Config.Nesting = Nesting.Checked;
 
             Config.Save();
             Close();

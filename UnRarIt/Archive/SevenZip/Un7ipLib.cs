@@ -157,35 +157,42 @@ namespace UnRarIt.Archive.SevenZip
 
         public void Extract()
         {
-            using (SevenZipArchive ar = new SevenZipArchive(archiveFiles[0], this, format))
+            try
             {
-                List<uint> indices = new List<uint>();
-                Dictionary<uint, IArchiveEntry> files = new Dictionary<uint, IArchiveEntry>();
-                uint e = ar.GetNumberOfItems();
-                for (uint i = 0; i < e; ++i)
+                using (SevenZipArchive ar = new SevenZipArchive(archiveFiles[0], this, format))
                 {
-                    string name = ar.GetProperty(i, ItemPropId.Path).GetString();
-                    if (format == FormatSplit)
+                    List<uint> indices = new List<uint>();
+                    Dictionary<uint, IArchiveEntry> files = new Dictionary<uint, IArchiveEntry>();
+                    uint e = ar.GetNumberOfItems();
+                    for (uint i = 0; i < e; ++i)
                     {
-                        name = Path.GetFileName(name);
-                    }
-                    if (!items.ContainsKey(name))
-                    {
-                        continue;
-                    }
+                        string name = ar.GetProperty(i, ItemPropId.Path).GetString();
+                        if (format == FormatSplit)
+                        {
+                            name = Path.GetFileName(name);
+                        }
+                        if (!items.ContainsKey(name))
+                        {
+                            continue;
+                        }
 
-                    IArchiveEntry entry = items[name];
-                    if (entry.Destination == null)
-                    {
-                        continue;
+                        IArchiveEntry entry = items[name];
+                        if (entry.Destination == null)
+                        {
+                            continue;
+                        }
+                        indices.Add(i);
+                        files[i] = entry;
                     }
-                    indices.Add(i);
-                    files[i] = entry;
+                    using (ExtractCallback callback = new ExtractCallback(this, files))
+                    {
+                        ar.Extract(indices.ToArray(), (uint)indices.Count, ExtractMode.Extract, callback);
+                    }
                 }
-                using (ExtractCallback callback = new ExtractCallback(this, files))
-                {
-                    ar.Extract(indices.ToArray(), (uint)indices.Count, ExtractMode.Extract, callback);
-                }
+            }
+            finally
+            {
+                CloseStreams();
             }
         }
 
@@ -196,113 +203,115 @@ namespace UnRarIt.Archive.SevenZip
 
         public void Open(IEnumerator<string> aPasswords)
         {
-            passwords = aPasswords;
-            Dictionary<Guid, bool> formats = new Dictionary<Guid, bool>();
-            formats.Add(format, false);
-            foreach (Guid f in AllFormats)
+            try
             {
-                formats[f] = false;
-            }
-            bool opened = false;
-            foreach (Guid f in formats.Keys)
-            {
-                if (opened)
+                passwords = aPasswords;
+                Dictionary<Guid, bool> formats = new Dictionary<Guid, bool>();
+                formats.Add(format, false);
+                foreach (Guid f in AllFormats)
                 {
-                    break;
+                    formats[f] = false;
                 }
-                for (; !passwordDefined; )
+                bool opened = false;
+                foreach (Guid f in formats.Keys)
                 {
-                    try
+                    if (opened)
                     {
-                        using (SevenZipArchive ar = new SevenZipArchive(archiveFiles[0], this, f))
+                        break;
+                    }
+                    for (; !passwordDefined; )
+                    {
+                        try
                         {
-                            IArchiveEntry minCrypted = null;
-                            uint minIndex = 0;
-                            uint e = ar.GetNumberOfItems();
-                            if (e != 0)
+                            using (SevenZipArchive ar = new SevenZipArchive(archiveFiles[0], this, f))
                             {
-                                format = f;
-                                opened = true;
-                            }
-                            else if (!passwordRequested)
-                            {
-                                break;
-                            }
+                                IArchiveEntry minCrypted = null;
+                                uint minIndex = 0;
+                                uint e = ar.GetNumberOfItems();
+                                if (e != 0)
+                                {
+                                    format = f;
+                                    opened = true;
+                                }
+                                else if (!passwordRequested)
+                                {
+                                    break;
+                                }
 
-                            for (uint i = 0; i < e; ++i)
-                            {
-                                if (ar.GetProperty(i, ItemPropId.IsDir).GetBool())
+                                for (uint i = 0; i < e; ++i)
                                 {
-                                    continue;
-                                }
-                                string name = ar.GetProperty(i, ItemPropId.Path).GetString();
-                                if (format == FormatSplit)
-                                {
-                                    name = Path.GetFileName(name);
-                                }
-                                if (Path.GetExtension(name).ToLower() == ".7z")
-                                {
-
-                                }
-                                ulong size = ar.GetProperty(i, ItemPropId.Size).GetUlong();
-                                ulong packedSize = ar.GetProperty(i, ItemPropId.PackedSize).GetUlong();
-                                if (packedSize == 0)
-                                {
-                                    packedSize = size;
-                                }
-                                bool isCrypted = ar.GetProperty(i, ItemPropId.Encrypted).GetBool();
-                                uint crc = ar.GetProperty(i, ItemPropId.CRC).GetUint();
-                                passwordDefined = true;
-                                IArchiveEntry entry = new SevenZipItemInfo(name, crc, isCrypted, size, packedSize);
-                                items[name] = entry;
-                                if (isCrypted && (minCrypted == null || minCrypted.CompressedSize > packedSize))
-                                {
-                                    minCrypted = entry;
-                                    minIndex = i;
-                                }
-                            }
-                            if (minCrypted != null)
-                            {
-                                passwordDefined = false;
-                                passwords.Reset();
-                                Dictionary<uint, IArchiveEntry> files = new Dictionary<uint, IArchiveEntry>();
-                                files[minIndex] = minCrypted;
-                                for (; !passwordDefined; )
-                                {
-                                    using (ExtractCallback callback = new ExtractCallback(this, files))
+                                    if (ar.GetProperty(i, ItemPropId.IsDir).GetBool())
                                     {
-                                        try
-                                        {
-                                            ar.Extract(new uint[] { minIndex }, 1, ExtractMode.Test, callback);
-                                            passwordDefined = true;
-                                        }
-                                        catch (IOException)
-                                        {
-                                            continue;
-                                        }
+                                        continue;
+                                    }
+                                    string name = ar.GetProperty(i, ItemPropId.Path).GetString();
+                                    if (format == FormatSplit)
+                                    {
+                                        name = Path.GetFileName(name);
+                                    }
+                                    if (Path.GetExtension(name).ToLower() == ".7z")
+                                    {
+
+                                    }
+                                    ulong size = ar.GetProperty(i, ItemPropId.Size).GetUlong();
+                                    ulong packedSize = ar.GetProperty(i, ItemPropId.PackedSize).GetUlong();
+                                    if (packedSize == 0)
+                                    {
+                                        packedSize = size;
+                                    }
+                                    bool isCrypted = ar.GetProperty(i, ItemPropId.Encrypted).GetBool();
+                                    uint crc = ar.GetProperty(i, ItemPropId.CRC).GetUint();
+                                    passwordDefined = true;
+                                    IArchiveEntry entry = new SevenZipItemInfo(name, crc, isCrypted, size, packedSize);
+                                    items[name] = entry;
+                                    if (isCrypted && (minCrypted == null || minCrypted.CompressedSize > packedSize))
+                                    {
+                                        minCrypted = entry;
+                                        minIndex = i;
                                     }
                                 }
+                                if (minCrypted != null)
+                                {
+                                    passwordDefined = false;
+                                    passwords.Reset();
+                                    Dictionary<uint, IArchiveEntry> files = new Dictionary<uint, IArchiveEntry>();
+                                    files[minIndex] = minCrypted;
+                                    for (; !passwordDefined; )
+                                    {
+                                        using (ExtractCallback callback = new ExtractCallback(this, files))
+                                        {
+                                            try
+                                            {
+                                                ar.Extract(new uint[] { minIndex }, 1, ExtractMode.Test, callback);
+                                                passwordDefined = true;
+                                            }
+                                            catch (IOException)
+                                            {
+                                                continue;
+                                            }
+                                        }
+                                    }
 
+                                }
                             }
-                        }
 
-                    }
-                    catch (IndexOutOfRangeException)
-                    {
-                        throw new ArchiveException("Password missing");
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            throw new ArchiveException("Password missing");
+                        }
                     }
                 }
+            }
+            finally
+            {
+                CloseStreams();
             }
         }
 
         public string Password
         {
             get { return password; }
-        }
-
-        public void Dispose()
-        {
-
         }
 
         public IEnumerator<IArchiveEntry> GetEnumerator()
@@ -409,9 +418,12 @@ namespace UnRarIt.Archive.SevenZip
 
         #endregion
 
-        #region IDisposable Members
-
         void IDisposable.Dispose()
+        {
+            CloseStreams();
+        }
+
+        private void CloseStreams()
         {
             foreach (SevenZipFileStream s in fileStreams.Values)
             {
@@ -419,7 +431,5 @@ namespace UnRarIt.Archive.SevenZip
             }
             fileStreams.Clear();
         }
-
-        #endregion
     }
 }

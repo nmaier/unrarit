@@ -46,6 +46,7 @@
             this.RemoveAll = new System.Windows.Forms.RadioButton();
             this.RemoveDone = new System.Windows.Forms.RadioButton();
             this.RemoveNone = new System.Windows.Forms.RadioButton();
+            this.Nesting = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OwnDirectoryLimit)).BeginInit();
@@ -57,7 +58,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(343, 249);
+            this.buttonCancel.Location = new System.Drawing.Point(343, 266);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 0;
@@ -68,7 +69,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(262, 249);
+            this.buttonOK.Location = new System.Drawing.Point(262, 266);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
@@ -249,13 +250,24 @@
             this.RemoveNone.Text = "No items at all";
             this.RemoveNone.UseVisualStyleBackColor = true;
             // 
+            // Nesting
+            // 
+            this.Nesting.AutoSize = true;
+            this.Nesting.Location = new System.Drawing.Point(12, 243);
+            this.Nesting.Name = "Nesting";
+            this.Nesting.Size = new System.Drawing.Size(137, 17);
+            this.Nesting.TabIndex = 6;
+            this.Nesting.Text = "Extract nested archives";
+            this.Nesting.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(430, 284);
+            this.ClientSize = new System.Drawing.Size(430, 301);
+            this.Controls.Add(this.Nesting);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -278,6 +290,7 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -301,5 +314,6 @@
         private System.Windows.Forms.RadioButton RemoveDone;
         private System.Windows.Forms.RadioButton RemoveNone;
         private System.Windows.Forms.RadioButton Rename;
+        private System.Windows.Forms.CheckBox Nesting;
     }
 }

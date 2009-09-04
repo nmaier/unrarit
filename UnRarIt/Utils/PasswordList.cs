@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.IsolatedStorage;
 using System.Text;
+using System.Windows.Forms;
 
-namespace UnRarIt
+namespace UnRarIt.Utils
 {
     internal class PasswordList : IEnumerable<string>, IDisposable
     {
@@ -125,17 +125,31 @@ namespace UnRarIt
         #endregion
 
         List<Password> passwords = new List<Password>();
-        IsolatedStorageFile file;
+        FileInfo file;
         Dictionary<string, Password> used = new Dictionary<string, Password>();
         bool dirty = false;
 
         public PasswordList()
         {
-            file = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
+            file = new FileInfo(Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".unrarit"), "passwords.lst"));
+            if (!file.Directory.Exists)
+            {
+                file.Directory.Create();
+            }
+            Load();
             dirty = false;
+        }
+
+        private void Load()
+        {
+            passwords.Clear();
+            if (!file.Exists)
+            {
+                return;
+            }
             try
             {
-                using (StreamReader r = new StreamReader(new IsolatedStorageFileStream("passwords", FileMode.Open, FileAccess.Read), Encoding.UTF8))
+                using (StreamReader r = new StreamReader(file.FullName, Encoding.UTF8))
                 {
                     AddFromStream(r);
                 }
@@ -144,7 +158,6 @@ namespace UnRarIt
             {
                 // no op
             }
-
         }
 
         public void AddFromFile(string aFile)
@@ -157,7 +170,6 @@ namespace UnRarIt
 
         private void AddFromStream(StreamReader r)
         {
-
             string line;
             uint count, lastUsed;
             while ((line = r.ReadLine()) != null)
@@ -215,6 +227,7 @@ namespace UnRarIt
             {
                 return;
             }
+            Load();
             foreach (Password p in used.Values)
             {
                 int idx = passwords.IndexOf(p);
@@ -228,15 +241,15 @@ namespace UnRarIt
                 }
             }
             passwords.Sort();
-            using (Stream stream = new IsolatedStorageFileStream("passwords", FileMode.OpenOrCreate, FileAccess.Write))
+            using (Stream stream = new FileStream(file.FullName, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 SaveToStream(stream);
             }
             dirty = false;
         }
-        public void SaveToFile(string file)
+        public void SaveToFile(string aFile)
         {
-            using (Stream stream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write))
+            using (Stream stream = new FileStream(aFile, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 SaveToStream(stream);
             }
@@ -272,10 +285,6 @@ namespace UnRarIt
         public void Dispose()
         {
             Save();
-            if (file != null)
-            {
-                file.Dispose();
-            }
         }
 
 

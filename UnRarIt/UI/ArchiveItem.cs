@@ -17,10 +17,18 @@ namespace UnRarIt
         Dictionary<string, FileInfo> parts = new Dictionary<string, FileInfo>();
         FileInfo file;
         Guid format;
+        bool nested = false;
 
-        public ArchiveItem(string aFileName, Guid aFormat)
+        public bool IsNested
+        {
+            get { return nested; }
+        }
+
+        public ArchiveItem(string aFileName, Guid aFormat, bool aNested)
         {
             format = aFormat;
+            nested = aNested;
+
             SubItems.Add(string.Empty);
             SubItems.Add("Ready...");
             file = new FileInfo(aFileName);
@@ -32,7 +40,7 @@ namespace UnRarIt
             ImageKey = file.Extension;
             StateImageIndex = 0;
 
-            Invalidate();
+            Invalidate(); 
         }
 
         internal Guid Format
@@ -98,35 +106,48 @@ namespace UnRarIt
             get { return file; }
         }
 
-        internal void AddPart(string Part)
+        internal bool AddPart(string Part)
         {
             FileInfo pf = new FileInfo(Part);
             if (!pf.Exists)
             {
-                return;
+                return false;
             }
-            parts[pf.FullName.ToLower()] = pf;
-            Invalidate();
+            if (!parts.ContainsKey(pf.FullName.ToLower()))
+            {
+                parts[pf.FullName.ToLower()] = pf;
+                Invalidate();
+                return true;
+            }
+            return false;
         }
 
         internal void ExcuteSuccessAction()
         {
-            switch (Config.SuccessAction)
+            if (IsNested)
             {
-                case 1:
-                    {
-                        Dictionary<string, FileInfo> oldParts = parts;
-                        parts = new Dictionary<string, FileInfo>();
-                        foreach (FileInfo part in oldParts.Values)
+                DeleteFiles();
+                Remove();
+            }
+            else
+            {
+                switch (Config.SuccessAction)
+                {
+                    case 1:
                         {
-                            FileInfo newPart = Rename(part);
-                            parts[newPart.FullName.ToLower()] = newPart;
+                            Dictionary<string, FileInfo> oldParts = parts;
+                            parts = new Dictionary<string, FileInfo>();
+                            foreach (FileInfo part in oldParts.Values)
+                            {
+                                FileInfo newPart = Rename(part);
+                                parts[newPart.FullName.ToLower()] = newPart;
+                            }
                         }
-                    }
-                    break;
-                case 2:
-                    DeleteFiles();
-                    break;
+                        break;
+                    case 2:
+                        DeleteFiles();
+                        break;
+                }
             }
             Invalidate();
         }

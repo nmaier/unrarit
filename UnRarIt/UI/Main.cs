@@ -142,9 +142,13 @@ namespace UnRarIt
             AddFiles(dropped);
 
         }
-
-        private void AddFiles(string[] aFiles)
+        private bool AddFiles(string[] aFiles)
         {
+            return AddFiles(aFiles, false);
+        }
+        private bool AddFiles(string[] aFiles, bool nested)
+        {
+            bool added = false;
             Dictionary<string, ArchiveItem> seen = new Dictionary<string, ArchiveItem>();
 
             Files.BeginUpdate();
@@ -183,22 +187,22 @@ namespace UnRarIt
                     ArchiveItem item;
                     if (ext == ".zip")
                     {
-                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatZip);
+                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatZip, nested);
                         item.Group = Files.Groups["GroupZip"];
                     }
                     else if (ext == ".7z")
                     {
-                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatSevenZip);
+                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatSevenZip, nested);
                         item.Group = Files.Groups["GroupSevenZip"];
                     }
                     else if (ext == ".rar")
                     {
-                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatRar);
+                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatRar, nested);
                         item.Group = Files.Groups["GroupRar"];
                     }
                     else if (ext == ".001")
                     {
-                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatSplit);
+                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatSplit, nested);
                         item.Group = Files.Groups["GroupSplit"];
                     }
                     else
@@ -206,7 +210,7 @@ namespace UnRarIt
                         continue;
                     }
                     seen[info.FullName.ToLower()] = item;
-
+                    added = true;
                     Files.Items.Add(item);
                 }
                 catch (Exception ex)
@@ -220,10 +224,11 @@ namespace UnRarIt
                 {
                     continue;
                 }
-                seen[part.Key].AddPart(part.Value);
+                added = seen[part.Key].AddPart(part.Value) || added;
             }
             Files.EndUpdate();
             AdjustHeaders();
+            return added;
         }
 
         private void Files_DragEnter(object sender, DragEventArgs e)
@@ -278,6 +283,13 @@ namespace UnRarIt
             public string Result = string.Empty;
             public OverwriteAction Action = OverwriteAction.Unspecified;
 
+            private List<string> files = new List<string>();
+
+            public List<string> Files
+            {
+                get { return files; }
+            }
+
             public Task(Main aOwner, ArchiveItem aItem, IArchiveFile aFile)
             {
                 file = aFile;
@@ -290,6 +302,7 @@ namespace UnRarIt
 
             private void OnExtractFile(object sender, ExtractFileEventArgs e)
             {
+                files.Add(e.Item.Destination.FullName);
                 owner.BeginInvoke(
                     new SetStatus(delegate(string status) { Item.SubStatus = status; }),
                     String.Format("Extracting {0}", e.Item.Name)
@@ -311,6 +324,7 @@ namespace UnRarIt
 
             public void Dispose()
             {
+                files.Clear();
                 file.Dispose();
             }
 
@@ -330,134 +344,142 @@ namespace UnRarIt
             UnrarIt.Click -= UnRarIt_Click;
 
             Progress.Visible = true;
-            Progress.Maximum = Files.Items.Count;
-            Progress.Value = 0;
-
-            List<Task> tasks = new List<Task>();
-
-            foreach (ArchiveItem i in Files.Items)
-            {
-                if (aborted)
-                {
-                    break;
-                }
-                if (i.StateImageIndex == 1)
-                {
-                    continue;
-                }
-                if (!File.Exists(i.FileName))
-                {
-                    i.Status = "Error, File not found";
-                    i.StateImageIndex = 2;
-                    continue;
-                }
-
-
-                tasks.Add(new Task(this, i, new SevenZipArchiveFile(i, i.Format)));
-            }
-
-            IEnumerator<Task> taskEnumerator = tasks.GetEnumerator();
-            Dictionary<AutoResetEvent, Task> runningTasks = new Dictionary<AutoResetEvent, Task>();
-
             int threads = Math.Min(Environment.ProcessorCount, 4);
 
-            for (; ; )
+            Progress.Value = 0;
+            Progress.Maximum = 0;
+
+            for (bool rerun = true; rerun && !aborted; )
             {
-                while (!aborted && runningTasks.Count < threads && taskEnumerator.MoveNext())
+                rerun = false;
+
+                List<Task> tasks = new List<Task>();
+
+                foreach (ArchiveItem i in Files.Items)
                 {
-                    Task task = taskEnumerator.Current;
-                    task.Item.StateImageIndex = 3;
-                    task.Item.Status = "Processing...";
-                    Thread thread = new Thread(HandleFile);
-                    thread.Priority = ThreadPriority.BelowNormal;
-                    thread.Start(task);
-                    runningTasks[task.Signal] = task;
-                }
-                if (runningTasks.Count == 0)
-                {
-                    break;
-                }
-                AutoResetEvent[] handles = new List<AutoResetEvent>(runningTasks.Keys).ToArray();
-                int idx = WaitHandle.WaitAny(handles, 100);
-                if (idx != WaitHandle.WaitTimeout)
-                {
-                    AutoResetEvent evt = handles[idx];
-                    Task task = runningTasks[evt];
-                    runningTasks.Remove(evt);
                     if (aborted)
                     {
-                        task.Item.Status = String.Format("Aborted");
-                        task.Item.StateImageIndex = 2;
-
+                        break;
+                    }
+                    if (i.StateImageIndex != 0)
+                    {
                         continue;
                     }
-                    if (string.IsNullOrEmpty(task.Result))
+                    if (!File.Exists(i.FileName))
                     {
-                        if (!string.IsNullOrEmpty(task.File.Password))
-                        {
-                            passwords.SetGood(task.File.Password);
-                        }
-                        try
-                        {
-                            task.Item.ExcuteSuccessAction();
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Failed to rename/delete file:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        task.Item.Checked = true;
-                        task.Item.Status = String.Format("Done, {0} files, {1}{2}",
-                            task.ExtractedFiles,
-                            ToFormatedSize(task.UnpackedSize),
-                            string.IsNullOrEmpty(task.File.Password) ? "" : String.Format(", {0}", task.File.Password)
-                            );
-                        task.Item.StateImageIndex = 1;
-                        AdjustHeaders();
+                        i.Status = "Error, File not found";
+                        i.StateImageIndex = 2;
+                        continue;
                     }
-                    else
-                    {
-                        task.Item.Status = String.Format(
-                            "Error, {0}{1}",
-                            task.Result.ToString(),
-                            string.IsNullOrEmpty(task.File.Password) ? "" : String.Format(", {0}", task.File.Password)
-                            );
-                        task.Item.StateImageIndex = 2;
-                        AdjustHeaders();
-                    }
-                    task.Dispose();
-                    Progress.Increment(1);
+                    tasks.Add(new Task(this, i, new SevenZipArchiveFile(i, i.Format)));
                 }
-                Application.DoEvents();
-            }
+                IEnumerator<Task> taskEnumerator = tasks.GetEnumerator();
+                Dictionary<AutoResetEvent, Task> runningTasks = new Dictionary<AutoResetEvent, Task>();
 
-            if (!aborted)
-            {
-                Files.BeginUpdate();
-                switch (Config.EmptyListWhenDone)
+                Progress.Maximum += tasks.Count;
+
+                for (; ; )
                 {
-                    case 1:
-                        Files.Clear();
+                    while (!aborted && runningTasks.Count < threads && taskEnumerator.MoveNext())
+                    {
+                        Task task = taskEnumerator.Current;
+                        task.Item.StateImageIndex = 3;
+                        task.Item.Status = "Processing...";
+                        Thread thread = new Thread(HandleFile);
+                        thread.Priority = ThreadPriority.BelowNormal;
+                        thread.Start(task);
+                        runningTasks[task.Signal] = task;
+                    }
+                    if (runningTasks.Count == 0)
+                    {
                         break;
-                    case 2:
+                    }
+                    AutoResetEvent[] handles = new List<AutoResetEvent>(runningTasks.Keys).ToArray();
+                    int idx = WaitHandle.WaitAny(handles, 100);
+                    if (idx != WaitHandle.WaitTimeout)
+                    {
+                        AutoResetEvent evt = handles[idx];
+                        Task task = runningTasks[evt];
+                        runningTasks.Remove(evt);
+                        if (aborted)
                         {
-                            List<int> idx = new List<int>();
-                            foreach (ArchiveItem i in Files.Items)
+                            task.Item.Status = String.Format("Aborted");
+                            task.Item.StateImageIndex = 2;
+
+                            continue;
+                        }
+                        if (string.IsNullOrEmpty(task.Result))
+                        {
+                            if (!string.IsNullOrEmpty(task.File.Password))
                             {
-                                if (i.StateImageIndex == 1)
+                                passwords.SetGood(task.File.Password);
+                            }
+                            try
+                            {
+                                task.Item.ExcuteSuccessAction();
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Failed to rename/delete file:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            task.Item.Checked = true;
+                            task.Item.Status = String.Format("Done, {0} files, {1}{2}",
+                                task.ExtractedFiles,
+                                ToFormatedSize(task.UnpackedSize),
+                                string.IsNullOrEmpty(task.File.Password) ? "" : String.Format(", {0}", task.File.Password)
+                                );
+                            task.Item.StateImageIndex = 1;
+                            AdjustHeaders();
+                        }
+                        else
+                        {
+                            task.Item.Status = String.Format(
+                                "Error, {0}{1}",
+                                task.Result.ToString(),
+                                string.IsNullOrEmpty(task.File.Password) ? "" : String.Format(", {0}", task.File.Password)
+                                );
+                            task.Item.StateImageIndex = 2;
+                            AdjustHeaders();
+                        }
+                        if (Config.Nesting)
+                        {
+                            rerun = AddFiles(task.Files.ToArray(), true) || rerun;
+                        }
+                        task.Dispose();
+                        Progress.Increment(1);
+                    }
+                    Application.DoEvents();
+                }
+
+                if (!aborted)
+                {
+                    Files.BeginUpdate();
+                    switch (Config.EmptyListWhenDone)
+                    {
+                        case 1:
+                            Files.Clear();
+                            break;
+                        case 2:
+                            {
+                                List<int> idx = new List<int>();
+                                foreach (ArchiveItem i in Files.Items)
                                 {
-                                    idx.Add(i.Index);
+                                    if (i.StateImageIndex == 1)
+                                    {
+                                        idx.Add(i.Index);
+                                    }
+                                }
+                                idx.Reverse();
+                                foreach (int i in idx)
+                                {
+                                    Files.Items.RemoveAt(i);
                                 }
                             }
-                            idx.Reverse();
-                            foreach (int i in idx)
-                            {
-                                Files.Items.RemoveAt(i);
-                            }
-                        }
-                        break;
+                            break;
 
+                    }
+                    Files.EndUpdate();
                 }
-                Files.EndUpdate();
             }
 
             Details.Text = "";
@@ -549,7 +571,13 @@ namespace UnRarIt
                     {
                         name = name.Substring(minPath.Length + 1);
                     }
-                    FileInfo dest = new FileInfo(Reimplement.CombinePath(Reimplement.CombinePath(Config.Dest, basePath), name));
+                    string rootPath = Config.Dest;
+                    if (task.Item.IsNested)
+                    {
+                        rootPath = task.File.Archive.Directory.FullName;
+                    }
+
+                    FileInfo dest = new FileInfo(Reimplement.CombinePath(Reimplement.CombinePath(rootPath, basePath), name));
                     if (dest.Exists)
                     {
                         switch (Config.OverwriteAction)

@@ -100,7 +100,7 @@
     <Compile Include="UI\OverwriteForm.Designer.cs">
       <DependentUpon>OverwriteForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="PasswordList.cs" />
+    <Compile Include="Utils\PasswordList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="UI\AboutBox.resx">
