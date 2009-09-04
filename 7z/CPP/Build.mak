@@ -1,3 +1,5 @@
+CC = icl
+
 LIBS = $(LIBS) oleaut32.lib ole32.lib
 
 !IFDEF CPU
@@ -6,10 +8,13 @@ LIBS = $(LIBS) bufferoverflowU.lib
 !ENDIF
 !ENDIF
 
+!IFNDEF ARCH
+ARCH = dbg
+!ENDIF
 
 !IFNDEF O
 !IFDEF CPU
-O=$(CPU)
+O=$(CPU)-$(ARCH)
 !ELSE
 O=O
 !ENDIF
@@ -52,20 +57,22 @@ CFLAGS = $(CFLAGS) -W4 -GS- -Zc:forScope
 CFLAGS = $(CFLAGS) -W3
 !ENDIF
 
-!IF "$(CPU)" == "x86-dbg"
+!IF "$(ARCH)" == "dbg"
 CFLAGS_O1 = $(CFLAGS) -Od
 CFLAGS_O2 = $(CFLAGS) -Od
+!ELSEIF "$(ARCH)" == "sse3"
+CFLAGS_O1 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Og -Qipo -Ob2 -GS -arch:SSE3 -QxSSE3 -QaxHost
+CFLAGS_O2 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Qipo -Ob2 -Og -QxSSE3 -QaxHost
 !ELSE
 CFLAGS_O1 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Og -Qipo -Ob2 -GS
 CFLAGS_O2 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Qipo -Ob2 -Og 
-!ENDIF
-
-!IF "$(CPU)" != "IA64"
-!IF "$(CPU)" != "AMD64"
+!IF "$(CPU)" != "IA64" && "$(CPU)" != "AMD64"
 CFLAGS_O1 = $(CFLAGS_O1) -arch:IA32
 CFLAGS_O2 = $(CFLAGS_O2) -arch:IA32
 !ENDIF
 !ENDIF
+
+
 
 LFLAGS = $(LFLAGS) -nologo -OPT:NOWIN98 -OPT:REF -OPT:ICF
 
@@ -93,7 +100,7 @@ $(PROGDIR):
 	if not exist "$(PROGDIR)" mkdir "$(PROGDIR)"
 
 $(PROGPATH): $O  $(PROGDIR) $(OBJS) $(DEF_FILE) 
-	xilink $(LFLAGS) -out:$(PROGPATH) $(OBJS) $(LIBS) /DEBUG /PDB:$(PROGDIR)\$(*B).pdb /MAP:$(PROGDIR)\$(*B).map /MAPINFO:EXPORTS ../../../../crt/$(CRT)/libcmt.lib ../../../../crt/$(CRT)/libcpmt.lib /NODEFAULTLIB:libc.lib /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcpmt.lib
+	xilink $(LFLAGS) -out:$(PROGPATH) $(OBJS) $(LIBS) /DEBUG /PDB:$(PROGPATH).pdb /MAP:$(PROGPATH).map /MAPINFO:EXPORTS ../../../../crt/$(CRT)/libcmt.lib ../../../../crt/$(CRT)/libcpmt.lib /NODEFAULTLIB:libc.lib /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcpmt.lib
 $O\resource.res: $(*B).rc
 	rc $(RFLAGS) -fo$@ $**
 $O\StdAfx.obj: $(*B).cpp
