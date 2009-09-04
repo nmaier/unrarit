@@ -123,6 +123,13 @@ namespace UnRarIt.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap reqerror {
+            get {
+                object obj = ResourceManager.GetObject("reqerror", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap run {
             get {
                 object obj = ResourceManager.GetObject("run", resourceCulture);

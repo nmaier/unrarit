@@ -671,6 +671,7 @@ namespace UnRarIt
                 aInfo.entry.Name,
                 ToFormatedSize(aInfo.entry.Size)
                 );
+            form.Owner = this;
             DialogResult dr = form.ShowDialog();
             aInfo.Action = form.Action;
             form.Dispose();
@@ -859,6 +860,17 @@ namespace UnRarIt
                         Files.EndUpdate();
                         e.Handled = true;
                         break;
+                }
+            }
+        }
+
+        private void requeueFailedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in Files.Items)
+            {
+                if (item.StateImageIndex == 2)
+                {
+                    item.StateImageIndex = 0;
                 }
             }
         }

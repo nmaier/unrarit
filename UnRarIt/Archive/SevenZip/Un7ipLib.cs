@@ -203,6 +203,7 @@ namespace UnRarIt.Archive.SevenZip
 
         public void Open(IEnumerator<string> aPasswords)
         {
+                            bool opened = false;
             try
             {
                 passwords = aPasswords;
@@ -212,7 +213,6 @@ namespace UnRarIt.Archive.SevenZip
                 {
                     formats[f] = false;
                 }
-                bool opened = false;
                 foreach (Guid f in formats.Keys)
                 {
                     if (opened)
@@ -306,6 +306,10 @@ namespace UnRarIt.Archive.SevenZip
             finally
             {
                 CloseStreams();
+            }
+            if (!opened)
+            {
+                throw new ArchiveException("Invalid archive!");
             }
         }
 

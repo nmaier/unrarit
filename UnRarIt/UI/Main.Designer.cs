@@ -72,6 +72,7 @@
             this.GroupDest = new System.Windows.Forms.GroupBox();
             this.Dest = new System.Windows.Forms.TextBox();
             this.BrowseDest = new System.Windows.Forms.Button();
+            this.requeueFailedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FilesCtx.SuspendLayout();
             this.Statusbar.SuspendLayout();
             this.MainMenu.SuspendLayout();
@@ -139,15 +140,16 @@
             this.toolStripMenuItem4,
             this.CtxDeleteFiles,
             this.toolStripMenuItem3,
-            this.requeueToolStripMenuItem});
+            this.requeueToolStripMenuItem,
+            this.requeueFailedToolStripMenuItem});
             this.FilesCtx.Name = "FilesCtx";
-            this.FilesCtx.Size = new System.Drawing.Size(161, 104);
+            this.FilesCtx.Size = new System.Drawing.Size(165, 148);
             // 
             // CtxClearSelected
             // 
             this.CtxClearSelected.Image = global::UnRarIt.Properties.Resources.clearselected;
             this.CtxClearSelected.Name = "CtxClearSelected";
-            this.CtxClearSelected.Size = new System.Drawing.Size(160, 22);
+            this.CtxClearSelected.Size = new System.Drawing.Size(164, 22);
             this.CtxClearSelected.Text = "Clear selected";
             this.CtxClearSelected.Click += new System.EventHandler(this.CtxClearSelected_Click);
             // 
@@ -155,33 +157,33 @@
             // 
             this.CtxClearList.Image = global::UnRarIt.Properties.Resources.clearlist;
             this.CtxClearList.Name = "CtxClearList";
-            this.CtxClearList.Size = new System.Drawing.Size(160, 22);
+            this.CtxClearList.Size = new System.Drawing.Size(164, 22);
             this.CtxClearList.Text = "Clear list";
             this.CtxClearList.Click += new System.EventHandler(this.CtxClearList_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(157, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(161, 6);
             // 
             // CtxDeleteFiles
             // 
             this.CtxDeleteFiles.Image = global::UnRarIt.Properties.Resources.deletefiles;
             this.CtxDeleteFiles.Name = "CtxDeleteFiles";
-            this.CtxDeleteFiles.Size = new System.Drawing.Size(160, 22);
+            this.CtxDeleteFiles.Size = new System.Drawing.Size(164, 22);
             this.CtxDeleteFiles.Text = "Delete file(s)";
             this.CtxDeleteFiles.Click += new System.EventHandler(this.CtxDeleteFiles_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(157, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(161, 6);
             // 
             // requeueToolStripMenuItem
             // 
             this.requeueToolStripMenuItem.Image = global::UnRarIt.Properties.Resources.run;
             this.requeueToolStripMenuItem.Name = "requeueToolStripMenuItem";
-            this.requeueToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.requeueToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.requeueToolStripMenuItem.Text = "Requeue items";
             this.requeueToolStripMenuItem.Click += new System.EventHandler(this.requeueToolStripMenuItem_Click);
             // 
@@ -401,6 +403,14 @@
             this.BrowseDest.UseVisualStyleBackColor = true;
             this.BrowseDest.Click += new System.EventHandler(this.BrowseDest_Click);
             // 
+            // requeueFailedToolStripMenuItem
+            // 
+            this.requeueFailedToolStripMenuItem.Image = global::UnRarIt.Properties.Resources.reqerror;
+            this.requeueFailedToolStripMenuItem.Name = "requeueFailedToolStripMenuItem";
+            this.requeueFailedToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.requeueFailedToolStripMenuItem.Text = "Requeue Failed";
+            this.requeueFailedToolStripMenuItem.Click += new System.EventHandler(this.requeueFailedToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -472,6 +482,7 @@
         private System.Windows.Forms.ToolStripMenuItem requeueToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem CtxDeleteFiles;
+        private System.Windows.Forms.ToolStripMenuItem requeueFailedToolStripMenuItem;
     }
 }
 
