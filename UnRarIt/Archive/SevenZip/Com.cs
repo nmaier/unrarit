@@ -119,6 +119,17 @@ namespace UnRarIt.Archive.SevenZip
         uint GetNumberOfArchiveProperties();
         void GetArchivePropertyInfo(uint index, [MarshalAs(UnmanagedType.BStr)] string name, out ItemPropId propID, out ushort varType);
     }
+
+    [ComImport]
+    [Guid("23170F69-40C1-278A-0000-000600300000")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    internal interface IArchiveOpenVolumeCallback
+    {
+        void GetProperty(ItemPropId propID, ref PropVariant rv);
+        [PreserveSig]
+        [return: MarshalAs(UnmanagedType.I4)]
+        int GetStream([MarshalAs(UnmanagedType.LPWStr)] string name, ref IInStream stream);
+    }
     #endregion
 
     #region Props
@@ -207,15 +218,24 @@ namespace UnRarIt.Archive.SevenZip
         [MarshalAs(UnmanagedType.U4)]
         public VarEnum type;
         [FieldOffset(8)]
+        internal PropVariantUnion union;
+    }
+    [StructLayout(LayoutKind.Explicit)]
+    internal struct PropVariantUnion
+    {
+        [FieldOffset(0)]
         public IntPtr pointerValue;
-        [FieldOffset(8)]
+        [FieldOffset(0)]
         public byte byteValue;
-        [FieldOffset(8)]
+        [FieldOffset(0)]
         public long longValue;
-        [FieldOffset(8)]
+        [FieldOffset(0), MarshalAs(UnmanagedType.U8)]
+        public ulong ui8Value;
+        [FieldOffset(0)]
+        public IntPtr bstrValue;
+        [FieldOffset(0)]
         public System.Runtime.InteropServices.ComTypes.FILETIME filetime;
     }
-
     internal class Variant : IDisposable
     {
         [DllImport("ole32.dll")]
@@ -277,7 +297,7 @@ namespace UnRarIt.Archive.SevenZip
                 case VarEnum.VT_EMPTY:
                     return null;
                 case VarEnum.VT_FILETIME:
-                    return DateTime.FromFileTime(variant.longValue);
+                    return DateTime.FromFileTime(variant.union.longValue);
                 default:
                     GCHandle PropHandle = GCHandle.Alloc(variant, GCHandleType.Pinned);
                     try

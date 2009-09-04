@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using UnRarIt.Archive;
-using UnRarIt.Archive.Rar;
 using UnRarIt.Archive.SevenZip;
 using UnRarIt.Interop;
 
@@ -21,12 +20,16 @@ namespace UnRarIt
 
         private static Regex[] partFiles = new Regex[] {
             new Regex(
-                @"(part(\d+))\.(?:rar|zip)$",
+                @"\.(part(\d+))\.(?:rar|zip)$",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled
                 ),
             new Regex(
                 @"\.(r|z)\d{2,}$", 
                 RegexOptions.IgnoreCase | RegexOptions.Compiled
+                ),
+            new Regex(
+                @"\.(\d+)$",
+                RegexOptions.Compiled
                 )
             };
         private static Regex trimmer = new Regex(
@@ -191,18 +194,23 @@ namespace UnRarIt
                     ArchiveItem item;
                     if (ext == ".zip")
                     {
-                        item = new ArchiveItem(info.FullName, ArchiveFormat.Zip);
+                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatZip);
                         item.Group = Files.Groups["GroupZip"];
                     }
                     else if (ext == ".7z")
                     {
-                        item = new ArchiveItem(info.FullName, ArchiveFormat.SevenZip);
+                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatSevenZip);
                         item.Group = Files.Groups["GroupSevenZip"];
                     }
                     else if (ext == ".rar")
                     {
-                        item = new ArchiveItem(info.FullName, ArchiveFormat.Rar);
+                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatRar);
                         item.Group = Files.Groups["GroupRar"];
+                    }
+                    else if (ext == ".001")
+                    {
+                        item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatSplit);
+                        item.Group = Files.Groups["GroupSplit"];
                     }
                     else
                     {
@@ -242,9 +250,32 @@ namespace UnRarIt
                 string f = info.FullName.ToLower();
                 if (t.Length == 1)
                 {
+                    string format;
+                    switch (t[0])
+                    {
+                        case 'r':
+                            format = ".rar";
+                            break;
+                        default:
+                            format = ".zip";
+                            break;
+                    }
                     // old format
                     parts.Add(new KeyValuePair<string, string>(
-                        Reimplement.CombinePath(info.DirectoryName.ToLower(), Path.GetFileNameWithoutExtension(f) + (t[0] == 'r' ? ".rar" : ".zip")),
+                        Reimplement.CombinePath(info.DirectoryName.ToLower(), Path.GetFileNameWithoutExtension(f) + format),
+                        info.FullName
+                        ));
+                }
+                else if (m.Groups.Count == 2)
+                {
+                    string val = m.Groups[1].Value;
+                    uint i = 0;
+                    if (!uint.TryParse(val, out i) || i == 1)
+                    {
+                        return false;
+                    }
+                    parts.Add(new KeyValuePair<string, string>(
+                        Reimplement.CombinePath(info.DirectoryName.ToLower(), String.Format("{0}.{1}1", Path.GetFileNameWithoutExtension(f), new string('0', m.Groups[1].Length - 1))),
                         info.FullName
                         ));
                 }
@@ -283,7 +314,7 @@ namespace UnRarIt
             aborted = true;
         }
 
-        private class Task
+        private class Task : IDisposable
         {
             private Main owner;
 
@@ -348,6 +379,15 @@ namespace UnRarIt
                     );
                 e.ContinueOperation = !owner.aborted;
             }
+
+            #region IDisposable Members
+
+            public void Dispose()
+            {
+                file.Dispose();
+            }
+
+            #endregion
         }
 
         private void Run()
@@ -386,18 +426,7 @@ namespace UnRarIt
                 }
 
 
-                switch (i.Format)
-                {
-                    case ArchiveFormat.Rar:
-                        tasks.Add(new Task(this, i, new RarArchiveFile(i.FileName)));
-                        break;
-                    case ArchiveFormat.Zip:
-                        tasks.Add(new Task(this, i, new SevenZipArchiveFile(i.FileName, SevenZipArchiveFile.FormatZip)));
-                        break;
-                    case ArchiveFormat.SevenZip:
-                        tasks.Add(new Task(this, i, new SevenZipArchiveFile(i.FileName, SevenZipArchiveFile.FormatSevenZip)));
-                        break;
-                }
+                tasks.Add(new Task(this, i, new SevenZipArchiveFile(i, i.Format)));
             }
 
             IEnumerator<Task> taskEnumerator = tasks.GetEnumerator();
@@ -468,6 +497,7 @@ namespace UnRarIt
                         task.Item.StateImageIndex = 2;
                         AdjustHeaders();
                     }
+                    task.Dispose();
                     Progress.Increment(1);
                 }
                 Application.DoEvents();
@@ -637,7 +667,7 @@ namespace UnRarIt
             }
             catch (Exception ex)
             {
-                task.Result = "Unexpected: " + ex.Message;
+                task.Result = String.Format("Unexpected: {0} ({1})", ex.Message, typeof(Exception).ToString());
             }
             task.Signal.Set();
         }

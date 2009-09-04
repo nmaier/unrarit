@@ -9,25 +9,47 @@ namespace UnRarIt.Archive.SevenZip
 {
     internal class SevenZipArchive : IDisposable, IInArchive
     {
-        [DllImport("7z_Win32.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
+        [DllImport("7z-x86-generic.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_32(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 
-        [DllImport("7z_x64.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
+        [DllImport("7z-x86_sse3.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
+        private extern static int CreateObject_32SSE3(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
+
+        [DllImport("7z-x64-generic.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_64(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
+
+        [DllImport("7z-x64_sse3.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
+        private extern static int CreateObject_64SSE3(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 
         private IInArchive inArchive = null;
         private SevenZipStream stream;
-        internal SevenZipArchive(FileInfo aFile, IArchiveOpenCallback callback, Guid format)
+        private List<FileInfo> files;
+        internal SevenZipArchive(List<FileInfo> aFiles, IArchiveOpenCallback callback, Guid format)
         {
+            files = aFiles;
             Guid Interface = typeof(IInArchive).GUID;
             object result;
             if (CpuInfo.isX64)
             {
-                CreateObject_64(ref format, ref Interface, out result);
+                if (CpuInfo.hasSSE3)
+                {
+                    CreateObject_64(ref format, ref Interface, out result);
+                }
+                else
+                {
+                    CreateObject_64SSE3(ref format, ref Interface, out result);
+                }
             }
             else
             {
-                CreateObject_32(ref format, ref Interface, out result);
+                if (CpuInfo.hasSSE3)
+                {
+                    CreateObject_32(ref format, ref Interface, out result);
+                }
+                else
+                {
+                    CreateObject_32SSE3(ref format, ref Interface, out result);
+                }
             }
             if (result == null)
             {
@@ -35,7 +57,13 @@ namespace UnRarIt.Archive.SevenZip
             }
             inArchive = result as IInArchive;
 
-            stream = new SevenZipFileStream(aFile, FileMode.Open, FileAccess.Read);
+            if (files.Count == 1 || true)
+            {
+                stream = new SevenZipFileStream(files[0], FileMode.Open, FileAccess.Read);
+            }
+            else {
+                stream = new SevenZipVolumeStream(files, FileMode.Open, FileAccess.Read);
+            }
             ulong sp = 4194304;
             inArchive.Open(stream, ref sp, callback);
 

@@ -7,29 +7,24 @@ using UnRarIt.Interop;
 
 namespace UnRarIt
 {
-    internal enum ArchiveFormat
-    {
-        Zip,
-        Rar,
-        SevenZip
-    }
 
-    internal class ArchiveItem : ListViewItem
+    internal class ArchiveItem : ListViewItem, IEnumerable<FileInfo>
     {
         internal static ImageList Icons = new ImageList();
         private static IFileIcon FileIcon = new FileIconWin();
         private static Properties.Settings Config = Properties.Settings.Default;
 
         Dictionary<string, FileInfo> parts = new Dictionary<string, FileInfo>();
-        FileInfo file = null;
-        ArchiveFormat format;
+        FileInfo file;
+        Guid format;
 
-        public ArchiveItem(string aFileName, ArchiveFormat aFormat)
+        public ArchiveItem(string aFileName, Guid aFormat)
         {
             format = aFormat;
             SubItems.Add(string.Empty);
             SubItems.Add("Ready...");
             file = new FileInfo(aFileName);
+            parts.Add(aFileName, file);
             if (!Icons.Images.ContainsKey(file.Extension))
             {
                 Icons.Images.Add(file.Extension, FileIcon.GetIcon(file.FullName, ExtractIconSize.Small));
@@ -40,19 +35,18 @@ namespace UnRarIt
             Invalidate();
         }
 
-        internal ArchiveFormat Format
+        internal Guid Format
         {
             get { return format; }
         }
 
         protected void Invalidate()
         {
-            Text = file.Name + (parts.Count != 0 ? String.Format(" +{0} parts", parts.Count) : "");
+            Text = file.Name + (parts.Count > 1 ? String.Format(" +{0} parts", parts.Count - 1) : "");
 
             if (file.Exists)
             {
                 ulong size = 0;
-                size += (ulong)file.Length;
                 foreach (FileInfo part in parts.Values)
                 {
                     if (part.Exists)
@@ -120,7 +114,6 @@ namespace UnRarIt
             switch (Config.SuccessAction)
             {
                 case 1:
-                    file = Rename(file);
                     {
                         Dictionary<string, FileInfo> oldParts = parts;
                         parts = new Dictionary<string, FileInfo>();
@@ -165,5 +158,22 @@ namespace UnRarIt
             return aFile;
         }
 
+        #region IEnumerable<FileInfo> Members
+
+        public IEnumerator<FileInfo> GetEnumerator()
+        {
+            return parts.Values.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IEnumerable Members
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return parts.Values.GetEnumerator();
+        }
+
+        #endregion
     }
 }

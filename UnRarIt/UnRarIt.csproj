@@ -69,12 +69,6 @@
     <Compile Include="Archive\SevenZip\Item.cs" />
     <Compile Include="Archive\SevenZip\Streams.cs" />
     <Compile Include="Archive\SevenZip\Un7ipLib.cs" />
-    <Compile Include="Archive\Rar\RarArchiveX64SSE4.cs" />
-    <Compile Include="Archive\Rar\RarArchiveX64Release.cs" />
-    <Compile Include="Archive\Rar\RarArchiveWin32SSE4.cs" />
-    <Compile Include="Archive\Rar\RarArchive.cs" />
-    <Compile Include="Archive\Rar\RarArchiveWin32Release.cs" />
-    <Compile Include="Archive\Rar\Types.cs" />
     <Compile Include="Interop\CpuInfo.cs" />
     <Compile Include="UI\AboutBox.cs">
       <SubType>Form</SubType>
@@ -151,7 +145,6 @@
     <Compile Include="UI\SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Archive\Rar\UnrarLib.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\unrarit-about.png" />

@@ -32,6 +32,7 @@
             System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Rar-Archives", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("7zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Split-Archives", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.Files = new System.Windows.Forms.ListView();
             this.columnFile = new System.Windows.Forms.ColumnHeader();
@@ -94,10 +95,13 @@
             listViewGroup2.Name = "GroupSevenZip";
             listViewGroup3.Header = "Zip-Archives";
             listViewGroup3.Name = "GroupZip";
+            listViewGroup4.Header = "Split-Archives";
+            listViewGroup4.Name = "GroupSplit";
             this.Files.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
             listViewGroup1,
             listViewGroup2,
-            listViewGroup3});
+            listViewGroup3,
+            listViewGroup4});
             this.Files.Location = new System.Drawing.Point(12, 27);
             this.Files.Name = "Files";
             this.Files.Size = new System.Drawing.Size(758, 408);
@@ -137,13 +141,13 @@
             this.toolStripMenuItem3,
             this.requeueToolStripMenuItem});
             this.FilesCtx.Name = "FilesCtx";
-            this.FilesCtx.Size = new System.Drawing.Size(159, 104);
+            this.FilesCtx.Size = new System.Drawing.Size(161, 104);
             // 
             // CtxClearSelected
             // 
             this.CtxClearSelected.Image = global::UnRarIt.Properties.Resources.clearselected;
             this.CtxClearSelected.Name = "CtxClearSelected";
-            this.CtxClearSelected.Size = new System.Drawing.Size(158, 22);
+            this.CtxClearSelected.Size = new System.Drawing.Size(160, 22);
             this.CtxClearSelected.Text = "Clear selected";
             this.CtxClearSelected.Click += new System.EventHandler(this.CtxClearSelected_Click);
             // 
@@ -151,33 +155,33 @@
             // 
             this.CtxClearList.Image = global::UnRarIt.Properties.Resources.clearlist;
             this.CtxClearList.Name = "CtxClearList";
-            this.CtxClearList.Size = new System.Drawing.Size(158, 22);
+            this.CtxClearList.Size = new System.Drawing.Size(160, 22);
             this.CtxClearList.Text = "Clear list";
             this.CtxClearList.Click += new System.EventHandler(this.CtxClearList_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(155, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(157, 6);
             // 
             // CtxDeleteFiles
             // 
             this.CtxDeleteFiles.Image = global::UnRarIt.Properties.Resources.deletefiles;
             this.CtxDeleteFiles.Name = "CtxDeleteFiles";
-            this.CtxDeleteFiles.Size = new System.Drawing.Size(158, 22);
+            this.CtxDeleteFiles.Size = new System.Drawing.Size(160, 22);
             this.CtxDeleteFiles.Text = "Delete file(s)";
             this.CtxDeleteFiles.Click += new System.EventHandler(this.CtxDeleteFiles_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(155, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(157, 6);
             // 
             // requeueToolStripMenuItem
             // 
             this.requeueToolStripMenuItem.Image = global::UnRarIt.Properties.Resources.run;
             this.requeueToolStripMenuItem.Name = "requeueToolStripMenuItem";
-            this.requeueToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.requeueToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.requeueToolStripMenuItem.Text = "Requeue items";
             this.requeueToolStripMenuItem.Click += new System.EventHandler(this.requeueToolStripMenuItem_Click);
             // 
@@ -221,7 +225,7 @@
             // Details
             // 
             this.Details.Name = "Details";
-            this.Details.Size = new System.Drawing.Size(230, 17);
+            this.Details.Size = new System.Drawing.Size(767, 17);
             this.Details.Spring = true;
             this.Details.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -249,26 +253,26 @@
             this.toolStripMenuItem2,
             this.Exit});
             this.FileMenu.Name = "FileMenu";
-            this.FileMenu.Size = new System.Drawing.Size(37, 20);
+            this.FileMenu.Size = new System.Drawing.Size(39, 20);
             this.FileMenu.Text = "File";
             // 
             // OpenSettings
             // 
             this.OpenSettings.Image = global::UnRarIt.Properties.Resources.preferences;
             this.OpenSettings.Name = "OpenSettings";
-            this.OpenSettings.Size = new System.Drawing.Size(176, 22);
+            this.OpenSettings.Size = new System.Drawing.Size(177, 22);
             this.OpenSettings.Text = "Open Preferences";
             this.OpenSettings.Click += new System.EventHandler(this.OpenSettings_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(173, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(174, 6);
             // 
             // Exit
             // 
             this.Exit.Name = "Exit";
-            this.Exit.Size = new System.Drawing.Size(176, 22);
+            this.Exit.Size = new System.Drawing.Size(177, 22);
             this.Exit.Text = "Exit";
             this.Exit.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -280,32 +284,32 @@
             this.toolStripMenuItem1,
             this.ClearAllPasswords});
             this.passwordsToolStripMenuItem.Name = "passwordsToolStripMenuItem";
-            this.passwordsToolStripMenuItem.Size = new System.Drawing.Size(75, 20);
+            this.passwordsToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
             this.passwordsToolStripMenuItem.Text = "Passwords";
             // 
             // ImportPasswords
             // 
             this.ImportPasswords.Name = "ImportPasswords";
-            this.ImportPasswords.Size = new System.Drawing.Size(177, 22);
+            this.ImportPasswords.Size = new System.Drawing.Size(185, 22);
             this.ImportPasswords.Text = "Import";
             this.ImportPasswords.Click += new System.EventHandler(this.AddPassword_Click);
             // 
             // ExportPasswords
             // 
             this.ExportPasswords.Name = "ExportPasswords";
-            this.ExportPasswords.Size = new System.Drawing.Size(177, 22);
+            this.ExportPasswords.Size = new System.Drawing.Size(185, 22);
             this.ExportPasswords.Text = "Export";
             this.ExportPasswords.Click += new System.EventHandler(this.ExportPasswords_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(174, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(182, 6);
             // 
             // ClearAllPasswords
             // 
             this.ClearAllPasswords.Name = "ClearAllPasswords";
-            this.ClearAllPasswords.Size = new System.Drawing.Size(177, 22);
+            this.ClearAllPasswords.Size = new System.Drawing.Size(185, 22);
             this.ClearAllPasswords.Text = "Clear all password";
             this.ClearAllPasswords.Click += new System.EventHandler(this.ClearAllPasswords_Click);
             // 
@@ -324,26 +328,26 @@
             // 
             this.Homepage.Image = global::UnRarIt.Properties.Resources.homepage;
             this.Homepage.Name = "Homepage";
-            this.Homepage.Size = new System.Drawing.Size(137, 22);
+            this.Homepage.Size = new System.Drawing.Size(138, 22);
             this.Homepage.Text = "Homepage";
             this.Homepage.Click += new System.EventHandler(this.Homepage_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(134, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(135, 6);
             // 
             // License
             // 
             this.License.Name = "License";
-            this.License.Size = new System.Drawing.Size(137, 22);
+            this.License.Size = new System.Drawing.Size(138, 22);
             this.License.Text = "License";
             this.License.Click += new System.EventHandler(this.License_Click);
             // 
             // About
             // 
             this.About.Name = "About";
-            this.About.Size = new System.Drawing.Size(137, 22);
+            this.About.Size = new System.Drawing.Size(138, 22);
             this.About.Text = "About";
             this.About.Click += new System.EventHandler(this.About_Click);
             // 
