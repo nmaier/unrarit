@@ -11,10 +11,11 @@ namespace UnRarIt
 {
     public enum OverwriteAction
     {
-        Unspecified,
-        Overwrite,
-        Skip,
-        Rename
+        Unspecified = 2,
+        Overwrite = 1,
+        Skip = 0,
+        Rename = 3,
+        RenameDirectory = 4
     };
 
     public partial class OverwriteForm : Form

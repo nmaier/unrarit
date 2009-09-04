@@ -65,7 +65,20 @@ namespace UnRarIt
 
             return info;
         }
+        private static DirectoryInfo MakeUnique(DirectoryInfo info)
+        {
+            if (!info.Exists)
+            {
+                return info;
+            }
+            string baseName = info.Name;
+            for (uint i = 1; info.Exists; ++i)
+            {
+                info = new DirectoryInfo(Reimplement.CombinePath(info.Parent.FullName, String.Format("{0}_{1}", baseName, i)));
+            }
 
+            return info;
+        }
 
         private bool running = false;
         private bool aborted = false;
@@ -576,30 +589,36 @@ namespace UnRarIt
                     {
                         rootPath = task.File.Archive.Directory.FullName;
                     }
+                    DirectoryInfo baseDirectory = new DirectoryInfo(Reimplement.CombinePath(rootPath, basePath));
+                    if (!string.IsNullOrEmpty(basePath) && (OverwriteAction)Config.OverwriteAction == OverwriteAction.RenameDirectory)
+                    {
+                        baseDirectory = MakeUnique(baseDirectory);
+                    }
 
-                    FileInfo dest = new FileInfo(Reimplement.CombinePath(Reimplement.CombinePath(rootPath, basePath), name));
+                    FileInfo dest = new FileInfo(Reimplement.CombinePath(baseDirectory.FullName, name));
                     if (dest.Exists)
                     {
-                        switch (Config.OverwriteAction)
+                        switch ((OverwriteAction)Config.OverwriteAction)
                         {
-                            case 1:
+                            case OverwriteAction.Overwrite:
                                 info.Destination = dest;
                                 shouldExtract = true;
                                 break;
-                            case 2:
+                            default:
                                 switch (OverwritePrompt(task, dest, info))
                                 {
                                     case OverwriteAction.Overwrite:
                                         info.Destination = dest;
                                         shouldExtract = true;
                                         break;
+                                    case OverwriteAction.RenameDirectory:
                                     case OverwriteAction.Rename:
                                         info.Destination = MakeUnique(dest);
                                         shouldExtract = true;
                                         break;
                                 }
                                 break;
-                            case 3:
+                            case OverwriteAction.Rename:
                                 info.Destination = MakeUnique(dest);
                                 shouldExtract = true;
                                 break;

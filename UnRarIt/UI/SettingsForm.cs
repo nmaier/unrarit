@@ -10,19 +10,22 @@ namespace UnRarIt
         public SettingsForm()
         {
             InitializeComponent();
-            switch (Config.OverwriteAction)
+            switch ((OverwriteAction)Config.OverwriteAction)
             {
                 default:
-                    Skip.Checked = true;
-                    break;
-                case 1:
-                    Overwrite.Checked = true;
-                    break;
-                case 2:
                     Ask.Checked = true;
                     break;
-                case 3:
+                case OverwriteAction.Overwrite:
+                    Overwrite.Checked = true;
+                    break;
+                case OverwriteAction.Skip:
+                    Skip.Checked = true;
+                    break;
+                case OverwriteAction.Rename:
                     Rename.Checked = true;
+                    break;
+                case OverwriteAction.RenameDirectory:
+                    RenameDirectory.Checked = true;
                     break;
             }
             switch (Config.SuccessAction)
@@ -63,19 +66,23 @@ namespace UnRarIt
             Config.OwnDirectoryLimit = (uint)OwnDirectoryLimit.Value;
             if (Skip.Checked)
             {
-                Config.OverwriteAction = 0;
+                Config.OverwriteAction = (uint)OverwriteAction.Skip;
             }
             else if (Overwrite.Checked)
             {
-                Config.OverwriteAction = 1;
+                Config.OverwriteAction = (uint)OverwriteAction.Overwrite;
             }
             else if (Rename.Checked)
             {
-                Config.OverwriteAction = 3;
+                Config.OverwriteAction = (uint)OverwriteAction.Rename;
+            }
+            else if (RenameDirectory.Checked)
+            {
+                Config.OverwriteAction = (uint)OverwriteAction.RenameDirectory;
             }
             else
             {
-                Config.OverwriteAction = 2;
+                Config.OverwriteAction = (uint)OverwriteAction.Unspecified;
             }
 
             if (SuccesNothing.Checked)

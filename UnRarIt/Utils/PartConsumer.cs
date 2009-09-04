@@ -40,7 +40,7 @@ namespace UnRarIt.Utils
                     default:
                         throw new NotImplementedException();
                 }
-                key = Reimplement.CombinePath(info.DirectoryName.ToLower(), Path.GetFileNameWithoutExtension(info.Name).ToLower() + format);
+                key = Reimplement.CombinePath(info.DirectoryName, Path.GetFileNameWithoutExtension(info.Name).ToLower() + format).ToLower();
                 return true;
             }
         }
@@ -61,7 +61,7 @@ namespace UnRarIt.Utils
                 {
                     return false;
                 }
-                key = Reimplement.CombinePath(info.DirectoryName.ToLower(), String.Format("{0}.{1}1", Path.GetFileNameWithoutExtension(info.Name).ToLower(), new string('0', m.Groups[1].Length - 1)));
+                key = Reimplement.CombinePath(info.DirectoryName, String.Format("{0}.{1}1", Path.GetFileNameWithoutExtension(info.Name), new string('0', m.Groups[1].Length - 1))).ToLower();
                 return true;
             }
         }
@@ -84,10 +84,10 @@ namespace UnRarIt.Utils
                     return false;
                 }
                 // new format
-                key = info.Name.Replace(m.Groups[1].Value.ToLower(), String.Format(
+                key = Reimplement.CombinePath(info.DirectoryName, info.Name.Replace(m.Groups[1].Value, String.Format(
                     "part{0}",
                     1.ToString(new string('0', val.Length))
-                ));
+                ))).ToLower();
                 return true;
             }
         }

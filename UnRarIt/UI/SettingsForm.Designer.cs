@@ -47,6 +47,7 @@
             this.RemoveDone = new System.Windows.Forms.RadioButton();
             this.RemoveNone = new System.Windows.Forms.RadioButton();
             this.Nesting = new System.Windows.Forms.CheckBox();
+            this.RenameDirectory = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OwnDirectoryLimit)).BeginInit();
@@ -58,7 +59,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(343, 266);
+            this.buttonCancel.Location = new System.Drawing.Point(343, 265);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 0;
@@ -69,7 +70,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(262, 266);
+            this.buttonOK.Location = new System.Drawing.Point(262, 265);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
@@ -79,6 +80,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.RenameDirectory);
             this.groupBox1.Controls.Add(this.Rename);
             this.groupBox1.Controls.Add(this.Ask);
             this.groupBox1.Controls.Add(this.Overwrite);
@@ -260,13 +262,24 @@
             this.Nesting.Text = "Extract nested archives";
             this.Nesting.UseVisualStyleBackColor = true;
             // 
+            // RenameDirectory
+            // 
+            this.RenameDirectory.AutoSize = true;
+            this.RenameDirectory.Location = new System.Drawing.Point(88, 65);
+            this.RenameDirectory.Name = "RenameDirectory";
+            this.RenameDirectory.Size = new System.Drawing.Size(67, 17);
+            this.RenameDirectory.TabIndex = 5;
+            this.RenameDirectory.TabStop = true;
+            this.RenameDirectory.Text = "Directory";
+            this.RenameDirectory.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(430, 301);
+            this.ClientSize = new System.Drawing.Size(430, 300);
             this.Controls.Add(this.Nesting);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -315,5 +328,6 @@
         private System.Windows.Forms.RadioButton RemoveNone;
         private System.Windows.Forms.RadioButton Rename;
         private System.Windows.Forms.CheckBox Nesting;
+        private System.Windows.Forms.RadioButton RenameDirectory;
     }
 }
