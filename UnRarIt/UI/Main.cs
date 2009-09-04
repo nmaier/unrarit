@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using UnRarIt.Archive;
 using UnRarIt.Archive.SevenZip;
 using UnRarIt.Interop;
+using UnRarIt.Utils;
 
 namespace UnRarIt
 {
@@ -18,20 +19,6 @@ namespace UnRarIt
         private static PasswordList passwords = new PasswordList();
         private static Mutex overwritePromptMutex = new Mutex();
 
-        private static Regex[] partFiles = new Regex[] {
-            new Regex(
-                @"\.(part(\d+))\.(?:rar|zip)$",
-                RegexOptions.IgnoreCase | RegexOptions.Compiled
-                ),
-            new Regex(
-                @"\.(r|z)\d{2,}$", 
-                RegexOptions.IgnoreCase | RegexOptions.Compiled
-                ),
-            new Regex(
-                @"\.(\d+)$",
-                RegexOptions.Compiled
-                )
-            };
         private static Regex trimmer = new Regex(
             @"^[\s_-]+|^unrarit_|(?:\.part\d+)?\.(?:[r|z].{2}|7z)$|[\s_-]+$",
             RegexOptions.IgnoreCase | RegexOptions.Compiled
@@ -159,13 +146,15 @@ namespace UnRarIt
         private void AddFiles(string[] aFiles)
         {
             Dictionary<string, ArchiveItem> seen = new Dictionary<string, ArchiveItem>();
-            List<KeyValuePair<string, string>> parts = new List<KeyValuePair<string, string>>();
 
             Files.BeginUpdate();
             foreach (ArchiveItem i in Files.Items)
             {
                 seen[i.FileName.ToLower()] = i;
             }
+
+            PartFileConsumer consumer = new PartFileConsumer();
+
             foreach (string file in aFiles)
             {
                 try
@@ -180,7 +169,7 @@ namespace UnRarIt
                         continue;
                     }
 
-                    if (ConsumePartFile(parts, info))
+                    if (consumer.Consume(info))
                     {
                         continue;
                     }
@@ -225,7 +214,7 @@ namespace UnRarIt
                     Console.Error.WriteLine(ex);
                 }
             }
-            foreach (KeyValuePair<string, string> part in parts)
+            foreach (KeyValuePair<string, string> part in consumer.Parts)
             {
                 if (!seen.ContainsKey(part.Key))
                 {
@@ -235,68 +224,6 @@ namespace UnRarIt
             }
             Files.EndUpdate();
             AdjustHeaders();
-        }
-
-        private static bool ConsumePartFile(List<KeyValuePair<string, string>> parts, FileInfo info)
-        {
-            foreach (Regex partFile in partFiles)
-            {
-                Match m = partFile.Match(info.FullName);
-                if (!m.Success)
-                {
-                    continue;
-                }
-                string t = m.Groups[1].Value.ToLower();
-                string f = info.FullName.ToLower();
-                if (t.Length == 1)
-                {
-                    string format;
-                    switch (t[0])
-                    {
-                        case 'r':
-                            format = ".rar";
-                            break;
-                        default:
-                            format = ".zip";
-                            break;
-                    }
-                    // old format
-                    parts.Add(new KeyValuePair<string, string>(
-                        Reimplement.CombinePath(info.DirectoryName.ToLower(), Path.GetFileNameWithoutExtension(f) + format),
-                        info.FullName
-                        ));
-                }
-                else if (m.Groups.Count == 2)
-                {
-                    string val = m.Groups[1].Value;
-                    uint i = 0;
-                    if (!uint.TryParse(val, out i) || i == 1)
-                    {
-                        return false;
-                    }
-                    parts.Add(new KeyValuePair<string, string>(
-                        Reimplement.CombinePath(info.DirectoryName.ToLower(), String.Format("{0}.{1}1", Path.GetFileNameWithoutExtension(f), new string('0', m.Groups[1].Length - 1))),
-                        info.FullName
-                        ));
-                }
-                else
-                {
-                    string val = m.Groups[2].Value;
-                    uint i = 0;
-                    if (!uint.TryParse(val, out i) || i == 1)
-                    {
-                        return false;
-                    }
-                    // new format
-                    string basePart = f.Replace(t, String.Format(
-                        "part{0}",
-                        1.ToString(new string('0', val.Length))
-                    ));
-                    parts.Add(new KeyValuePair<string, string>(basePart, info.FullName));
-                }
-                return true;
-            }
-            return false;
         }
 
         private void Files_DragEnter(object sender, DragEventArgs e)

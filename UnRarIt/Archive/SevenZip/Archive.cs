@@ -22,11 +22,20 @@ namespace UnRarIt.Archive.SevenZip
         private extern static int CreateObject_64SSE3(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 
         private IInArchive inArchive = null;
-        private SevenZipStream stream;
+        private IInStream stream;
         private List<FileInfo> files;
-        internal SevenZipArchive(List<FileInfo> aFiles, IArchiveOpenCallback callback, Guid format)
+        internal SevenZipArchive(FileInfo aFile, IArchiveOpenCallback callback, Guid format)
         {
-            files = aFiles;
+            stream = new SevenZipFileStream(aFile, FileMode.Open, FileAccess.Read);
+            InternalOpen(callback, format);
+        }
+        internal SevenZipArchive(IInStream aStream, IArchiveOpenCallback callback, Guid format)
+        {
+            stream = aStream;
+            InternalOpen(callback, format);
+        }
+        void InternalOpen(IArchiveOpenCallback callback, Guid format)
+        {
             Guid Interface = typeof(IInArchive).GUID;
             object result;
             if (CpuInfo.isX64)
@@ -57,13 +66,6 @@ namespace UnRarIt.Archive.SevenZip
             }
             inArchive = result as IInArchive;
 
-            if (files.Count == 1 || true)
-            {
-                stream = new SevenZipFileStream(files[0], FileMode.Open, FileAccess.Read);
-            }
-            else {
-                stream = new SevenZipVolumeStream(files, FileMode.Open, FileAccess.Read);
-            }
             ulong sp = 4194304;
             inArchive.Open(stream, ref sp, callback);
 
@@ -85,11 +87,11 @@ namespace UnRarIt.Archive.SevenZip
                 inArchive.Close();
                 inArchive = null;
             }
-            if (stream != null)
+            if (stream != null && stream is IDisposable)
             {
-                stream.Dispose();
-                stream = null;
+                ((IDisposable)stream).Dispose();
             }
+            stream = null;
         }
 
         public uint GetNumberOfItems()

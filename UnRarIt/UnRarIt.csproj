@@ -145,6 +145,7 @@
     <Compile Include="UI\SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\PartConsumer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\unrarit-about.png" />

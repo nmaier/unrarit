@@ -157,7 +157,7 @@ namespace UnRarIt.Archive.SevenZip
 
         public void Extract()
         {
-            using (SevenZipArchive ar = new SevenZipArchive(archiveFiles, this, format))
+            using (SevenZipArchive ar = new SevenZipArchive(archiveFiles[0], this, format))
             {
                 List<uint> indices = new List<uint>();
                 Dictionary<uint, IArchiveEntry> files = new Dictionary<uint, IArchiveEntry>();
@@ -214,7 +214,7 @@ namespace UnRarIt.Archive.SevenZip
                 {
                     try
                     {
-                        using (SevenZipArchive ar = new SevenZipArchive(archiveFiles, this, f))
+                        using (SevenZipArchive ar = new SevenZipArchive(archiveFiles[0], this, f))
                         {
                             IArchiveEntry minCrypted = null;
                             uint minIndex = 0;
@@ -239,6 +239,10 @@ namespace UnRarIt.Archive.SevenZip
                                 if (format == FormatSplit)
                                 {
                                     name = Path.GetFileName(name);
+                                }
+                                if (Path.GetExtension(name).ToLower() == ".7z")
+                                {
+
                                 }
                                 ulong size = ar.GetProperty(i, ItemPropId.Size).GetUlong();
                                 ulong packedSize = ar.GetProperty(i, ItemPropId.PackedSize).GetUlong();
