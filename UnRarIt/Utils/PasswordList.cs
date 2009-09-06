@@ -12,42 +12,43 @@ namespace UnRarIt.Utils
         #region Password
         class Password : IComparable<Password>, IEquatable<Password>
         {
-            static uint GetStamp()
+            static int GetStamp()
             {
-                return ((uint)DateTime.Now.Year * 100) + (uint)DateTime.Now.Month;
+                return (DateTime.Now.Year * 100) + DateTime.Now.Month;
             }
+            static int baseStamp = GetStamp();
 
             string password;
             uint count;
-            uint lastUsed;
+            int lastUsed;
+            long score;
 
             public Password(string aPassword)
             {
                 password = aPassword;
                 count = 0;
-                lastUsed = GetStamp();
+                lastUsed = baseStamp;
+                setScore();
             }
-            public Password(string aPassword, uint aCount, uint aLastUsed)
+            public Password(string aPassword, uint aCount, int aLastUsed)
             {
                 password = aPassword;
                 count = aCount;
                 lastUsed = aLastUsed;
+                setScore();
+            }
+            private void setScore()
+            {
+                score = Math.Max(0, (36 - ((int)baseStamp - lastUsed)));
+                score += count * score;
             }
             public int CompareTo(Password rhs)
             {
-                if (lastUsed > rhs.lastUsed)
+                if (score > rhs.score)
                 {
                     return -1;
                 }
-                else if (lastUsed < rhs.lastUsed)
-                {
-                    return 1;
-                }
-                else if (count > rhs.count)
-                {
-                    return -1;
-                }
-                else if (count < rhs.count)
+                if (score < rhs.score)
                 {
                     return 1;
                 }
@@ -61,24 +62,28 @@ namespace UnRarIt.Utils
             {
                 get { return count; }
             }
-            public uint LastUsed
+            public int LastUsed
             {
                 get { return lastUsed; }
             }
             public void Mark()
             {
                 count++;
-                lastUsed = GetStamp();
+                lastUsed = baseStamp;
             }
             public void Merge(Password pass)
             {
                 count += pass.count;
-                lastUsed = GetStamp();
+                lastUsed = baseStamp;
             }
 
             public bool Equals(Password other)
             {
                 return password == other.password;
+            }
+            override public string ToString()
+            {
+                return String.Format("{0}:{1}:{2}:{3}", password, score, count, lastUsed);
             }
         }
         #endregion
@@ -171,11 +176,12 @@ namespace UnRarIt.Utils
         private void AddFromStream(StreamReader r)
         {
             string line;
-            uint count, lastUsed;
+            uint count;
+            int lastUsed;
             while ((line = r.ReadLine()) != null)
             {
                 line = line.Trim();
-                lastUsed = count = 0;
+                lastUsed = 0; count = 0;
                 if (line.Contains("\t"))
                 {
                     string[] pieces = line.Split(new char[] { '\t' });
@@ -185,7 +191,7 @@ namespace UnRarIt.Utils
                     }
                     if (pieces.Length >= 3)
                     {
-                        uint.TryParse(pieces[2], out lastUsed);
+                        int.TryParse(pieces[2], out lastUsed);
                     }
                     line = pieces[0];
                 }

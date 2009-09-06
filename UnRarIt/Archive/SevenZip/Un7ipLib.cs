@@ -40,6 +40,7 @@ namespace UnRarIt.Archive.SevenZip
         Guid format;
         Dictionary<FileInfo, SevenZipFileStream> fileStreams = new Dictionary<FileInfo, SevenZipFileStream>();
         bool passwordRequested = false;
+        bool nextPassword = true;
 
         public SevenZipArchiveFile(IEnumerable<FileInfo> aArchive, Guid aFormat)
         {
@@ -225,6 +226,7 @@ namespace UnRarIt.Archive.SevenZip
                         {
                             using (SevenZipArchive ar = new SevenZipArchive(archiveFiles[0], this, f))
                             {
+                                nextPassword = true;
                                 IArchiveEntry minCrypted = null;
                                 uint minIndex = 0;
                                 uint e = ar.GetNumberOfItems();
@@ -232,6 +234,7 @@ namespace UnRarIt.Archive.SevenZip
                                 {
                                     format = f;
                                     opened = true;
+                                    passwordDefined = !string.IsNullOrEmpty(password);
                                 }
                                 else if (!passwordRequested)
                                 {
@@ -287,6 +290,7 @@ namespace UnRarIt.Archive.SevenZip
                                             }
                                             catch (IOException)
                                             {
+                                                nextPassword = true;
                                                 continue;
                                             }
                                         }
@@ -355,7 +359,7 @@ namespace UnRarIt.Archive.SevenZip
         bool passwordDefined = false;
         public void CryptoGetTextPassword(out string aPassword)
         {
-            if (passwordDefined)
+            if (passwordDefined || !nextPassword)
             {
                 aPassword = password;
                 return;
@@ -379,6 +383,7 @@ namespace UnRarIt.Archive.SevenZip
                 throw new IndexOutOfRangeException();
             }
             password = aPassword = passwords.Current;
+            nextPassword = false;
         }
 
         #region IArchiveOpenVolumeCallback Members

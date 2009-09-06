@@ -9,11 +9,19 @@ namespace UnRarIt.Archive.SevenZip
 {
     internal class SevenZipArchive : IDisposable, IInArchive
     {
+#if DEBUG
+        [DllImport("7z-x86-dbg.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
+        private extern static int CreateObject_32(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
+
+        [DllImport("7z-x86_dbg.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
+        private extern static int CreateObject_32SSE3(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
+#else
         [DllImport("7z-x86-generic.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_32(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 
         [DllImport("7z-x86_sse3.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_32SSE3(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
+#endif
 
         [DllImport("7z-x64-generic.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_64(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
@@ -23,7 +31,6 @@ namespace UnRarIt.Archive.SevenZip
 
         private IInArchive inArchive = null;
         private IInStream stream;
-        private List<FileInfo> files;
         internal SevenZipArchive(FileInfo aFile, IArchiveOpenCallback callback, Guid format)
         {
             stream = new SevenZipFileStream(aFile, FileMode.Open, FileAccess.Read);
