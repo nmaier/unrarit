@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 namespace UnRarIt.Properties {
     
     
@@ -18,9 +19,14 @@ namespace UnRarIt.Properties {
             //
             try
             {
-                Upgrade();
+                if (MustUpgrade)
+                {
+                    Upgrade();
+                    MustUpgrade = false;
+                    Save();
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }

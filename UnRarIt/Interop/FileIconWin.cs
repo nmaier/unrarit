@@ -62,7 +62,7 @@ namespace UnRarIt.Interop
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public Image GetIcon(string aPath, ExtractIconSize aSize)
+        public Image GetIcon(string aPath, FileIconSize aSize)
         {
             SHFILEINFO info = new SHFILEINFO(true);
             int sInfo = Marshal.SizeOf(info);

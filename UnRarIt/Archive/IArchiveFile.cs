@@ -22,17 +22,23 @@ namespace UnRarIt.Archive
 
     public class ExtractFileEventArgs
     {
+        public enum ExtractionStage
+        {
+            Extracting,
+            Done
+        }
+
         public FileInfo Archive;
         public IArchiveEntry Item;
-        public string Destination;
+        public ExtractionStage Stage;
 
         public bool ContinueOperation = true;
 
-        internal ExtractFileEventArgs(FileInfo aArchive, IArchiveEntry aItem, string aDestination)
+        internal ExtractFileEventArgs(FileInfo aArchive, IArchiveEntry aItem, ExtractionStage aStage)
         {
             Archive = aArchive;
             Item = aItem;
-            Destination = aDestination;
+            Stage = aStage;
         }
     }
 

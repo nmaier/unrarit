@@ -11,11 +11,12 @@ namespace UnRarIt
     internal class ArchiveItem : ListViewItem, IEnumerable<FileInfo>
     {
         internal static ImageList Icons = new ImageList();
-        private static IFileIcon FileIcon = new FileIconWin();
         private static Properties.Settings Config = Properties.Settings.Default;
 
         Dictionary<string, FileInfo> parts = new Dictionary<string, FileInfo>();
         FileInfo file;
+        DirectoryInfo baseDirectory;
+
         Guid format;
         bool nested = false;
 
@@ -35,7 +36,7 @@ namespace UnRarIt
             parts.Add(aFileName, file);
             if (!Icons.Images.ContainsKey(file.Extension))
             {
-                Icons.Images.Add(file.Extension, FileIcon.GetIcon(file.FullName, ExtractIconSize.Small));
+                Icons.Images.Add(file.Extension, FileIcon.GetIcon(file.FullName, FileIconSize.Small));
             }
             ImageKey = file.Extension;
             StateImageIndex = 0;
@@ -106,6 +107,20 @@ namespace UnRarIt
             get { return file; }
         }
 
+        public DirectoryInfo BaseDirectory
+        {
+            get
+            {
+                if (baseDirectory == null || !baseDirectory.Exists)
+                {
+                    return file.Directory;
+                }
+                return baseDirectory;
+            }
+            set { baseDirectory = value; }
+        }
+
+
         internal bool AddPart(string Part)
         {
             FileInfo pf = new FileInfo(Part);
@@ -127,7 +142,6 @@ namespace UnRarIt
             if (IsNested)
             {
                 DeleteFiles();
-                Remove();
             }
             else
             {
@@ -166,6 +180,7 @@ namespace UnRarIt
                 }
             }
             parts.Clear();
+            Remove();
         }
 
         private static Regex renamer = new Regex("^unrarit_", RegexOptions.Compiled);

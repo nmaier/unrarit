@@ -119,6 +119,7 @@ namespace UnRarIt
                 AdjustHeaders();
             }
             BrowseDestDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            CtxOpenDirectory.Image = FileIcon.GetIcon(BrowseDestDialog.SelectedPath, FileIconSize.Small);
 
         }
 
@@ -198,7 +199,7 @@ namespace UnRarIt
                     }
 
                     ArchiveItem item;
-                    if (ext == ".zip")
+                    if (ext == ".zip" || ext == ".jar" || ext == ".xpi")
                     {
                         item = new ArchiveItem(info.FullName, SevenZipArchiveFile.FormatZip, nested);
                         item.Group = Files.Groups["GroupZip"];
@@ -320,8 +321,11 @@ namespace UnRarIt
                     new SetStatus(delegate(string status) { Item.SubStatus = status; }),
                     String.Format("Extracting {0}", e.Item.Name)
                     );
-                unpackedSize += e.Item.Size;
-                extractedFiles++;
+                if (e.Stage == ExtractFileEventArgs.ExtractionStage.Done)
+                {
+                    unpackedSize += e.Item.Size;
+                    extractedFiles++;
+                }
                 e.ContinueOperation = !owner.aborted;
             }
             private void OnPasswordAttempt(object sender, PasswordEventArgs e)
@@ -384,7 +388,7 @@ namespace UnRarIt
                         i.StateImageIndex = 2;
                         continue;
                     }
-                    tasks.Add(new Task(this, i, new SevenZipArchiveFile(i, i.Format)));
+                    tasks.Add(new Task(this, i, new SevenZipArchiveFile(i.File, i.Format)));
                 }
                 IEnumerator<Task> taskEnumerator = tasks.GetEnumerator();
                 Dictionary<AutoResetEvent, Task> runningTasks = new Dictionary<AutoResetEvent, Task>();
@@ -522,6 +526,60 @@ namespace UnRarIt
         }
         delegate void SetStatus(string NewStatus);
 
+        static string CommonDirectoryPrefix(List<string> paths)
+        {
+            List<string> work = new List<string>(paths);
+            string rv = null;
+            for (; ; )
+            {
+                string dn = null;
+                foreach (string p in work)
+                {
+                    string cd = Path.GetDirectoryName(p);
+                    if (string.IsNullOrEmpty(cd))
+                    {
+                        break;
+                    }
+                    for (; ; )
+                    {
+                        string pd = Path.GetDirectoryName(cd);
+                        if (string.IsNullOrEmpty(pd))
+                        {
+                            break;
+                        }
+                        cd = pd;
+                    }
+                    if (dn == null)
+                    {
+                        dn = cd;
+                    }
+                    else if (dn != cd)
+                    {
+                        dn = null;
+                        break;
+                    }
+                }
+                if (dn != null)
+                {
+                    if (!string.IsNullOrEmpty(rv))
+                    {
+                        rv += "\\";
+                    }
+                    rv += dn;
+                    work.Clear();
+                    foreach (string p in paths)
+                    {
+                        work.Add(p.Substring(rv.Length + 1));
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return rv;
+        }
+
         private void HandleFile(object o)
         {
             Task task = o as Task;
@@ -538,8 +596,9 @@ namespace UnRarIt
                 );
                 List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
 
-                string minPath = null;
+                
                 uint items = 0;
+                List<string> paths = new List<string>();
                 foreach (IArchiveEntry info in task.File)
                 {
                     if (skipper.IsMatch(info.Name))
@@ -547,29 +606,38 @@ namespace UnRarIt
                         continue;
                     }
                     ++items;
-                    string path = Path.GetDirectoryName(info.Name);
-                    if (minPath == null || minPath.Length > path.Length)
-                    {
-                        minPath = path;
-                    }
+                    paths.Add(info.Name);
                 }
+                string minPath = CommonDirectoryPrefix(paths);
                 if (minPath == null)
                 {
                     minPath = string.Empty;
                 }
                 string basePath = string.Empty;
-                if (items >= Config.OwnDirectoryLimit && string.IsNullOrEmpty(minPath))
+                if (items >= Config.OwnDirectoryLimit)
                 {
-                    basePath = trimmer.Replace(task.File.Archive.Name, "");
-                    string tmpPath;
-                    while ((tmpPath = trimmer.Replace(basePath, "")) != basePath)
+                    if (string.IsNullOrEmpty(minPath))
                     {
-                        basePath = tmpPath;
+                        basePath = trimmer.Replace(task.File.Archive.Name, "");
+                        string tmpPath;
+                        while ((tmpPath = trimmer.Replace(basePath, "")) != basePath)
+                        {
+                            basePath = tmpPath;
+                        }
                     }
-                }
-                else if (!string.IsNullOrEmpty(minPath))
-                {
-                    minPath = Path.GetDirectoryName(minPath);
+                    else
+                    {
+                        basePath = minPath;
+                        for (; ; )
+                        {
+                            string p = Path.GetDirectoryName(basePath);
+                            if (string.IsNullOrEmpty(p))
+                            {
+                                break;
+                            }
+                            basePath = p;
+                        }
+                    }
                 }
                 bool shouldExtract = false;
                 foreach (IArchiveEntry info in task.File)
@@ -594,6 +662,7 @@ namespace UnRarIt
                     {
                         baseDirectory = MakeUnique(baseDirectory);
                     }
+                    task.Item.BaseDirectory = baseDirectory;
 
                     FileInfo dest = new FileInfo(Reimplement.CombinePath(baseDirectory.FullName, name));
                     if (dest.Exists)
@@ -835,7 +904,6 @@ namespace UnRarIt
             foreach (ArchiveItem item in Files.SelectedItems)
             {
                 item.DeleteFiles();
-                item.Remove();
             }
             Files.EndUpdate();
             AdjustHeaders();
@@ -873,6 +941,37 @@ namespace UnRarIt
                     item.StateImageIndex = 0;
                 }
             }
+        }
+
+        private void CtxOpenDirectory_Click(object sender, EventArgs e)
+        {
+            if (Files.SelectedItems.Count == 0)
+            {
+                return;
+            }
+            ArchiveItem item = Files.SelectedItems[0] as ArchiveItem;
+            if (item == null)
+            {
+                return;
+            }
+            Process.Start(item.BaseDirectory.FullName);
+        }
+
+        private void FilesCtx_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            bool hasItems = Files.SelectedItems.Count != 0;
+            CtxOpenDirectory.Enabled = hasItems;
+            if (!hasItems)
+            {
+                return;
+            }
+            ArchiveItem item = Files.SelectedItems[0] as ArchiveItem;
+            if (item == null)
+            {
+                CtxOpenDirectory.Enabled = false;
+                return;
+            }
+            CtxOpenDirectory.Image = FileIcon.GetIcon(item.BaseDirectory.FullName, FileIconSize.Small);
         }
     }
 }

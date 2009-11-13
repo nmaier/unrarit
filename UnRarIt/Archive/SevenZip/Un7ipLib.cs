@@ -35,40 +35,32 @@ namespace UnRarIt.Archive.SevenZip
         Dictionary<string, IArchiveEntry> items = new Dictionary<string, IArchiveEntry>();
         string password = string.Empty;
         IEnumerator<string> passwords;
-        List<FileInfo> archiveFiles;
+        FileInfo archive;
         FileInfo current;
         Guid format;
-        Dictionary<FileInfo, SevenZipFileStream> fileStreams = new Dictionary<FileInfo, SevenZipFileStream>();
+        Dictionary<string, SevenZipFileStream> fileStreams = new Dictionary<string, SevenZipFileStream>();
         bool passwordRequested = false;
         bool nextPassword = true;
 
-        public SevenZipArchiveFile(IEnumerable<FileInfo> aArchive, Guid aFormat)
+        public SevenZipArchiveFile(FileInfo aArchive, Guid aFormat)
         {
-            archiveFiles = new List<FileInfo>(aArchive);
-            archiveFiles.Sort(new FileInfoComparer());
+            archive = aArchive;
             format = aFormat;
 
-            if (archiveFiles.Count == 0)
+            if (!archive.Exists)
             {
                 throw new FileNotFoundException("Empty List supplied");
             }
 
-            foreach (FileInfo f in archiveFiles)
-            {
-                if (!f.Exists)
-                {
-                    throw new FileNotFoundException("SevenZip file not found!", f.FullName);
-                }
-            }
-            current = archiveFiles[0];
+            current = archive;
         }
 
         public FileInfo Archive
         {
-            get { return archiveFiles[0]; }
+            get { return archive; }
         }
 
-        class ExtractCallback : IArchiveExtractCallback, IGetPassword, IDisposable, IProgress
+        class ExtractCallback : IArchiveExtractCallback, IGetPassword, IDisposable, IProgress, IArchiveOpenVolumeCallback
         {
             private SevenZipArchiveFile owner;
             private Dictionary<uint, IArchiveEntry> files;
@@ -105,7 +97,13 @@ namespace UnRarIt.Archive.SevenZip
                         stream.Dispose();
                     }
                     current = index;
-                    stream = new SevenZipFileStream(files[index].Destination, FileMode.Create, FileAccess.Write);
+                    stream = new SevenZipOutFileStream(files[index].Destination, (long)files[index].Size);
+                    ExtractFileEventArgs args = new ExtractFileEventArgs(owner.Archive, files[current], ExtractFileEventArgs.ExtractionStage.Extracting);
+                    owner.ExtractFile(owner, args);
+                    if (!args.ContinueOperation)
+                    {
+                        throw new IOException("User aborted!");
+                    }
                 }
                 else
                 {
@@ -115,7 +113,6 @@ namespace UnRarIt.Archive.SevenZip
                     }
                     stream = new SevenZipNullStream();
                 }
-                current = index;
                 outStream = stream;
                 mode = extractMode;
             }
@@ -133,7 +130,7 @@ namespace UnRarIt.Archive.SevenZip
                 }
                 if (mode == ExtractMode.Extract && owner.ExtractFile != null)
                 {
-                    ExtractFileEventArgs args = new ExtractFileEventArgs(owner.Archive, files[current], files[current].Destination.FullName);
+                    ExtractFileEventArgs args = new ExtractFileEventArgs(owner.Archive, files[current], ExtractFileEventArgs.ExtractionStage.Done);
                     owner.ExtractFile(owner, args);
                     if (!args.ContinueOperation)
                     {
@@ -154,13 +151,23 @@ namespace UnRarIt.Archive.SevenZip
                     stream = null;
                 }
             }
+
+            int IArchiveOpenVolumeCallback.GetStream(string name, ref IInStream stream)
+            {
+                return (owner as IArchiveOpenVolumeCallback).GetStream(name, ref stream);
+            }
+            void IArchiveOpenVolumeCallback.GetProperty(ItemPropId propID, ref PropVariant rv)
+            {
+                (owner as IArchiveOpenVolumeCallback).GetProperty(propID, ref rv);
+            }
+
         }
 
         public void Extract()
         {
             try
             {
-                using (SevenZipArchive ar = new SevenZipArchive(archiveFiles[0], this, format))
+                using (SevenZipArchive ar = new SevenZipArchive(archive, this, format))
                 {
                     List<uint> indices = new List<uint>();
                     Dictionary<uint, IArchiveEntry> files = new Dictionary<uint, IArchiveEntry>();
@@ -204,7 +211,7 @@ namespace UnRarIt.Archive.SevenZip
 
         public void Open(IEnumerator<string> aPasswords)
         {
-                            bool opened = false;
+            bool opened = false;
             try
             {
                 passwords = aPasswords;
@@ -224,7 +231,7 @@ namespace UnRarIt.Archive.SevenZip
                     {
                         try
                         {
-                            using (SevenZipArchive ar = new SevenZipArchive(archiveFiles[0], this, f))
+                            using (SevenZipArchive ar = new SevenZipArchive(archive, this, f))
                             {
                                 nextPassword = true;
                                 IArchiveEntry minCrypted = null;
@@ -394,7 +401,7 @@ namespace UnRarIt.Archive.SevenZip
             {
                 case ItemPropId.Name:
                     rv.type = VarEnum.VT_BSTR;
-                    rv.union.bstrValue = Marshal.StringToBSTR(archiveFiles[0].FullName);
+                    rv.union.bstrValue = Marshal.StringToBSTR(archive.FullName);
                     return;
                 case ItemPropId.Size:
                     rv.type = VarEnum.VT_UI8;
@@ -413,14 +420,14 @@ namespace UnRarIt.Archive.SevenZip
                 return 1;
             }
             current = c;
-            if (fileStreams.ContainsKey(current))
+            if (fileStreams.ContainsKey(name))
             {
-                stream = fileStreams[current];
+                stream = fileStreams[name];
                 stream.Seek(0, 0);
                 return 0;
             }
             SevenZipFileStream fileStream = new SevenZipFileStream(current, FileMode.Open, FileAccess.Read);
-            fileStreams[current] = fileStream;
+            fileStreams[name] = fileStream;
             stream = fileStream;
             return 0;
         }

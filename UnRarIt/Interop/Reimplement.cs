@@ -28,7 +28,7 @@ namespace UnRarIt.Interop
                 }
                 result.Append(ch);
             }
-            fileName = result.ToString();
+            fileName = result.ToString().Trim();
             return fileName.Replace('/', '\\');
         }
 
@@ -54,9 +54,9 @@ namespace UnRarIt.Interop
             }
             path1 = CleanFileName(path1);
             path2 = CleanFileName(path2);
-            if ((path2.Length >= 1 && path2[0] == Path.DirectorySeparatorChar) || (path2.Length >= 2 && path2[1] == Path.VolumeSeparatorChar))
+            while ((path2.Length >= 1 && path2[0] == Path.DirectorySeparatorChar) || (path2.Length >= 2 && path2[1] == Path.VolumeSeparatorChar))
             {
-                throw new ArgumentException("path2 is rooted");
+                path2 = path2.Substring(1);
             }
             if (string.IsNullOrEmpty(path1))
             {

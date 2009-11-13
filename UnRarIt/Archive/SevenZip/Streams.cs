@@ -33,28 +33,49 @@ namespace UnRarIt.Archive.SevenZip
 
     internal class SevenZipFileStream : SevenZipStream
     {
-        FileStream stream;
+        protected FileStream stream;
         public SevenZipFileStream(FileInfo file, FileMode mode, FileAccess access)
         {
             if (!file.Directory.Exists && access != FileAccess.Read)
             {
                 file.Directory.Create();
             }
-            stream = new FileStream(file.FullName, mode, access);
+            stream = new FileStream(file.FullName, mode, access, FileShare.Read, 8388608);
         }
 
         public ulong Seek(long offset, uint seekOrigin)
         {
-            return (ulong)stream.Seek(offset, (SeekOrigin)seekOrigin);
+            try
+            {
+                return (ulong)stream.Seek(offset, (SeekOrigin)seekOrigin);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         public uint Read(byte[] data, uint size)
         {
-            return (uint)stream.Read(data, 0, (int)size);
+            try
+            {
+                return (uint)stream.Read(data, 0, (int)size);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         public uint Write(byte[] data, uint size)
         {
-            stream.Write(data, 0, (int)size);
-            return size;
+            try
+            {
+                stream.Write(data, 0, (int)size);
+                return size;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         public void Dispose()
         {
@@ -62,6 +83,18 @@ namespace UnRarIt.Archive.SevenZip
             {
                 stream.Dispose();
                 stream = null;
+            }
+        }
+    }
+    internal class SevenZipOutFileStream : SevenZipFileStream
+    {
+        public SevenZipOutFileStream(FileInfo file, long size)
+            : base(file, FileMode.Create, FileAccess.ReadWrite)
+        {
+            if (size > 0)
+            {
+                stream.SetLength(size);
+                stream.Flush();
             }
         }
     }

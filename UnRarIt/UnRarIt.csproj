@@ -70,6 +70,7 @@
     <Compile Include="Archive\SevenZip\Streams.cs" />
     <Compile Include="Archive\SevenZip\Un7ipLib.cs" />
     <Compile Include="Interop\CpuInfo.cs" />
+    <Compile Include="Interop\FileIcon.cs" />
     <Compile Include="UI\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,10 +156,17 @@
     <None Include="Resources\new.png" />
     <None Include="Resources\preferences.png" />
     <None Include="Resources\run.png" />
+    <None Include="Resources\addpassword.png" />
     <Content Include="Resources\clearselected.png" />
+    <None Include="Resources\close.png" />
+    <None Include="Resources\delete.png" />
     <Content Include="Resources\deletefiles.png" />
     <Content Include="Resources\clearlist.png" />
     <None Include="Resources\reqerror.png" />
+    <None Include="Resources\license.png" />
+    <None Include="Resources\export.png" />
+    <None Include="Resources\import.png" />
+    <None Include="Resources\extract.png" />
     <Content Include="UI\unrarit.ico" />
   </ItemGroup>
   <ItemGroup>
