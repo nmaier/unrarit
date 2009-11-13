@@ -12,7 +12,7 @@
     <AssemblyName>UnRarIt</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ApplicationIcon>UI\unrarit.ico</ApplicationIcon>
+    <ApplicationIcon>unrarit.ico</ApplicationIcon>
     <SignManifests>false</SignManifests>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -168,6 +168,7 @@
     <None Include="Resources\import.png" />
     <None Include="Resources\extract.png" />
     <Content Include="UI\unrarit.ico" />
+    <Content Include="unrarit.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GetOptNet\GetOptNet.csproj">

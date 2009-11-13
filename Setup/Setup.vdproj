@@ -16,13 +16,7 @@
         "Entry"
         {
         "MsmKey" = "8:_0B32E6B58CBFF3B1F21874D678C2D41B"
-        "OwnerKey" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
-        "OwnerKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -51,8 +45,14 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
+        "OwnerKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -389,7 +389,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UnRarIt.Net"
         "ProductCode" = "8:{CCDA29E5-37E8-4E8A-81EB-2FFCE023E8BA}"
-        "PackageCode" = "8:{FCB2F21D-B852-4EF4-9928-06694355E273}"
+        "PackageCode" = "8:{48FE59DC-A9C5-4055-8B8B-9FBFA7D38DD0}"
         "UpgradeCode" = "8:{AF6374D3-725E-4BC2-9C06-722794CDAD33}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -405,7 +405,7 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:Batch unrar/unzip archive files, even password protected ones."
         "ARPURLINFOABOUT" = "8:http://tn123.ath.cx/"
-        "ARPPRODUCTICON" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
+        "ARPPRODUCTICON" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
         "ARPIconIndex" = "3:32512"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -508,32 +508,46 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_D80ED48F184D409896E74CB4C5DCF35F"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_2062A6269812443C9D0D00F38265854C"
             {
-            "Name" = "8:UnrarIt.Net"
+            "Name" = "8:UnRarIt"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:32512"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
-            "Folder" = "8:_6C23E72D64BB460989FF07F808981C88"
-            "WorkingFolder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
-            "Icon" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_DE89984B9EDB452399864253D2D0D4CA"
-            {
-            "Name" = "8:UnrarIt"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:32512"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
+            "Target" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
             "Folder" = "8:_17AC6B0CF3ED4BA585B7DAF048A8C60E"
             "WorkingFolder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
-            "Icon" = "8:_371D475A5F9547BC87E7CF2E5BB4540D"
+            "Icon" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_3BF77CDECC84437B83DF31B7B96B6995"
+            {
+            "Name" = "8:UnRarIt.Net"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:32512"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
+            "Folder" = "8:_6C23E72D64BB460989FF07F808981C88"
+            "WorkingFolder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Icon" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_92395592232D43DEA66882A09C32ABD3"
+            {
+            "Name" = "8:License.rtf"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_A9EFFA1148AD4D7BB68146999D317864"
+            "Folder" = "8:_6C23E72D64BB460989FF07F808981C88"
+            "WorkingFolder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Icon" = "8:"
             "Feature" = "8:"
             }
         }
@@ -933,35 +947,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_01797AB8F8E64F939E41EC54EB831493"
-            {
-            "SourcePath" = "8:"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:ContentFiles"
-            "OutputProjectGuid" = "8:{C743A9DD-790D-44C0-82E8-14C3784F57FA}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_371D475A5F9547BC87E7CF2E5BB4540D"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FF0751A4E6A94604A3AD77E580521FB6"
             {
             "SourcePath" = "8:..\\UnRarIt\\obj\\Release\\UnRarIt.exe"
             "TargetName" = "8:"
