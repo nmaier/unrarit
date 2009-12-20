@@ -1,5 +1,5 @@
 // DLLExports.cpp
-
+#define DO_NOT_DECLARE_COMSTUBS
 #include "StdAfx.h"
 
 #include "../../Common/MyInitGuid.h"

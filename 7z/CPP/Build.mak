@@ -8,9 +8,6 @@ LIBS = $(LIBS) bufferoverflowU.lib
 !ENDIF
 !ENDIF
 
-!IFNDEF ARCH
-ARCH = dbg
-!ENDIF
 
 !IFNDEF O
 !IFDEF CPU
@@ -20,16 +17,17 @@ O=O
 !ENDIF
 !ENDIF
 
-!IF "$(CPU)" != "IA64"
-!IF "$(CPU)" != "AMD64"
-MY_ML = ml
-EXTRA_CFLAGS = -Oy
-CRT = Intel
-!ELSE
-MY_ML = ml64
-EXTRA_CFLAGS = 
+EXTRA_CFLAGS = -DDO_NOT_DECLARE_COMSTUBS=1 
+
+!IF "$(CPU)" == "AMD64"
+MY_ML = ml64 -Dx64
 CRT = AMD64
-!ENDIF
+!ELSEIF "$(CPU)" == "ARM"
+MY_ML = armasm
+!ELSE
+MY_ML = ml
+EXTRA_CFLAGS = $(EXTRA_CFLAGS) -Oy
+CRT = Intel
 !ENDIF
 
 
@@ -39,13 +37,18 @@ RFLAGS = $(RFLAGS) -dUNDER_CE
 LFLAGS = $(LFLAGS) /ENTRY:mainACRTStartup
 !ENDIF
 !ELSE
+!IFNDEF NEW_COMPILER
 LFLAGS = $(LFLAGS) -OPT:NOWIN98
+!ENDIF
 CFLAGS = $(CFLAGS) -Gr
 LIBS = $(LIBS) user32.lib advapi32.lib shell32.lib
 !ENDIF
 
-
+!IF "$(CPU)" == "ARM"
+COMPL_ASM = $(MY_ML) $** $O/$(*B).obj
+!ELSE
 COMPL_ASM = $(MY_ML) -c -Fo$O/ $**
+!ENDIF
 
 CFLAGS = $(CFLAGS) $(EXTRA_CFLAGS) -nologo -c -Fo$O/ -WX -EHsc -Gr -Gy -GR-
 
@@ -72,9 +75,7 @@ CFLAGS_O2 = $(CFLAGS_O2) -arch:IA32
 !ENDIF
 !ENDIF
 
-
-
-LFLAGS = $(LFLAGS) -nologo -OPT:NOWIN98 -OPT:REF -OPT:ICF
+LFLAGS = $(LFLAGS) -nologo -OPT:REF -OPT:ICF
 
 !IFDEF DEF_FILE
 LFLAGS = $(LFLAGS) -DLL -DEF:$(DEF_FILE)

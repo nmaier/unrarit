@@ -6,11 +6,11 @@ DIRS = \
   Format7zF\~ \
   Format7zR\~ \
   Format7zExtract\~ \
-  Format7zExtractR\~
-
-!IF "$(CPU)" == "x86"
-DIRS = $(DIRS) SFXCon\~ SFXSetup\~ SFXWin\~
-!ENDIF
+  Format7zExtractR\~ \
+  LzmaCon\~ \
+  SFXCon\~ \
+  SFXSetup\~ \
+  SFXWin\~ \
   
 all: $(DIRS)
 
