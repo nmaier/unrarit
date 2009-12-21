@@ -18,13 +18,14 @@ namespace UnRarIt.Interop
             for (int i = 0, e = fileName.Length; i < e; ++i)
             {
                 char ch = fileName[i];
-                if (ch < 32 || ch == 34 || ch == 60 || ch == 62 || ch == 63 || ch == 127)
+                if (ch < 32 || ch == 34 || ch == 60 || ch == 62 || ch == 63 || ch == 127 || ch == 0x2a || ch == 0x3f)
                 {
                     if (i == e - 1)
                     {
                         break;
                     }
                     result.Append('_');
+                    continue;
                 }
                 result.Append(ch);
             }
