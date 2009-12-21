@@ -34,13 +34,25 @@ namespace UnRarIt.Archive.SevenZip
     internal class SevenZipFileStream : SevenZipStream
     {
         protected FileStream stream;
+        public SevenZipFileStream(FileInfo file, FileMode mode)
+        {
+            Init(file, mode, FileAccess.Read, 4194304);
+        }
         public SevenZipFileStream(FileInfo file, FileMode mode, FileAccess access)
+        {
+            Init(file, mode, access, 4194304);
+        }
+        public SevenZipFileStream(FileInfo file, FileMode mode, FileAccess access, long buffering)
+        {
+            Init(file, mode, access, (int)Math.Min(buffering, 4194304));
+        }
+        private void Init(FileInfo file, FileMode mode, FileAccess access, int buffering)
         {
             if (!file.Directory.Exists && access != FileAccess.Read)
             {
                 file.Directory.Create();
             }
-            stream = new FileStream(file.FullName, mode, access, FileShare.Read, 8388608);
+            stream = new FileStream(file.FullName, mode, access, FileShare.Read, buffering);
         }
 
         public ulong Seek(long offset, uint seekOrigin)
@@ -89,7 +101,7 @@ namespace UnRarIt.Archive.SevenZip
     internal class SevenZipOutFileStream : SevenZipFileStream
     {
         public SevenZipOutFileStream(FileInfo file, long size)
-            : base(file, FileMode.Create, FileAccess.ReadWrite)
+            : base(file, FileMode.Create, FileAccess.ReadWrite, size)
         {
             if (size > 0)
             {

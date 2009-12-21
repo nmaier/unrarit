@@ -124,6 +124,8 @@ namespace UnRarIt.Archive.SevenZip
 
             public void SetOperationResult(OperationResult resultEOperationResult)
             {
+                stream.Dispose();
+                stream = null;
                 if (mode != ExtractMode.Skip && resultEOperationResult != OperationResult.OK)
                 {
                     throw new IOException(resultEOperationResult.ToString());
@@ -259,10 +261,7 @@ namespace UnRarIt.Archive.SevenZip
                                     {
                                         name = Path.GetFileName(name);
                                     }
-                                    if (Path.GetExtension(name).ToLower() == ".7z")
-                                    {
 
-                                    }
                                     ulong size = ar.GetProperty(i, ItemPropId.Size).GetUlong();
                                     ulong packedSize = ar.GetProperty(i, ItemPropId.PackedSize).GetUlong();
                                     if (packedSize == 0)
