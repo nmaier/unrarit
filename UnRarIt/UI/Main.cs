@@ -361,7 +361,7 @@ namespace UnRarIt
             UnrarIt.Click -= UnRarIt_Click;
 
             Progress.Visible = true;
-            int threads = Math.Min(Environment.ProcessorCount, 4);
+            int threads = Math.Min(Environment.ProcessorCount, 3);
 
             Progress.Value = 0;
             Progress.Maximum = 0;
@@ -538,6 +538,7 @@ namespace UnRarIt
                     string cd = Path.GetDirectoryName(p);
                     if (string.IsNullOrEmpty(cd))
                     {
+                        dn = null;
                         break;
                     }
                     for (; ; )
@@ -559,23 +560,21 @@ namespace UnRarIt
                         break;
                     }
                 }
-                if (dn != null)
-                {
-                    if (!string.IsNullOrEmpty(rv))
-                    {
-                        rv += "\\";
-                    }
-                    rv += dn;
-                    work.Clear();
-                    foreach (string p in paths)
-                    {
-                        work.Add(p.Substring(rv.Length + 1));
-                    }
-                }
-                else
+                if (dn == null)
                 {
                     break;
                 }
+                if (!string.IsNullOrEmpty(rv))
+                {
+                    rv += "\\";
+                }
+                rv += dn;
+                work.Clear();
+                foreach (string p in paths)
+                {
+                    work.Add(p.Substring(rv.Length + 1));
+                }
+                dn = null;
             }
             return rv;
         }
@@ -596,7 +595,7 @@ namespace UnRarIt
                 );
                 List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
 
-                
+
                 uint items = 0;
                 List<string> paths = new List<string>();
                 foreach (IArchiveEntry info in task.File)
