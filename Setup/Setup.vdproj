@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_08F2E81A0ED24290B50E97EF7F06C8BA"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0B32E6B58CBFF3B1F21874D678C2D41B"
         "OwnerKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
         "MsmSig" = "8:_UNDEFINED"
@@ -22,6 +28,12 @@
         "Entry"
         {
         "MsmKey" = "8:_4D2FC38C0F2448E9B7CE1BEB73686C40"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_822815C46DE84C639D4C899C588D4147"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -40,6 +52,12 @@
         "Entry"
         {
         "MsmKey" = "8:_CF436AD3FB3C48B3BFD54983A803A001"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D69436D106EC4FA391CDC33B309EE487"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -166,6 +184,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_08F2E81A0ED24290B50E97EF7F06C8BA"
+            {
+            "SourcePath" = "8:..\\UnRarIt\\bin\\Release\\7z-x64-generic.dll"
+            "TargetName" = "8:7z-x64-generic.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0B32E6B58CBFF3B1F21874D678C2D41B"
             {
             "AssemblyRegister" = "3:1"
@@ -201,6 +239,26 @@
             {
             "SourcePath" = "8:..\\UnRarIt\\bin\\Release\\7z-x86-sse3.dll"
             "TargetName" = "8:7z-x86-sse3.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_822815C46DE84C639D4C899C588D4147"
+            {
+            "SourcePath" = "8:..\\UnRarIt\\bin\\Release\\CPUFeatures_x64.dll"
+            "TargetName" = "8:CPUFeatures_x64.dll"
             "Tag" = "8:"
             "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
             "Condition" = "8:"
@@ -261,6 +319,26 @@
             {
             "SourcePath" = "8:..\\UnRarIt\\bin\\Release\\7z-x86-generic.dll"
             "TargetName" = "8:7z-x86-generic.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D69436D106EC4FA391CDC33B309EE487"
+            {
+            "SourcePath" = "8:..\\UnRarIt\\bin\\Release\\7z-x64-sse3.dll"
+            "TargetName" = "8:7z-x64-sse3.dll"
             "Tag" = "8:"
             "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
             "Condition" = "8:"
@@ -388,14 +466,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UnRarIt.Net"
-        "ProductCode" = "8:{CCDA29E5-37E8-4E8A-81EB-2FFCE023E8BA}"
-        "PackageCode" = "8:{48FE59DC-A9C5-4055-8B8B-9FBFA7D38DD0}"
+        "ProductCode" = "8:{193128A6-3187-49E1-98ED-E2ED064ABE31}"
+        "PackageCode" = "8:{19B9EC0B-7D27-417B-A159-0EA0250E1A03}"
         "UpgradeCode" = "8:{AF6374D3-725E-4BC2-9C06-722794CDAD33}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0.5"
+        "ProductVersion" = "8:2.0.7"
         "Manufacturer" = "8:Nils Maier"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://tn123.ath.cx/UnRarIt"
