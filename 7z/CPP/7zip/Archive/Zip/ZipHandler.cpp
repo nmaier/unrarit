@@ -18,6 +18,7 @@
 #include "../../Compress/CopyCoder.h"
 #include "../../Compress/LzmaDecoder.h"
 #include "../../Compress/ImplodeDecoder.h"
+#include "../../Compress/PpmdZip.h"
 #include "../../Compress/ShrinkDecoder.h"
 
 #include "../../Crypto/WzAes.h"
@@ -127,7 +128,9 @@ static STATPROPSTG kProps[] =
 static STATPROPSTG kArcProps[] =
 {
   { NULL, kpidBit64, VT_BOOL},
-  { NULL, kpidComment, VT_BSTR}
+  { NULL, kpidComment, VT_BSTR},
+  { NULL, kpidPhySize, VT_UI8},
+  { NULL, kpidOffset, VT_UI8}
 };
 
 CHandler::CHandler()
@@ -159,9 +162,9 @@ STDMETHODIMP CHandler::GetArchiveProperty(PROPID propID, PROPVARIANT *value)
   switch(propID)
   {
     case kpidBit64:  if (m_Archive.IsZip64) prop = m_Archive.IsZip64; break;
-    case kpidComment:
-      prop = MultiByteToUnicodeString(BytesToString(m_Archive.m_ArchiveInfo.Comment), CP_ACP);
-      break;
+    case kpidComment:  prop = MultiByteToUnicodeString(BytesToString(m_Archive.ArcInfo.Comment), CP_ACP); break;
+    case kpidPhySize:  prop = m_Archive.ArcInfo.GetPhySize(); break;
+    case kpidOffset:  if (m_Archive.ArcInfo.StartPosition != 0) prop = m_Archive.ArcInfo.StartPosition; break;
   }
   prop.Detach(value);
   COM_TRY_END
@@ -595,6 +598,8 @@ HRESULT CZipDecoder::Decode(
       mi.Coder = new NCompress::NImplode::NDecoder::CCoder;
     else if (methodId == NFileHeader::NCompressionMethod::kLZMA)
       mi.Coder = new CLzmaDecoder;
+    else if (methodId == NFileHeader::NCompressionMethod::kPPMd)
+      mi.Coder = new NCompress::NPpmdZip::CDecoder(true);
     else
     {
       CMethodId szMethodID;

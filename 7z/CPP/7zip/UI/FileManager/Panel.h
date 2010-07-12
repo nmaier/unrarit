@@ -236,12 +236,12 @@ private:
 
   void ChangeWindowSize(int xSize, int ySize);
  
-  void InitColumns();
+  HRESULT InitColumns();
   // void InitColumns2(PROPID sortID);
   void InsertColumn(int index);
 
   void SetFocusedSelectedItem(int index, bool select);
-  void RefreshListCtrl(const UString &focusedName, int focusedPos, bool selectFocused,
+  HRESULT RefreshListCtrl(const UString &focusedName, int focusedPos, bool selectFocused,
       const UStringVector &selectedNames);
 
   void OnShiftSelectMessage();
@@ -335,8 +335,8 @@ public:
 
   void GetSelectedNames(UStringVector &selectedNames);
   void SaveSelectedState(CSelectedState &s);
-  void RefreshListCtrl(const CSelectedState &s);
-  void RefreshListCtrlSaveFocused();
+  HRESULT RefreshListCtrl(const CSelectedState &s);
+  HRESULT RefreshListCtrlSaveFocused();
 
   UString GetItemName(int itemIndex) const;
   UString GetItemPrefix(int itemIndex) const;
@@ -349,7 +349,7 @@ public:
   // PanelFolderChange.cpp
 
   void SetToRootFolder();
-  HRESULT BindToPath(const UString &fullPath, bool &archiveIsOpened, bool &encrypted); // can be prefix
+  HRESULT BindToPath(const UString &fullPath, const UString &arcFormat, bool &archiveIsOpened, bool &encrypted); // can be prefix
   HRESULT BindToPathAndRefresh(const UString &path);
   void OpenDrivesFolder();
   
@@ -367,6 +367,7 @@ public:
   HRESULT Create(HWND mainWindow, HWND parentWindow,
       UINT id,
       const UString &currentFolderPrefix,
+      const UString &arcFormat,
       CPanelCallback *panelCallback,
       CAppState *appState, bool &archiveIsOpened, bool &encrypted);
   void SetFocusToList();
@@ -465,9 +466,11 @@ public:
   void KillSelection();
 
   UString GetFolderTypeID() const;
+  bool IsFolderTypeEqTo(const wchar_t *s) const;
   bool IsRootFolder() const;
   bool IsFSFolder() const;
   bool IsFSDrivesFolder() const;
+  bool IsArcFolder() const;
   bool IsFsOrDrivesFolder() const { return IsFSFolder() || IsFSDrivesFolder(); }
   bool IsDeviceDrivesPrefix() const { return _currentFolderPrefix == L"\\\\.\\"; }
   bool IsFsOrPureDrivesFolder() const { return IsFSFolder() || (IsFSDrivesFolder() && !IsDeviceDrivesPrefix()); }
@@ -514,7 +517,7 @@ public:
   // bool _passwordIsDefined;
   // UString _password;
 
-  void RefreshListCtrl();
+  HRESULT RefreshListCtrl();
 
   void MessageBoxInfo(LPCWSTR message, LPCWSTR caption);
   void MessageBox(LPCWSTR message);
@@ -539,8 +542,9 @@ public:
   HRESULT OpenItemAsArchive(IInStream *inStream,
       const CTempFileInfo &tempFileInfo,
       const UString &virtualFilePath,
+      const UString &arcFormat,
       bool &encrypted);
-  HRESULT OpenItemAsArchive(const UString &name, bool &encrypted);
+  HRESULT OpenItemAsArchive(const UString &name, const UString &arcFormat, bool &encrypted);
   HRESULT OpenItemAsArchive(int index);
   void OpenItemInArchive(int index, bool tryInternal, bool tryExternal,
       bool editMode);

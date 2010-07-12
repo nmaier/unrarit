@@ -4,7 +4,7 @@ LIBS = $(LIBS) oleaut32.lib ole32.lib
 
 !IFDEF CPU
 !IFNDEF NO_BUFFEROVERFLOWU
-LIBS = $(LIBS) bufferoverflowU.lib
+#LIBS = $(LIBS) bufferoverflowU.lib
 !ENDIF
 !ENDIF
 
@@ -17,7 +17,7 @@ O=O
 !ENDIF
 !ENDIF
 
-EXTRA_CFLAGS = -DDO_NOT_DECLARE_COMSTUBS=1 
+EXTRA_CFLAGS = -DDO_NOT_DECLARE_COMSTUBS=1 -GS
 
 !IF "$(CPU)" == "AMD64"
 MY_ML = ml64 -Dx64
@@ -64,8 +64,8 @@ CFLAGS = $(CFLAGS) -W3
 CFLAGS_O1 = $(CFLAGS) -Od
 CFLAGS_O2 = $(CFLAGS) -Od
 !ELSEIF "$(ARCH)" == "sse3"
-CFLAGS_O1 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Og -Qipo -Ob2 -GS -arch:SSE3 -QxSSE3 -QaxHost
-CFLAGS_O2 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Qipo -Ob2 -Og -QxSSE3 -QaxHost
+CFLAGS_O1 = $(CFLAGS) -Og -Ox -Oi -Ot -GT -GF -Og -Qipo -Ob2 -GS -arch:SSE3 -QxSSE3 -QaxSSE4.2 -Quse-intel-optimized-headers
+CFLAGS_O2 = $(CFLAGS) -Og -Ox -Oi -Ot -GT -GF -Qipo -Ob2 -Og -QxSSE3 -QaxSSE4.2 -Quse-intel-optimized-headers
 !ELSE
 CFLAGS_O1 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Og -Qipo -Ob2 -GS
 CFLAGS_O2 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Qipo -Ob2 -Og 
@@ -90,6 +90,7 @@ COMPL_PCH  = $(CC) $(CFLAGS_O1) -Yc"StdAfx.h" -Fp$O/a.pch $**
 COMPL      = $(CC) $(CFLAGS_O1) -Yu"StdAfx.h" -Fp$O/a.pch $**
 
 all: $(PROGPATH)
+    echo $(PROGPATH)
 
 clean:
 	-del /Q $(PROGPATH) $O\*.exe $O\*.dll $O\*.obj $O\*.lib $O\*.exp $O\*.res $O\*.pch

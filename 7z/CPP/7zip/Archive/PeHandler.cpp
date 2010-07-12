@@ -145,7 +145,7 @@ struct COptHeader
   // UInt32 AddressOfEntryPoint;
   // UInt32 BaseOfCode;
   // UInt32 BaseOfData32;
-  // UInt64 ImageBase;
+  UInt64 ImageBase;
 
   UInt32 SectAlign;
   UInt32 FileAlign;
@@ -202,8 +202,8 @@ bool COptHeader::Parse(const Byte *p, UInt32 size)
 
   // AddressOfEntryPoint = Get32(p + 16);
   // BaseOfCode = Get32(p + 20);
-  // BaseOfData32 = Get32(p + 24);
-  // ImageBase = hdr64 ? GetUi64(p + 24) :Get32(p + 28);
+  // BaseOfData32 = hdr64 ? 0: Get32(p + 24);
+  ImageBase = hdr64 ? GetUi64(p + 24) : Get32(p + 28);
 
   SectAlign = Get32(p + 32);
   FileAlign = Get32(p + 36);
@@ -259,8 +259,9 @@ struct CSection
   // UInt16 NumRelocs;
   bool IsDebug;
   bool IsRealSect;
+  bool IsAdditionalSection;
 
-  CSection(): IsRealSect(false), IsDebug(false) {}
+  CSection(): IsRealSect(false), IsDebug(false), IsAdditionalSection(false) {}
   UInt64 GetPackSize() const { return PSize; }
 
   void UpdateTotalSize(UInt32 &totalSize)
@@ -448,6 +449,8 @@ struct CResItem
   bool IsBmp() const { return Type == 2; }
   bool IsIcon() const { return Type == 3; }
   bool IsString() const { return Type == 6; }
+  bool IsRcData() const { return Type == 10; }
+  bool IsRcDataOrUnknown() const { return IsRcData() || Type > 64; }
 };
 
 struct CStringItem
@@ -530,6 +533,7 @@ class CHandler:
   COptHeader _optHeader;
   UInt32 _totalSize;
   UInt32 _totalSizeLimited;
+  Int32 _mainSubfile;
 
   CRecordVector<CResItem> _items;
   CObjectVector<CStringItem> _strings;
@@ -621,6 +625,10 @@ enum
   kpidStackCommit,
   kpidHeapReserve,
   kpidHeapCommit,
+  kpidImageBase
+  // kpidAddressOfEntryPoint,
+  // kpidBaseOfCode,
+  // kpidBaseOfData32,
 };
 
 STATPROPSTG kArcProps[] =
@@ -648,7 +656,11 @@ STATPROPSTG kArcProps[] =
   { L"Stack Commit", kpidStackCommit, VT_UI8},
   { L"Heap Reserve", kpidHeapReserve, VT_UI8},
   { L"Heap Commit", kpidHeapCommit, VT_UI8},
- };
+  { L"Image Base", kpidImageBase, VT_UI8}
+  // { L"Address Of Entry Point", kpidAddressOfEntryPoint, VT_UI8},
+  // { L"Base Of Code", kpidBaseOfCode, VT_UI8},
+  // { L"Base Of Data", kpidBaseOfData32, VT_UI8},
+};
 
 STATPROPSTG kProps[] =
 {
@@ -689,7 +701,7 @@ STDMETHODIMP CHandler::GetArchiveProperty(PROPID propID, PROPVARIANT *value)
     case kpidLinkerVer:
     {
       CVersion v = { _optHeader.LinkerVerMajor, _optHeader.LinkerVerMinor };
-      VerToProp(v, prop); break;
+      VerToProp(v, prop);
       break;
     }
   
@@ -716,6 +728,13 @@ STDMETHODIMP CHandler::GetArchiveProperty(PROPID propID, PROPVARIANT *value)
     case kpidStackCommit: prop = _optHeader.StackCommit; break;
     case kpidHeapReserve: prop = _optHeader.HeapReserve; break;
     case kpidHeapCommit: prop = _optHeader.HeapCommit; break;
+
+    case kpidImageBase: prop = _optHeader.ImageBase; break;
+    // case kpidAddressOfEntryPoint: prop = _optHeader.AddressOfEntryPoint; break;
+    // case kpidBaseOfCode: prop = _optHeader.BaseOfCode; break;
+    // case kpidBaseOfData32: if (!_optHeader.Is64Bit()) prop = _optHeader.BaseOfData32; break;
+
+    case kpidMainSubfile: if (_mainSubfile >= 0) prop = (UInt32)_mainSubfile; break;
   }
   prop.Detach(value);
   return S_OK;
@@ -1240,16 +1259,26 @@ HRESULT CHandler::OpenResources(int sectionIndex, IInStream *stream, IArchiveOpe
   {
     UInt32 mask = (1 << numBits) - 1;
     size_t end = ((maxOffset + mask) & ~mask);
-    if (end < sect.VSize)
+    if (end < sect.VSize && end <= sect.PSize)
     {
       CSection sect2;
       sect2.Flags = 0;
+
+      // we skip Zeros to start of aligned block
+      size_t i;
+      for (i = maxOffset; i < end; i++)
+        if (_buf[i] != 0)
+          break;
+      if (i == end)
+        maxOffset = end;
+      
       sect2.Pa = sect.Pa + (UInt32)maxOffset;
       sect2.Va = sect.Va + (UInt32)maxOffset;
       sect2.PSize = sect.VSize - (UInt32)maxOffset;
       sect2.VSize = sect2.PSize;
       sect2.Name = ".rsrc_1";
       sect2.Time = 0;
+      sect2.IsAdditionalSection = true;
       _sections.Add(sect2);
     }
   }
@@ -1261,6 +1290,8 @@ HRESULT CHandler::Open2(IInStream *stream, IArchiveOpenCallback *callback)
 {
   const UInt32 kBufSize = 1 << 18;
   const UInt32 kSigSize = 2;
+
+  _mainSubfile = -1;
 
   CByteBuffer buffer;
   buffer.SetCapacity(kBufSize);
@@ -1358,6 +1389,7 @@ HRESULT CHandler::Open2(IInStream *stream, IArchiveOpenCallback *callback)
         CSection s2;
         s2.Pa = s2.Va = limit;
         s2.PSize = s2.VSize = s.Pa - limit;
+        s2.IsAdditionalSection = true;
         s2.Name = '[';
         s2.Name += GetDecString(num++);
         s2.Name += ']';
@@ -1374,7 +1406,9 @@ HRESULT CHandler::Open2(IInStream *stream, IArchiveOpenCallback *callback)
 
   _parseResources = true;
 
-  for (int i = 0; i < _sections.Size(); i++)
+  UInt64 mainSize = 0, mainSize2 = 0;
+  int i;
+  for (i = 0; i < _sections.Size(); i++)
   {
     const CSection &sect = _sections[i];
     CMixItem mixItem;
@@ -1386,12 +1420,26 @@ HRESULT CHandler::Open2(IInStream *stream, IArchiveOpenCallback *callback)
       {
         _resourceFileName = GetUnicodeString(sect.Name);
         for (int j = 0; j < _items.Size(); j++)
-          if (_items[j].Enabled)
+        {
+          const CResItem &item = _items[j];
+          if (item.Enabled)
           {
             mixItem.ResourceIndex = j;
             mixItem.StringIndex = -1;
+            if (item.IsRcDataOrUnknown())
+            {
+              if (item.Size >= mainSize)
+              {
+                mainSize2 = mainSize;
+                mainSize = item.Size;
+                _mainSubfile = _mixItems.Size();
+              }
+              else if (item.Size >= mainSize2)
+                mainSize2 = item.Size;
+            }
             _mixItems.Add(mixItem);
           }
+        }
         if (sect.PSize > sect.VSize)
         {
           int numBits = _optHeader.GetNumFileAlignBits();
@@ -1410,6 +1458,7 @@ HRESULT CHandler::Open2(IInStream *stream, IArchiveOpenCallback *callback)
               sect2.VSize = sect2.PSize;
               sect2.Name = ".rsrc_2";
               sect2.Time = 0;
+              sect2.IsAdditionalSection = true;
               _sections.Add(sect2);
             }
           }
@@ -1422,8 +1471,33 @@ HRESULT CHandler::Open2(IInStream *stream, IArchiveOpenCallback *callback)
     }
     mixItem.StringIndex = -1;
     mixItem.ResourceIndex = -1;
+    if (sect.IsAdditionalSection)
+    {
+      if (sect.PSize >= mainSize)
+      {
+        mainSize2 = mainSize;
+        mainSize = sect.PSize;
+        _mainSubfile = _mixItems.Size();
+      }
+      else
+        mainSize2 = sect.PSize;
+    }
     _mixItems.Add(mixItem);
   }
+  
+  if (mainSize2 >= (1 << 20) && mainSize < mainSize2 * 2)
+    _mainSubfile = -1;
+
+  for (i = 0; i < _mixItems.Size(); i++)
+  {
+    const CMixItem &mixItem = _mixItems[i];
+    if (mixItem.StringIndex < 0 && mixItem.ResourceIndex < 0 && _sections[mixItem.SectionIndex].Name == "_winzip_")
+    {
+      _mainSubfile = i;
+      break;
+    }
+  }
+
   return S_OK;
 }
 

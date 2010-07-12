@@ -26,6 +26,10 @@
 
 #include "ContextMenu.h"
 
+// {23170F69-40C1-278A-1000-000100020000}
+DEFINE_GUID(CLSID_CZipContextMenu,
+0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x00, 0x02, 0x00, 0x00);
+
 using namespace NWindows;
 
 HINSTANCE g_hInstance = 0;
@@ -96,7 +100,7 @@ STDMETHODIMP CShellExtClassFactory::LockServer(BOOL /* fLock */)
 
 #define NT_CHECK_FAIL_ACTION return FALSE;
 
-extern "C" __declspec(dllexport)
+extern "C"
 BOOL WINAPI DllMain(
   #ifdef UNDER_CE
   HANDLE hInstance
@@ -121,15 +125,13 @@ BOOL WINAPI DllMain(
 /////////////////////////////////////////////////////////////////////////////
 // Used to determine whether the DLL can be unloaded by OLE
 
-extern "C" __declspec(dllexport)
-HRESULT WINAPI DllCanUnloadNow(void)
+STDAPI DllCanUnloadNow(void)
 {
   // ODS("In DLLCanUnloadNow\r\n");
   return (g_DllRefCount == 0 ? S_OK : S_FALSE);
 }
 
-extern "C" __declspec(dllexport)
-HRESULT WINAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
+STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 {
   // ODS("In DllGetClassObject\r\n");
   *ppv = NULL;
@@ -225,8 +227,7 @@ static BOOL RegisterServer(CLSID clsid, LPCWSTR title)
   return TRUE;
 }
 
-extern "C" __declspec(dllexport)
-HRESULT WINAPI DllRegisterServer(void)
+STDAPI DllRegisterServer(void)
 {
   return RegisterServer(CLSID_CZipContextMenu, kShellExtName) ?  S_OK: SELFREG_E_CLASS;
 }
@@ -258,8 +259,7 @@ static BOOL UnregisterServer(CLSID clsid)
   return TRUE;
 }
 
-extern "C" __declspec(dllexport)
-HRESULT WINAPI DllUnregisterServer(void)
+STDAPI DllUnregisterServer(void)
 {
   return UnregisterServer(CLSID_CZipContextMenu) ? S_OK: SELFREG_E_CLASS;
 }

@@ -1,5 +1,5 @@
 /* XzDec.c -- Xz Decode
-2009-06-08 : Igor Pavlov : Public domain */
+2010-04-16 : Igor Pavlov : Public domain */
 
 /* #define XZ_DUMP */
 
@@ -295,7 +295,7 @@ static SRes Lzma2State_Code(void *pp, Byte *dest, SizeT *destLen, const Byte *sr
 {
   ELzmaStatus status;
   /* ELzmaFinishMode fm = (finishMode == LZMA_FINISH_ANY) ? LZMA_FINISH_ANY : LZMA_FINISH_END; */
-  SRes res = Lzma2Dec_DecodeToBuf((CLzma2Dec *)pp, dest, destLen, src, srcLen, (ELzmaFinishMode)finishMode, &status);
+  SRes res = Lzma2Dec_DecodeToBuf((CLzma2Dec *)pp, dest, destLen, src, srcLen, finishMode, &status);
   srcWasFinished = srcWasFinished;
   *wasFinished = (status == LZMA_STATUS_FINISHED_WITH_MARK);
   return res;
@@ -624,7 +624,7 @@ SRes XzUnpacker_Code(CXzUnpacker *p, Byte *dest, SizeT *destLen,
         return SZ_OK;
       }
       
-      res = MixCoder_Code(&p->decoder, dest, &destLen2, src, &srcLen2, False, (ECoderFinishMode)finishMode, status);
+      res = MixCoder_Code(&p->decoder, dest, &destLen2, src, &srcLen2, False, finishMode, status);
       XzCheck_Update(&p->check, dest, destLen2);
       
       (*srcLen) += srcLen2;
@@ -858,6 +858,8 @@ SRes XzUnpacker_Code(CXzUnpacker *p, Byte *dest, SizeT *destLen,
         }
         break;
       }
+      
+      case XZ_STATE_BLOCK: break; /* to disable GCC warning */
     }
   }
   /*

@@ -83,8 +83,9 @@ STDAPI CreateArchiver(const GUID *clsid, const GUID *iid, void **outObject)
   return S_OK;
 }
 
-EXTERN_C __declspec(dllexport) HRESULT WINAPI GetHandlerProperty2(UInt32 formatIndex, PROPID propID, PROPVARIANT *value)
+STDAPI GetHandlerProperty2(UInt32 formatIndex, PROPID propID, PROPVARIANT *value)
 {
+  COM_TRY_BEGIN
   if (formatIndex >= g_NumArcs)
     return E_INVALIDARG;
   const CArcInfo &arc = *g_Arcs[formatIndex];
@@ -119,14 +120,15 @@ EXTERN_C __declspec(dllexport) HRESULT WINAPI GetHandlerProperty2(UInt32 formatI
   }
   prop.Detach(value);
   return S_OK;
+  COM_TRY_END
 }
 
-EXTERN_C __declspec(dllexport) HRESULT WINAPI GetHandlerProperty(PROPID propID, PROPVARIANT *value)
+STDAPI GetHandlerProperty(PROPID propID, PROPVARIANT *value)
 {
   return GetHandlerProperty2(g_DefaultArcIndex, propID, value);
 }
 
-EXTERN_C __declspec(dllexport) HRESULT WINAPI GetNumberOfFormats(UINT32 *numFormats)
+STDAPI GetNumberOfFormats(UINT32 *numFormats)
 {
   *numFormats = g_NumArcs;
   return S_OK;

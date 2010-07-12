@@ -1,5 +1,5 @@
 /* CpuArch.h -- CPU specific code
-2009-11-25: Igor Pavlov : Public domain */
+2010-05-20: Igor Pavlov : Public domain */
 
 #ifndef __CPU_ARCH_H
 #define __CPU_ARCH_H
@@ -24,8 +24,16 @@ If MY_CPU_LE_UNALIGN is not defined, we don't know about these properties of pla
 #define MY_CPU_64BIT
 #endif
 
-#if defined(_M_IX86) || defined(__i386__) || defined(MY_CPU_AMD64)
+#if defined(_M_IX86) || defined(__i386__)
+#define MY_CPU_X86
+#endif
+
+#if defined(MY_CPU_X86) || defined(MY_CPU_AMD64)
 #define MY_CPU_X86_OR_AMD64
+#endif
+
+#if defined(MY_CPU_X86) || defined(_M_ARM)
+#define MY_CPU_32BIT
 #endif
 
 #if defined(_WIN32) && defined(_M_ARM)
@@ -47,6 +55,7 @@ If MY_CPU_LE_UNALIGN is not defined, we don't know about these properties of pla
 #define GetUi64(p) (*(const UInt64 *)(p))
 #define SetUi16(p, d) *(UInt16 *)(p) = (d);
 #define SetUi32(p, d) *(UInt32 *)(p) = (d);
+#define SetUi64(p, d) *(UInt64 *)(p) = (d);
 
 #else
 
@@ -70,14 +79,16 @@ If MY_CPU_LE_UNALIGN is not defined, we don't know about these properties of pla
     ((Byte *)(p))[2] = (Byte)(_x_ >> 16); \
     ((Byte *)(p))[3] = (Byte)(_x_ >> 24); }
 
+#define SetUi64(p, d) { UInt64 _x64_ = (d); \
+    SetUi32(p, (UInt32)_x64_); \
+    SetUi32(((Byte *)(p)) + 4, (UInt32)(_x64_ >> 32)); }
+
 #endif
 
 #if defined(MY_CPU_LE_UNALIGN) && defined(_WIN64) && (_MSC_VER >= 1300)
 
-#if !defined(__INTEL_COMPILER) && !defined(__x86_64__) && !defined(_M_X64)
 #pragma intrinsic(_byteswap_ulong)
 #pragma intrinsic(_byteswap_uint64)
-#endif
 #define GetBe32(p) _byteswap_ulong(*(const UInt32 *)(const Byte *)(p))
 #define GetBe64(p) _byteswap_uint64(*(const UInt64 *)(const Byte *)(p))
 

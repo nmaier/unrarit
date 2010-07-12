@@ -67,6 +67,7 @@ public:
 HRESULT CPanel::OpenItemAsArchive(IInStream *inStream,
     const CTempFileInfo &tempFileInfo,
     const UString &virtualFilePath,
+    const UString &arcFormat,
     bool &encrypted)
 {
   encrypted = false;
@@ -95,6 +96,7 @@ HRESULT CPanel::OpenItemAsArchive(IInStream *inStream,
   UString password;
   RINOK(OpenFileFolderPlugin(inStream,
       folderLink.FilePath.IsEmpty() ? virtualFilePath : folderLink.FilePath,
+      arcFormat,
       &library, &newFolder, GetParent(), encrypted, password));
  
   folderLink.Password = password;
@@ -114,20 +116,20 @@ HRESULT CPanel::OpenItemAsArchive(IInStream *inStream,
   return S_OK;
 }
 
-HRESULT CPanel::OpenItemAsArchive(const UString &name, bool &encrypted)
+HRESULT CPanel::OpenItemAsArchive(const UString &name, const UString &arcFormat, bool &encrypted)
 {
   CTempFileInfo tfi;
   tfi.ItemName = name;
   tfi.FolderPath = _currentFolderPrefix;
   tfi.FilePath = _currentFolderPrefix + name;
-  return OpenItemAsArchive(NULL, tfi, _currentFolderPrefix + name, encrypted);
+  return OpenItemAsArchive(NULL, tfi, _currentFolderPrefix + name, arcFormat, encrypted);
 }
 
 HRESULT CPanel::OpenItemAsArchive(int index)
 {
   CDisableTimerProcessing disableTimerProcessing1(*this);
   bool encrypted;
-  RINOK(OpenItemAsArchive(GetItemRelPath(index), encrypted));
+  RINOK(OpenItemAsArchive(GetItemRelPath(index), UString(), encrypted));
   RefreshListCtrl();
   return S_OK;
 }
@@ -161,38 +163,49 @@ HRESULT CPanel::OpenParentArchiveFolder()
   return S_OK;
 }
 
-static const wchar_t *kStartExtensions[] =
-{
+static const char *kStartExtensions =
   #ifdef UNDER_CE
-  L"cab",
+  " cab"
   #endif
-  L"exe", L"bat", L"com",
-  L"chm",
-  L"msi", L"doc", L"xls", L"ppt", L"pps", L"wps", L"wpt", L"wks", L"xlr", L"wdb",
+  " exe bat com"
+  " chm"
+  " msi doc xls ppt pps wps wpt wks xlr wdb"
 
-  L"docx", L"docm", L"dotx", L"dotm", L"xlsx", L"xlsm", L"xltx", L"xltm", L"xlsb",
-  L"xlam", L"pptx", L"pptm", L"potx", L"potm", L"ppam", L"ppsx", L"ppsm", L"xsn",
-  L"msg",
-  L"dwf",
+  " docx docm dotx dotm xlsx xlsm xltx xltm xlsb"
+  " xlam pptx pptm potx potm ppam ppsx ppsm xsn"
+  " mpp"
+  " msg"
+  " dwf"
 
-  L"flv", L"swf",
+  " flv swf"
   
-  L"odt", L"ods",
-  L"wb3",
-  L"pdf"
-};
+  " odt ods"
+  " wb3"
+  " pdf"
+  " ";
 
-static bool DoItemAlwaysStart(const UString &name)
+static bool FindExt(const char *p, const UString &name)
 {
   int extPos = name.ReverseFind('.');
   if (extPos < 0)
     return false;
   UString ext = name.Mid(extPos + 1);
   ext.MakeLower();
-  for (int i = 0; i < sizeof(kStartExtensions) / sizeof(kStartExtensions[0]); i++)
-    if (ext.Compare(kStartExtensions[i]) == 0)
+  AString ext2 = UnicodeStringToMultiByte(ext);
+  for (int i = 0; p[i] != 0;)
+  {
+    int j;
+    for (j = i; p[j] != ' '; j++);
+    if (ext2.Length() == j - i && memcmp(p + i, (const char *)ext2, ext2.Length()) == 0)
       return true;
+    i = j + 1;
+  }
   return false;
+}
+
+static bool DoItemAlwaysStart(const UString &name)
+{
+  return FindExt(kStartExtensions, name);
 }
 
 static UString GetQuotedString(const UString &s)
@@ -575,7 +588,7 @@ void CPanel::OpenItemInArchive(int index, bool tryInternal, bool tryExternal, bo
         if (subStream)
         {
           bool encrypted;
-          if (OpenItemAsArchive(subStream, tempFileInfo, fullVirtPath, encrypted) == S_OK)
+          if (OpenItemAsArchive(subStream, tempFileInfo, fullVirtPath, UString(), encrypted) == S_OK)
           {
             tempDirectory.DisableDeleting();
             RefreshListCtrl();
@@ -623,7 +636,7 @@ void CPanel::OpenItemInArchive(int index, bool tryInternal, bool tryExternal, bo
   if (tryAsArchive)
   {
     bool encrypted;
-    if (OpenItemAsArchive(NULL, tempFileInfo, fullVirtPath, encrypted) == S_OK)
+    if (OpenItemAsArchive(NULL, tempFileInfo, fullVirtPath, UString(), encrypted) == S_OK)
     {
       tempDirectory.DisableDeleting();
       RefreshListCtrl();

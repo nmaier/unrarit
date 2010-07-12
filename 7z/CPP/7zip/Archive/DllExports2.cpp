@@ -22,7 +22,7 @@ HINSTANCE g_hInstance;
 
 #define NT_CHECK_FAIL_ACTION return FALSE;
 
-extern "C" __declspec(dllexport)
+extern "C"
 BOOL WINAPI DllMain(
   #ifdef UNDER_CE
   HANDLE
@@ -50,7 +50,7 @@ DEFINE_GUID(CLSID_CCodec,
 STDAPI CreateCoder(const GUID *clsid, const GUID *iid, void **outObject);
 STDAPI CreateArchiver(const GUID *classID, const GUID *iid, void **outObject);
 
-EXTERN_C __declspec(dllexport) HRESULT WINAPI CreateObject(const GUID *clsid, const GUID *iid, void **outObject)
+STDAPI CreateObject(const GUID *clsid, const GUID *iid, void **outObject)
 {
   // COM_TRY_BEGIN
   *outObject = 0;
@@ -65,7 +65,7 @@ EXTERN_C __declspec(dllexport) HRESULT WINAPI CreateObject(const GUID *clsid, co
   // COM_TRY_END
 }
 
-EXTERN_C __declspec(dllexport) HRESULT WINAPI SetLargePageMode()
+STDAPI SetLargePageMode()
 {
   #if defined(_WIN32) && defined(_7ZIP_LARGE_PAGES)
   SetLargePageSize();
