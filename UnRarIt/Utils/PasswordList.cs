@@ -39,7 +39,7 @@ namespace UnRarIt.Utils
             }
             private void setScore()
             {
-                score = Math.Max(0, (36 - ((int)baseStamp - lastUsed)));
+                score = 200 - Math.Min(200, Math.Max(0, (int)baseStamp - lastUsed));
                 score += count * score;
             }
             public int CompareTo(Password rhs)
@@ -170,6 +170,8 @@ namespace UnRarIt.Utils
             using (StreamReader r = new StreamReader(aFile, Encoding.UTF8))
             {
                 AddFromStream(r);
+                dirty = true;
+                Save();
             }
         }
 
@@ -209,7 +211,6 @@ namespace UnRarIt.Utils
                 {
                     passwords[idx] = new Password(toAdd.Pass, passwords[idx].Count + toAdd.Count, Math.Max(toAdd.LastUsed, passwords[idx].LastUsed));
                 }
-                dirty = true;
             }
             passwords.Sort();
         }
@@ -224,6 +225,7 @@ namespace UnRarIt.Utils
             else
             {
                 used[password] = new Password(password);
+                Save();
             }
         }
 
@@ -233,7 +235,6 @@ namespace UnRarIt.Utils
             {
                 return;
             }
-            Load();
             foreach (Password p in used.Values)
             {
                 int idx = passwords.IndexOf(p);

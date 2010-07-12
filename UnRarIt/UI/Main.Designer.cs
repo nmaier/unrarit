@@ -34,7 +34,7 @@
             System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Split-Archives", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            this.Files = new System.Windows.Forms.ListView();
+            this.Files = new UnRarIt.UI.ListView();
             this.columnFile = new System.Windows.Forms.ColumnHeader();
             this.columnSize = new System.Windows.Forms.ColumnHeader();
             this.columnStatus = new System.Windows.Forms.ColumnHeader();
@@ -472,7 +472,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView Files;
+        private UnRarIt.UI.ListView Files;
         private System.Windows.Forms.Button UnrarIt;
         private System.Windows.Forms.ColumnHeader columnFile;
         private System.Windows.Forms.ColumnHeader columnSize;

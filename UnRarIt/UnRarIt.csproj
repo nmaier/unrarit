@@ -51,7 +51,7 @@
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
@@ -89,6 +89,9 @@
     <Compile Include="Interop\IFileIcon.cs" />
     <Compile Include="Interop\Reimplement.cs" />
     <Compile Include="UI\ArchiveItem.cs" />
+    <Compile Include="UI\ListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +150,7 @@
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\PartConsumer.cs" />
+    <Compile Include="Utils\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\unrarit-about.png" />
@@ -157,6 +161,7 @@
     <None Include="Resources\preferences.png" />
     <None Include="Resources\run.png" />
     <None Include="Resources\addpassword.png" />
+    <None Include="Resources\abort.png" />
     <Content Include="Resources\clearselected.png" />
     <None Include="Resources\close.png" />
     <None Include="Resources\delete.png" />
@@ -167,6 +172,7 @@
     <None Include="Resources\export.png" />
     <None Include="Resources\import.png" />
     <None Include="Resources\extract.png" />
+    <None Include="Resources\process-stop.png" />
     <Content Include="unrarit.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -97,13 +97,15 @@ namespace UnRarIt.Archive.SevenZip
                         stream.Dispose();
                     }
                     current = index;
-                    stream = new SevenZipOutFileStream(files[index].Destination, (long)files[index].Size);
                     ExtractFileEventArgs args = new ExtractFileEventArgs(owner.Archive, files[current], ExtractFileEventArgs.ExtractionStage.Extracting);
                     owner.ExtractFile(owner, args);
                     if (!args.ContinueOperation)
                     {
                         throw new IOException("User aborted!");
                     }
+                    SevenZipOutFileStream ostream = new SevenZipOutFileStream(files[index].Destination, (long)files[index].Size);
+                    ostream.ProgressHandler += owner.ExtractProgress;
+                    stream = ostream;
                 }
                 else
                 {
@@ -124,8 +126,11 @@ namespace UnRarIt.Archive.SevenZip
 
             public void SetOperationResult(OperationResult resultEOperationResult)
             {
-                stream.Dispose();
-                stream = null;
+                if (stream != null)
+                {
+                    stream.Dispose();
+                    stream = null;
+                }
                 if (mode != ExtractMode.Skip && resultEOperationResult != OperationResult.OK)
                 {
                     throw new IOException(resultEOperationResult.ToString());
@@ -351,6 +356,7 @@ namespace UnRarIt.Archive.SevenZip
         public event PasswordRequiredHandler PasswordRequired;
         public event PasswordAttemptHandler PasswordAttempt;
         public event ExtractFileHandler ExtractFile;
+        public event ExtractProgressHandler ExtractProgress;
 
         public void SetTotal(IntPtr files, IntPtr bytes)
         {

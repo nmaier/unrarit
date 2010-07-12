@@ -77,7 +77,7 @@ namespace UnRarIt.Archive.SevenZip
                 throw ex;
             }
         }
-        public uint Write(byte[] data, uint size)
+        virtual public uint Write(byte[] data, uint size)
         {
             try
             {
@@ -100,14 +100,49 @@ namespace UnRarIt.Archive.SevenZip
     }
     internal class SevenZipOutFileStream : SevenZipFileStream
     {
-        public SevenZipOutFileStream(FileInfo file, long size)
-            : base(file, FileMode.Create, FileAccess.ReadWrite, size)
+        const uint PROGRESS_SIZE = 25 * 1024 * 1024;
+        const uint FLUSH_SIZE = 250 * 1024 * 1024;
+
+        long written = 0;
+        long fileSize;
+        uint flush = FLUSH_SIZE;
+        uint progress = PROGRESS_SIZE;
+        FileInfo file;
+        public SevenZipOutFileStream(FileInfo aFile, long aSize)
+            : base(aFile, FileMode.Create, FileAccess.ReadWrite)
         {
-            if (size > 0)
+            file = aFile;
+            fileSize = aSize;
+            if (fileSize > 0)
             {
-                stream.SetLength(size);
+                stream.SetLength(fileSize);
                 stream.Flush();
             }
         }
+        override public uint Write(byte[] data, uint size)
+        {
+            uint rv = base.Write(data, size);
+            flush -= Math.Min(rv, flush);
+            if (flush == 0)
+            {
+                stream.Flush();
+                flush = FLUSH_SIZE;
+            }
+            written += rv;
+            
+            if (ProgressHandler != null)
+            {
+                progress -= Math.Min(rv, progress);
+                if (progress == 0)
+                {
+                    ProgressHandler(this, file, written, fileSize);
+                    progress = PROGRESS_SIZE;
+                }
+            }
+
+            return rv;
+        }
+        public long Written { get { return written; } }
+        public event ExtractProgressHandler ProgressHandler;
     }
 }

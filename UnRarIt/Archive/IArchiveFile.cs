@@ -43,6 +43,7 @@ namespace UnRarIt.Archive
     }
 
     public delegate void ExtractFileHandler(object sender, ExtractFileEventArgs e);
+    public delegate void ExtractProgressHandler(object sender, FileInfo file, long written, long total);
     public delegate void PasswordAttemptHandler(object sender, PasswordEventArgs e);
     public delegate void PasswordRequiredHandler(object sender, PasswordEventArgs e);
 
@@ -51,6 +52,7 @@ namespace UnRarIt.Archive
         System.IO.FileInfo Archive { get; }
         void Extract();
         event ExtractFileHandler ExtractFile;
+        event ExtractProgressHandler ExtractProgress;
         int ItemCount { get; }
         void Open(IEnumerator<string> aPasswords);
         string Password { get; }

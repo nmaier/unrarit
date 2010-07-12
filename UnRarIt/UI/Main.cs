@@ -82,6 +82,7 @@ namespace UnRarIt
 
         private bool running = false;
         private bool aborted = false;
+        private bool stopped = false;
         private bool auto;
 
         public Main(bool aAuto, string dir, string[] args)
@@ -250,9 +251,18 @@ namespace UnRarIt
             e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
         }
 
+        public delegate void InvokeVoidDelegate();
         private void UnRarIt_Click(object sender, EventArgs e)
         {
-            Run();
+            BeginInvoke(new InvokeVoidDelegate(Run));
+        }
+        private void Stop_Click(object sender, EventArgs e)
+        {
+            stopped = true;
+            UnrarIt.Click -= Stop_Click;
+            UnrarIt.Click += Abort_Click;
+            UnrarIt.Image = UnRarIt.Properties.Resources.abort;
+            UnrarIt.Text = "Abort";
         }
         private void Abort_Click(object sender, EventArgs e)
         {
@@ -310,6 +320,7 @@ namespace UnRarIt
                 item = aItem;
                 owner = aOwner;
                 file.ExtractFile += OnExtractFile;
+                file.ExtractProgress += OnExtractProgress;
                 file.PasswordAttempt += OnPasswordAttempt;
             }
 
@@ -317,9 +328,10 @@ namespace UnRarIt
             private void OnExtractFile(object sender, ExtractFileEventArgs e)
             {
                 files.Add(e.Item.Destination.FullName);
+                string fn = e.Item.Name;
                 owner.BeginInvoke(
                     new SetStatus(delegate(string status) { Item.SubStatus = status; }),
-                    String.Format("Extracting {0}", e.Item.Name)
+                    String.Format("Extracting - {0}", fn)
                     );
                 if (e.Stage == ExtractFileEventArgs.ExtractionStage.Done)
                 {
@@ -328,13 +340,22 @@ namespace UnRarIt
                 }
                 e.ContinueOperation = !owner.aborted;
             }
+            private void OnExtractProgress(object sender, FileInfo file, long written, long total)
+            {
+                float progress = (float)((double)written / total);
+                string fn = file.Name;
+                owner.BeginInvoke(
+                    new SetStatus(delegate(string status) { Item.SubStatus = status; }),
+                    String.Format("{0:0%} - {1}", progress, fn)
+                    );
+            }
             private void OnPasswordAttempt(object sender, PasswordEventArgs e)
             {
                 owner.BeginInvoke(
                     new SetStatus(delegate(string status) { Item.SubStatus = status; }),
                     String.Format("Password: {0}", e.Password)
                     );
-                e.ContinueOperation = !owner.aborted;
+                e.ContinueOperation = !owner.aborted && !owner.stopped;
             }
 
             #region IDisposable Members
@@ -354,11 +375,13 @@ namespace UnRarIt
 
             running = true;
             aborted = false;
+            stopped = false;
             BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = AddPassword.Enabled = false;
-            UnrarIt.Text = "Abort";
 
-            UnrarIt.Click += Abort_Click;
+            UnrarIt.Click += Stop_Click;
             UnrarIt.Click -= UnRarIt_Click;
+            UnrarIt.Image = UnRarIt.Properties.Resources.process_stop;
+            UnrarIt.Text = "Stop";
 
             Progress.Visible = true;
             int threads = Math.Min(Environment.ProcessorCount, 3);
@@ -366,7 +389,7 @@ namespace UnRarIt
             Progress.Value = 0;
             Progress.Maximum = 0;
 
-            for (bool rerun = true; rerun && !aborted; )
+            for (bool rerun = true; rerun && !stopped && !aborted; )
             {
                 rerun = false;
 
@@ -374,7 +397,7 @@ namespace UnRarIt
 
                 foreach (ArchiveItem i in Files.Items)
                 {
-                    if (aborted)
+                    if (aborted || stopped)
                     {
                         break;
                     }
@@ -397,13 +420,13 @@ namespace UnRarIt
 
                 for (; ; )
                 {
-                    while (!aborted && runningTasks.Count < threads && taskEnumerator.MoveNext())
+                    while (!aborted && !stopped && runningTasks.Count < threads && taskEnumerator.MoveNext())
                     {
                         Task task = taskEnumerator.Current;
                         task.Item.StateImageIndex = 3;
                         task.Item.Status = "Processing...";
                         Thread thread = new Thread(HandleFile);
-                        thread.Priority = ThreadPriority.BelowNormal;
+                        thread.Priority = ThreadPriority.Lowest;
                         thread.Start(task);
                         runningTasks[task.Signal] = task;
                     }
@@ -505,7 +528,9 @@ namespace UnRarIt
             BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = UnrarIt.Enabled = AddPassword.Enabled = true;
             running = false;
             UnrarIt.Text = "Unrar!";
+            UnrarIt.Image = UnRarIt.Properties.Resources.extract;
             UnrarIt.Click += UnRarIt_Click;
+            UnrarIt.Click -= Stop_Click;
             UnrarIt.Click -= Abort_Click;
         }
 
@@ -615,16 +640,7 @@ namespace UnRarIt
                 string basePath = string.Empty;
                 if (items >= Config.OwnDirectoryLimit)
                 {
-                    if (string.IsNullOrEmpty(minPath))
-                    {
-                        basePath = trimmer.Replace(task.File.Archive.Name, "");
-                        string tmpPath;
-                        while ((tmpPath = trimmer.Replace(basePath, "")) != basePath)
-                        {
-                            basePath = tmpPath;
-                        }
-                    }
-                    else
+                    if (!string.IsNullOrEmpty(minPath))
                     {
                         basePath = minPath;
                         for (; ; )
@@ -637,7 +653,18 @@ namespace UnRarIt
                             basePath = p;
                         }
                     }
+                    if (string.IsNullOrEmpty(minPath))
+                    {
+                        basePath = trimmer.Replace(task.File.Archive.Name, "");
+                        string tmpPath;
+                        while ((tmpPath = trimmer.Replace(basePath, "")) != basePath)
+                        {
+                            basePath = tmpPath;
+                        }
+                    }
                 }
+                basePath = Utils.Utils.CleanName(basePath);
+
                 bool shouldExtract = false;
                 foreach (IArchiveEntry info in task.File)
                 {
