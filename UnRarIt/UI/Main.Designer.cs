@@ -1,4 +1,5 @@
-﻿namespace UnRarIt
+﻿using UnRarIt.UI;
+namespace UnRarIt
 {
     partial class Main
     {
@@ -34,15 +35,16 @@
             System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Split-Archives", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            this.Files = new UnRarIt.UI.ListView();
-            this.columnFile = new System.Windows.Forms.ColumnHeader();
-            this.columnSize = new System.Windows.Forms.ColumnHeader();
-            this.columnStatus = new System.Windows.Forms.ColumnHeader();
             this.FilesCtx = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CtxOpenDirectory = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.CtxClearSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.CtxClearList = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+            this.CtxDeleteFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.requeueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.requeueFailedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StateIcons = new System.Windows.Forms.ImageList(this.components);
             this.Statusbar = new System.Windows.Forms.StatusStrip();
             this.Progress = new System.Windows.Forms.ToolStripProgressBar();
@@ -50,89 +52,38 @@
             this.StatusPasswords = new System.Windows.Forms.ToolStripStatusLabel();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.FileMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.passwordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ImportPasswords = new System.Windows.Forms.ToolStripMenuItem();
+            this.ExportPasswords = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.ClearAllPasswords = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.Homepage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.License = new System.Windows.Forms.ToolStripMenuItem();
             this.About = new System.Windows.Forms.ToolStripMenuItem();
             this.BrowseDestDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.ExportDialog = new System.Windows.Forms.SaveFileDialog();
             this.GroupDest = new System.Windows.Forms.GroupBox();
-            this.Dest = new System.Windows.Forms.TextBox();
             this.BrowseDest = new System.Windows.Forms.Button();
             this.AddPassword = new System.Windows.Forms.Button();
-            this.OpenSettings = new System.Windows.Forms.ToolStripMenuItem();
-            this.Exit = new System.Windows.Forms.ToolStripMenuItem();
-            this.ImportPasswords = new System.Windows.Forms.ToolStripMenuItem();
-            this.ExportPasswords = new System.Windows.Forms.ToolStripMenuItem();
-            this.ClearAllPasswords = new System.Windows.Forms.ToolStripMenuItem();
-            this.Homepage = new System.Windows.Forms.ToolStripMenuItem();
-            this.License = new System.Windows.Forms.ToolStripMenuItem();
             this.UnrarIt = new System.Windows.Forms.Button();
-            this.CtxClearSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.CtxClearList = new System.Windows.Forms.ToolStripMenuItem();
-            this.CtxDeleteFiles = new System.Windows.Forms.ToolStripMenuItem();
-            this.requeueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.requeueFailedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DestsCtx = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.clearDestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Dests = new UnRarIt.UI.LRUComboBox();
+            this.Files = new UnRarIt.UI.ListView();
+            this.columnFile = new System.Windows.Forms.ColumnHeader();
+            this.columnSize = new System.Windows.Forms.ColumnHeader();
+            this.columnStatus = new System.Windows.Forms.ColumnHeader();
             this.FilesCtx.SuspendLayout();
             this.Statusbar.SuspendLayout();
             this.MainMenu.SuspendLayout();
             this.GroupDest.SuspendLayout();
+            this.DestsCtx.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // Files
-            // 
-            this.Files.AllowDrop = true;
-            this.Files.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.Files.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnFile,
-            this.columnSize,
-            this.columnStatus});
-            this.Files.ContextMenuStrip = this.FilesCtx;
-            listViewGroup1.Header = "Rar-Archives";
-            listViewGroup1.Name = "GroupRar";
-            listViewGroup2.Header = "7zip-Archives";
-            listViewGroup2.Name = "GroupSevenZip";
-            listViewGroup3.Header = "Zip-Archives";
-            listViewGroup3.Name = "GroupZip";
-            listViewGroup4.Header = "Split-Archives";
-            listViewGroup4.Name = "GroupSplit";
-            this.Files.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3,
-            listViewGroup4});
-            this.Files.Location = new System.Drawing.Point(12, 27);
-            this.Files.Name = "Files";
-            this.Files.Size = new System.Drawing.Size(758, 408);
-            this.Files.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.Files.StateImageList = this.StateIcons;
-            this.Files.TabIndex = 0;
-            this.Files.UseCompatibleStateImageBehavior = false;
-            this.Files.View = System.Windows.Forms.View.Details;
-            this.Files.DragDrop += new System.Windows.Forms.DragEventHandler(this.Files_DragDrop);
-            this.Files.DragEnter += new System.Windows.Forms.DragEventHandler(this.Files_DragEnter);
-            this.Files.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Files_KeyPress);
-            this.Files.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Files_KeyDown);
-            // 
-            // columnFile
-            // 
-            this.columnFile.Text = "File";
-            this.columnFile.Width = 200;
-            // 
-            // columnSize
-            // 
-            this.columnSize.Text = "Size";
-            this.columnSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnSize.Width = 100;
-            // 
-            // columnStatus
-            // 
-            this.columnStatus.Text = "Status";
-            this.columnStatus.Width = 400;
             // 
             // FilesCtx
             // 
@@ -147,30 +98,70 @@
             this.requeueToolStripMenuItem,
             this.requeueFailedToolStripMenuItem});
             this.FilesCtx.Name = "FilesCtx";
-            this.FilesCtx.Size = new System.Drawing.Size(165, 154);
+            this.FilesCtx.Size = new System.Drawing.Size(155, 154);
             this.FilesCtx.Opening += new System.ComponentModel.CancelEventHandler(this.FilesCtx_Opening);
             // 
             // CtxOpenDirectory
             // 
             this.CtxOpenDirectory.Name = "CtxOpenDirectory";
-            this.CtxOpenDirectory.Size = new System.Drawing.Size(164, 22);
+            this.CtxOpenDirectory.Size = new System.Drawing.Size(154, 22);
             this.CtxOpenDirectory.Text = "Open Directory";
             this.CtxOpenDirectory.Click += new System.EventHandler(this.CtxOpenDirectory_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(161, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(151, 6);
+            // 
+            // CtxClearSelected
+            // 
+            this.CtxClearSelected.Image = global::UnRarIt.Properties.Resources.clearselected;
+            this.CtxClearSelected.Name = "CtxClearSelected";
+            this.CtxClearSelected.Size = new System.Drawing.Size(154, 22);
+            this.CtxClearSelected.Text = "Clear selected";
+            this.CtxClearSelected.Click += new System.EventHandler(this.CtxClearSelected_Click);
+            // 
+            // CtxClearList
+            // 
+            this.CtxClearList.Image = global::UnRarIt.Properties.Resources.clearlist;
+            this.CtxClearList.Name = "CtxClearList";
+            this.CtxClearList.Size = new System.Drawing.Size(154, 22);
+            this.CtxClearList.Text = "Clear list";
+            this.CtxClearList.Click += new System.EventHandler(this.CtxClearList_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(161, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(151, 6);
+            // 
+            // CtxDeleteFiles
+            // 
+            this.CtxDeleteFiles.Image = global::UnRarIt.Properties.Resources.deletefiles;
+            this.CtxDeleteFiles.Name = "CtxDeleteFiles";
+            this.CtxDeleteFiles.Size = new System.Drawing.Size(154, 22);
+            this.CtxDeleteFiles.Text = "Delete file(s)";
+            this.CtxDeleteFiles.Click += new System.EventHandler(this.CtxDeleteFiles_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(161, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(151, 6);
+            // 
+            // requeueToolStripMenuItem
+            // 
+            this.requeueToolStripMenuItem.Image = global::UnRarIt.Properties.Resources.run;
+            this.requeueToolStripMenuItem.Name = "requeueToolStripMenuItem";
+            this.requeueToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.requeueToolStripMenuItem.Text = "Requeue items";
+            this.requeueToolStripMenuItem.Click += new System.EventHandler(this.requeueToolStripMenuItem_Click);
+            // 
+            // requeueFailedToolStripMenuItem
+            // 
+            this.requeueFailedToolStripMenuItem.Image = global::UnRarIt.Properties.Resources.reqerror;
+            this.requeueFailedToolStripMenuItem.Name = "requeueFailedToolStripMenuItem";
+            this.requeueFailedToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.requeueFailedToolStripMenuItem.Text = "Requeue Failed";
+            this.requeueFailedToolStripMenuItem.Click += new System.EventHandler(this.requeueFailedToolStripMenuItem_Click);
             // 
             // StateIcons
             // 
@@ -229,13 +220,29 @@
             this.toolStripMenuItem2,
             this.Exit});
             this.FileMenu.Name = "FileMenu";
-            this.FileMenu.Size = new System.Drawing.Size(39, 20);
+            this.FileMenu.Size = new System.Drawing.Size(37, 20);
             this.FileMenu.Text = "File";
+            // 
+            // OpenSettings
+            // 
+            this.OpenSettings.Image = global::UnRarIt.Properties.Resources.preferences;
+            this.OpenSettings.Name = "OpenSettings";
+            this.OpenSettings.Size = new System.Drawing.Size(167, 22);
+            this.OpenSettings.Text = "Open Preferences";
+            this.OpenSettings.Click += new System.EventHandler(this.OpenSettings_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(174, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(164, 6);
+            // 
+            // Exit
+            // 
+            this.Exit.Image = global::UnRarIt.Properties.Resources.close;
+            this.Exit.Name = "Exit";
+            this.Exit.Size = new System.Drawing.Size(167, 22);
+            this.Exit.Text = "Exit";
+            this.Exit.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // passwordsToolStripMenuItem
             // 
@@ -245,13 +252,37 @@
             this.toolStripMenuItem1,
             this.ClearAllPasswords});
             this.passwordsToolStripMenuItem.Name = "passwordsToolStripMenuItem";
-            this.passwordsToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
+            this.passwordsToolStripMenuItem.Size = new System.Drawing.Size(74, 20);
             this.passwordsToolStripMenuItem.Text = "Passwords";
+            // 
+            // ImportPasswords
+            // 
+            this.ImportPasswords.Image = global::UnRarIt.Properties.Resources.import;
+            this.ImportPasswords.Name = "ImportPasswords";
+            this.ImportPasswords.Size = new System.Drawing.Size(169, 22);
+            this.ImportPasswords.Text = "Import";
+            this.ImportPasswords.Click += new System.EventHandler(this.AddPassword_Click);
+            // 
+            // ExportPasswords
+            // 
+            this.ExportPasswords.Image = global::UnRarIt.Properties.Resources.export;
+            this.ExportPasswords.Name = "ExportPasswords";
+            this.ExportPasswords.Size = new System.Drawing.Size(169, 22);
+            this.ExportPasswords.Text = "Export";
+            this.ExportPasswords.Click += new System.EventHandler(this.ExportPasswords_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(182, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(166, 6);
+            // 
+            // ClearAllPasswords
+            // 
+            this.ClearAllPasswords.Image = global::UnRarIt.Properties.Resources.delete;
+            this.ClearAllPasswords.Name = "ClearAllPasswords";
+            this.ClearAllPasswords.Size = new System.Drawing.Size(169, 22);
+            this.ClearAllPasswords.Text = "Clear all password";
+            this.ClearAllPasswords.Click += new System.EventHandler(this.ClearAllPasswords_Click);
             // 
             // HelpMenu
             // 
@@ -261,18 +292,34 @@
             this.License,
             this.About});
             this.HelpMenu.Name = "HelpMenu";
-            this.HelpMenu.Size = new System.Drawing.Size(25, 20);
+            this.HelpMenu.Size = new System.Drawing.Size(24, 20);
             this.HelpMenu.Text = "?";
+            // 
+            // Homepage
+            // 
+            this.Homepage.Image = global::UnRarIt.Properties.Resources.homepage;
+            this.Homepage.Name = "Homepage";
+            this.Homepage.Size = new System.Drawing.Size(133, 22);
+            this.Homepage.Text = "Homepage";
+            this.Homepage.Click += new System.EventHandler(this.Homepage_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(135, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(130, 6);
+            // 
+            // License
+            // 
+            this.License.Image = global::UnRarIt.Properties.Resources.license;
+            this.License.Name = "License";
+            this.License.Size = new System.Drawing.Size(133, 22);
+            this.License.Text = "License";
+            this.License.Click += new System.EventHandler(this.License_Click);
             // 
             // About
             // 
             this.About.Name = "About";
-            this.About.Size = new System.Drawing.Size(138, 22);
+            this.About.Size = new System.Drawing.Size(133, 22);
             this.About.Text = "About";
             this.About.Click += new System.EventHandler(this.About_Click);
             // 
@@ -284,7 +331,8 @@
             // GroupDest
             // 
             this.GroupDest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.GroupDest.Controls.Add(this.Dest);
+            this.GroupDest.ContextMenuStrip = this.DestsCtx;
+            this.GroupDest.Controls.Add(this.Dests);
             this.GroupDest.Controls.Add(this.BrowseDest);
             this.GroupDest.Location = new System.Drawing.Point(379, 441);
             this.GroupDest.Name = "GroupDest";
@@ -292,18 +340,6 @@
             this.GroupDest.TabIndex = 8;
             this.GroupDest.TabStop = false;
             this.GroupDest.Text = "Destination";
-            // 
-            // Dest
-            // 
-            this.Dest.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::UnRarIt.Properties.Settings.Default, "Dest", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.Dest.Location = new System.Drawing.Point(11, 21);
-            this.Dest.Name = "Dest";
-            this.Dest.ReadOnly = true;
-            this.Dest.Size = new System.Drawing.Size(344, 20);
-            this.Dest.TabIndex = 5;
-            this.Dest.TabStop = false;
-            this.Dest.Text = global::UnRarIt.Properties.Settings.Default.Dest;
-            this.Dest.TextChanged += new System.EventHandler(this.Dest_TextChanged);
             // 
             // BrowseDest
             // 
@@ -319,125 +355,103 @@
             // 
             this.AddPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.AddPassword.Image = global::UnRarIt.Properties.Resources.addpassword;
-            this.AddPassword.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddPassword.Location = new System.Drawing.Point(93, 460);
+            this.AddPassword.Location = new System.Drawing.Point(138, 441);
             this.AddPassword.Name = "AddPassword";
-            this.AddPassword.Size = new System.Drawing.Size(108, 34);
+            this.AddPassword.Size = new System.Drawing.Size(120, 34);
             this.AddPassword.TabIndex = 2;
             this.AddPassword.Text = "Add Password";
-            this.AddPassword.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.AddPassword.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.AddPassword.UseVisualStyleBackColor = true;
             this.AddPassword.Click += new System.EventHandler(this.AddPassword_Click);
-            // 
-            // OpenSettings
-            // 
-            this.OpenSettings.Image = global::UnRarIt.Properties.Resources.preferences;
-            this.OpenSettings.Name = "OpenSettings";
-            this.OpenSettings.Size = new System.Drawing.Size(177, 22);
-            this.OpenSettings.Text = "Open Preferences";
-            this.OpenSettings.Click += new System.EventHandler(this.OpenSettings_Click);
-            // 
-            // Exit
-            // 
-            this.Exit.Image = global::UnRarIt.Properties.Resources.close;
-            this.Exit.Name = "Exit";
-            this.Exit.Size = new System.Drawing.Size(177, 22);
-            this.Exit.Text = "Exit";
-            this.Exit.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // ImportPasswords
-            // 
-            this.ImportPasswords.Image = global::UnRarIt.Properties.Resources.import;
-            this.ImportPasswords.Name = "ImportPasswords";
-            this.ImportPasswords.Size = new System.Drawing.Size(185, 22);
-            this.ImportPasswords.Text = "Import";
-            this.ImportPasswords.Click += new System.EventHandler(this.AddPassword_Click);
-            // 
-            // ExportPasswords
-            // 
-            this.ExportPasswords.Image = global::UnRarIt.Properties.Resources.export;
-            this.ExportPasswords.Name = "ExportPasswords";
-            this.ExportPasswords.Size = new System.Drawing.Size(185, 22);
-            this.ExportPasswords.Text = "Export";
-            this.ExportPasswords.Click += new System.EventHandler(this.ExportPasswords_Click);
-            // 
-            // ClearAllPasswords
-            // 
-            this.ClearAllPasswords.Image = global::UnRarIt.Properties.Resources.delete;
-            this.ClearAllPasswords.Name = "ClearAllPasswords";
-            this.ClearAllPasswords.Size = new System.Drawing.Size(185, 22);
-            this.ClearAllPasswords.Text = "Clear all password";
-            this.ClearAllPasswords.Click += new System.EventHandler(this.ClearAllPasswords_Click);
-            // 
-            // Homepage
-            // 
-            this.Homepage.Image = global::UnRarIt.Properties.Resources.homepage;
-            this.Homepage.Name = "Homepage";
-            this.Homepage.Size = new System.Drawing.Size(138, 22);
-            this.Homepage.Text = "Homepage";
-            this.Homepage.Click += new System.EventHandler(this.Homepage_Click);
-            // 
-            // License
-            // 
-            this.License.Image = global::UnRarIt.Properties.Resources.license;
-            this.License.Name = "License";
-            this.License.Size = new System.Drawing.Size(138, 22);
-            this.License.Text = "License";
-            this.License.Click += new System.EventHandler(this.License_Click);
             // 
             // UnrarIt
             // 
             this.UnrarIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.UnrarIt.Image = global::UnRarIt.Properties.Resources.extract;
-            this.UnrarIt.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.UnrarIt.Location = new System.Drawing.Point(12, 460);
+            this.UnrarIt.Location = new System.Drawing.Point(12, 441);
             this.UnrarIt.Name = "UnrarIt";
-            this.UnrarIt.Size = new System.Drawing.Size(75, 34);
+            this.UnrarIt.Size = new System.Drawing.Size(120, 34);
             this.UnrarIt.TabIndex = 1;
-            this.UnrarIt.Text = "Unrar!";
-            this.UnrarIt.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.UnrarIt.Text = "Extract files";
+            this.UnrarIt.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.UnrarIt.UseVisualStyleBackColor = true;
             this.UnrarIt.Click += new System.EventHandler(this.UnRarIt_Click);
             // 
-            // CtxClearSelected
+            // DestsCtx
             // 
-            this.CtxClearSelected.Image = global::UnRarIt.Properties.Resources.clearselected;
-            this.CtxClearSelected.Name = "CtxClearSelected";
-            this.CtxClearSelected.Size = new System.Drawing.Size(164, 22);
-            this.CtxClearSelected.Text = "Clear selected";
-            this.CtxClearSelected.Click += new System.EventHandler(this.CtxClearSelected_Click);
+            this.DestsCtx.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearDestsToolStripMenuItem});
+            this.DestsCtx.Name = "DestsCtx";
+            this.DestsCtx.Size = new System.Drawing.Size(102, 26);
             // 
-            // CtxClearList
+            // clearDestsToolStripMenuItem
             // 
-            this.CtxClearList.Image = global::UnRarIt.Properties.Resources.clearlist;
-            this.CtxClearList.Name = "CtxClearList";
-            this.CtxClearList.Size = new System.Drawing.Size(164, 22);
-            this.CtxClearList.Text = "Clear list";
-            this.CtxClearList.Click += new System.EventHandler(this.CtxClearList_Click);
+            this.clearDestsToolStripMenuItem.Name = "clearDestsToolStripMenuItem";
+            this.clearDestsToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+            this.clearDestsToolStripMenuItem.Text = "Clear";
+            this.clearDestsToolStripMenuItem.Click += new System.EventHandler(this.clearDestsToolStripMenuItem_Click);
             // 
-            // CtxDeleteFiles
+            // Dests
             // 
-            this.CtxDeleteFiles.Image = global::UnRarIt.Properties.Resources.deletefiles;
-            this.CtxDeleteFiles.Name = "CtxDeleteFiles";
-            this.CtxDeleteFiles.Size = new System.Drawing.Size(164, 22);
-            this.CtxDeleteFiles.Text = "Delete file(s)";
-            this.CtxDeleteFiles.Click += new System.EventHandler(this.CtxDeleteFiles_Click);
+            this.Dests.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Dests.FormattingEnabled = true;
+            this.Dests.Location = new System.Drawing.Point(6, 19);
+            this.Dests.Name = "Dests";
+            this.Dests.Size = new System.Drawing.Size(349, 21);
+            this.Dests.TabIndex = 4;
             // 
-            // requeueToolStripMenuItem
+            // Files
             // 
-            this.requeueToolStripMenuItem.Image = global::UnRarIt.Properties.Resources.run;
-            this.requeueToolStripMenuItem.Name = "requeueToolStripMenuItem";
-            this.requeueToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.requeueToolStripMenuItem.Text = "Requeue items";
-            this.requeueToolStripMenuItem.Click += new System.EventHandler(this.requeueToolStripMenuItem_Click);
+            this.Files.AllowDrop = true;
+            this.Files.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.Files.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnFile,
+            this.columnSize,
+            this.columnStatus});
+            this.Files.ContextMenuStrip = this.FilesCtx;
+            listViewGroup1.Header = "Rar-Archives";
+            listViewGroup1.Name = "GroupRar";
+            listViewGroup2.Header = "7zip-Archives";
+            listViewGroup2.Name = "GroupSevenZip";
+            listViewGroup3.Header = "Zip-Archives";
+            listViewGroup3.Name = "GroupZip";
+            listViewGroup4.Header = "Split-Archives";
+            listViewGroup4.Name = "GroupSplit";
+            this.Files.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3,
+            listViewGroup4});
+            this.Files.Location = new System.Drawing.Point(12, 27);
+            this.Files.Name = "Files";
+            this.Files.Size = new System.Drawing.Size(758, 408);
+            this.Files.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.Files.StateImageList = this.StateIcons;
+            this.Files.TabIndex = 0;
+            this.Files.UseCompatibleStateImageBehavior = false;
+            this.Files.View = System.Windows.Forms.View.Details;
+            this.Files.DragDrop += new System.Windows.Forms.DragEventHandler(this.Files_DragDrop);
+            this.Files.DragEnter += new System.Windows.Forms.DragEventHandler(this.Files_DragEnter);
+            this.Files.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Files_KeyPress);
+            this.Files.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Files_KeyDown);
             // 
-            // requeueFailedToolStripMenuItem
+            // columnFile
             // 
-            this.requeueFailedToolStripMenuItem.Image = global::UnRarIt.Properties.Resources.reqerror;
-            this.requeueFailedToolStripMenuItem.Name = "requeueFailedToolStripMenuItem";
-            this.requeueFailedToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.requeueFailedToolStripMenuItem.Text = "Requeue Failed";
-            this.requeueFailedToolStripMenuItem.Click += new System.EventHandler(this.requeueFailedToolStripMenuItem_Click);
+            this.columnFile.Text = "Archive File";
+            this.columnFile.Width = 200;
+            // 
+            // columnSize
+            // 
+            this.columnSize.Text = "Size";
+            this.columnSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnSize.Width = 100;
+            // 
+            // columnStatus
+            // 
+            this.columnStatus.Text = "Status";
+            this.columnStatus.Width = 400;
             // 
             // Main
             // 
@@ -445,11 +459,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 519);
             this.Controls.Add(this.GroupDest);
-            this.Controls.Add(this.AddPassword);
             this.Controls.Add(this.Statusbar);
             this.Controls.Add(this.MainMenu);
-            this.Controls.Add(this.UnrarIt);
             this.Controls.Add(this.Files);
+            this.Controls.Add(this.AddPassword);
+            this.Controls.Add(this.UnrarIt);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.MainMenu;
             this.Name = "Main";
@@ -464,7 +478,7 @@
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
             this.GroupDest.ResumeLayout(false);
-            this.GroupDest.PerformLayout();
+            this.DestsCtx.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -499,7 +513,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem ClearAllPasswords;
         private System.Windows.Forms.GroupBox GroupDest;
-        private System.Windows.Forms.TextBox Dest;
         private System.Windows.Forms.Button BrowseDest;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem License;
@@ -513,6 +526,9 @@
         private System.Windows.Forms.ToolStripMenuItem requeueFailedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem CtxOpenDirectory;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private LRUComboBox Dests;
+        private System.Windows.Forms.ContextMenuStrip DestsCtx;
+        private System.Windows.Forms.ToolStripMenuItem clearDestsToolStripMenuItem;
     }
 }
 

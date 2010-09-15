@@ -53,6 +53,7 @@ namespace UnRarIt
                     break;
             }
             OwnDirectoryLimit.Value = Config.OwnDirectoryLimit;
+            Threads.Value = Config.Threads;
             Nesting.Checked = Config.Nesting;
         }
 
@@ -63,6 +64,7 @@ namespace UnRarIt
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            Config.Threads = (int)Threads.Value;
             Config.OwnDirectoryLimit = (uint)OwnDirectoryLimit.Value;
             if (Skip.Checked)
             {

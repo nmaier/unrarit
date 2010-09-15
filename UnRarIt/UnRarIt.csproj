@@ -92,6 +92,9 @@
     <Compile Include="UI\ListView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UI\LRUComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\Main.cs">
       <SubType>Form</SubType>
     </Compile>

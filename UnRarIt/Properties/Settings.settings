@@ -14,14 +14,14 @@
     <Setting Name="OverwriteAction" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="Dest" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="Nesting" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="MustUpgrade" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Threads" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

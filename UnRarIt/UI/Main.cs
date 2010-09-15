@@ -88,12 +88,9 @@ namespace UnRarIt
         public Main(bool aAuto, string dir, string[] args)
         {
             auto = aAuto;
-            if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
-            {
-                Config.Dest = dir;
-            }
 
             InitializeComponent();
+
             Files.SmallImageList = Files.LargeImageList = ArchiveItem.Icons;
             StateIcons.Images.Add(Properties.Resources.idle);
             StateIcons.Images.Add(Properties.Resources.done);
@@ -103,14 +100,20 @@ namespace UnRarIt
 
             Text = String.Format("{0} - {1}bit - {2}", Text, CpuInfo.isX64 ? 64 : 32, CpuInfo.hasSSE3 ? "SSE3/4" : "Generic");
 
-            if (!(UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text)))
-            {
-                GroupDest.ForeColor = Color.Red;
-            }
-
             About.Image = Icon.ToBitmap();
 
             RefreshPasswordCount();
+            BrowseDestDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            CtxOpenDirectory.Image = FileIcon.GetIcon(BrowseDestDialog.SelectedPath, FileIconSize.Small);
+
+            Dests.AddRange(Config.Destinations.ToArray());
+            DestinationsChanged();
+
+            if (!string.IsNullOrEmpty(dir))
+            {
+                Dests.Add(dir);
+            }
+
             if (args != null && args.Length != 0)
             {
                 AddFiles(args);
@@ -119,9 +122,18 @@ namespace UnRarIt
             {
                 AdjustHeaders();
             }
-            BrowseDestDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            CtxOpenDirectory.Image = FileIcon.GetIcon(BrowseDestDialog.SelectedPath, FileIconSize.Small);
+        }
 
+        private void DestinationsChanged()
+        {
+            if (!(UnrarIt.Enabled = Dests.Items.Count > 0))
+            {
+                GroupDest.ForeColor = Color.Red;
+            }
+            else
+            {
+                GroupDest.ForeColor = SystemColors.ControlText;
+            }
         }
 
         private void AdjustHeaders()
@@ -384,7 +396,7 @@ namespace UnRarIt
             UnrarIt.Text = "Stop";
 
             Progress.Visible = true;
-            int threads = Math.Min(Environment.ProcessorCount, 3);
+            int threads = UnRarIt.Properties.Settings.Default.Threads;
 
             Progress.Value = 0;
             Progress.Maximum = 0;
@@ -527,7 +539,7 @@ namespace UnRarIt
             Progress.Visible = false;
             BrowseDest.Enabled = Exit.Enabled = OpenSettings.Enabled = UnrarIt.Enabled = AddPassword.Enabled = true;
             running = false;
-            UnrarIt.Text = "Unrar!";
+            UnrarIt.Text = "Extract Files";
             UnrarIt.Image = UnRarIt.Properties.Resources.extract;
             UnrarIt.Click += UnRarIt_Click;
             UnrarIt.Click -= Stop_Click;
@@ -547,6 +559,12 @@ namespace UnRarIt
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Config.Destinations.Clear();
+            foreach (string s in Dests.Items)
+            {
+                Config.Destinations.Add(s);
+            }
+            Config.Save();
             passwords.Save();
         }
         delegate void SetStatus(string NewStatus);
@@ -678,7 +696,7 @@ namespace UnRarIt
                     {
                         name = name.Substring(minPath.Length + 1);
                     }
-                    string rootPath = Config.Dest;
+                    string rootPath = Dests.Text;
                     if (task.Item.IsNested)
                     {
                         rootPath = task.File.Archive.Directory.FullName;
@@ -836,15 +854,14 @@ namespace UnRarIt
         {
             if (BrowseDestDialog.ShowDialog() == DialogResult.OK)
             {
-                Config.Dest = BrowseDestDialog.SelectedPath;
-                Config.Save();
-                GroupDest.ForeColor = SystemColors.ControlText;
+                Dests.Add(BrowseDestDialog.SelectedPath);
+                DestinationsChanged();
             }
         }
 
         private void Dest_TextChanged(object sender, EventArgs e)
         {
-            UnrarIt.Enabled = !string.IsNullOrEmpty(Dest.Text);
+            UnrarIt.Enabled = !string.IsNullOrEmpty(Dests.Text);
         }
 
         private void Homepage_Click(object sender, EventArgs e)
@@ -998,6 +1015,12 @@ namespace UnRarIt
                 return;
             }
             CtxOpenDirectory.Image = FileIcon.GetIcon(item.BaseDirectory.FullName, FileIconSize.Small);
+        }
+
+        private void clearDestsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Dests.Items.Clear();
+            DestinationsChanged();
         }
     }
 }

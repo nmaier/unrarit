@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Configuration;
+using System.Collections.Generic;
 namespace UnRarIt.Properties {
     
     
@@ -29,6 +31,11 @@ namespace UnRarIt.Properties {
             catch (Exception)
             {
             }
+            if (Threads == 0)
+            {
+                Threads = Math.Min(Environment.ProcessorCount, 3);
+                Save();
+            }
         }
         
         private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e) {
@@ -38,5 +45,15 @@ namespace UnRarIt.Properties {
         private void SettingsSavingEventHandler(object sender, System.ComponentModel.CancelEventArgs e) {
             // Add code to handle the SettingsSaving event here.
         }
+
+        [UserScopedSetting()]
+        [SettingsSerializeAs(SettingsSerializeAs.Xml)]
+        [DefaultSettingValue("")]
+        public List<string> Destinations
+        {
+            get { return this["Destinations"] as List<string>; }
+            set { this["Destinations"] = value; }
+        }
+
     }
 }
