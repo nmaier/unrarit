@@ -284,9 +284,8 @@ namespace UnRarIt.Archive.SevenZip
                                         minIndex = i;
                                     }
                                 }
-                                if (minCrypted != null)
+                                if (minCrypted != null && !passwordDefined)
                                 {
-                                    passwordDefined = false;
                                     passwords.Reset();
                                     Dictionary<uint, IArchiveEntry> files = new Dictionary<uint, IArchiveEntry>();
                                     files[minIndex] = minCrypted;
