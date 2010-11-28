@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using UnRarIt.Interop;
 
 namespace UnRarIt.Archive.SevenZip
 {
@@ -64,7 +65,7 @@ namespace UnRarIt.Archive.SevenZip
         {
             private SevenZipArchiveFile owner;
             private Dictionary<uint, IArchiveEntry> files;
-            private SevenZipStream stream;
+            private ISevenZipStream stream;
             uint current = 0;
             ExtractMode mode = ExtractMode.Skip;
 
@@ -126,15 +127,18 @@ namespace UnRarIt.Archive.SevenZip
 
             public void SetOperationResult(OperationResult resultEOperationResult)
             {
-                if (stream != null)
-                {
-                    stream.Dispose();
-                    stream = null;
-                }
                 if (mode != ExtractMode.Skip && resultEOperationResult != OperationResult.OK)
                 {
                     throw new IOException(resultEOperationResult.ToString());
                 }
+
+                if (stream != null)
+                {
+                    stream.SetOK();
+                    stream.Dispose();
+                    stream = null;
+                }
+
                 if (mode == ExtractMode.Extract && owner.ExtractFile != null)
                 {
                     ExtractFileEventArgs args = new ExtractFileEventArgs(owner.Archive, files[current], ExtractFileEventArgs.ExtractionStage.Done);
@@ -275,7 +279,6 @@ namespace UnRarIt.Archive.SevenZip
                                     }
                                     bool isCrypted = ar.GetProperty(i, ItemPropId.Encrypted).GetBool();
                                     uint crc = ar.GetProperty(i, ItemPropId.CRC).GetUint();
-                                    passwordDefined = true;
                                     IArchiveEntry entry = new SevenZipItemInfo(name, crc, isCrypted, size, packedSize);
                                     items[name] = entry;
                                     if (isCrypted && (minCrypted == null || minCrypted.CompressedSize > packedSize))
@@ -305,7 +308,15 @@ namespace UnRarIt.Archive.SevenZip
                                             }
                                         }
                                     }
-
+                                }
+                                else if (items.Count != 0)
+                                {
+                                    passwordDefined = true;
+                                }
+                                else if (!passwordRequested)
+                                {
+                                    opened = false;
+                                    break;
                                 }
                             }
 
