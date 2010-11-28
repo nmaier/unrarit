@@ -71,6 +71,7 @@
     <Compile Include="Archive\SevenZip\Un7ipLib.cs" />
     <Compile Include="Interop\CpuInfo.cs" />
     <Compile Include="Interop\FileIcon.cs" />
+    <Compile Include="Interop\Priority.cs" />
     <Compile Include="UI\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
