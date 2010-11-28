@@ -168,15 +168,29 @@ namespace UnRarIt
 
         internal void DeleteFiles()
         {
-            if (file.Exists)
+            try
             {
-                file.Delete();
+                if (file.Exists)
+                {
+                    file.Delete();
+                }
+            }
+            catch (Exception)
+            {
+                // no op
             }
             foreach (FileInfo part in parts.Values)
             {
-                if (part.Exists)
+                try
                 {
-                    part.Delete();
+                    if (part.Exists)
+                    {
+                        part.Delete();
+                    }
+                }
+                catch (Exception)
+                {
+                    // no op
                 }
             }
             parts.Clear();
