@@ -41,9 +41,24 @@ namespace UnRarIt.Archive
             Stage = aStage;
         }
     }
+    public class ExtractProgressEventArgs
+    {
+        public FileInfo File;
+        public long Written;
+        public long Total;
+
+        public bool ContinueOperation = true;
+
+        internal ExtractProgressEventArgs(FileInfo aFile, long aWritten, long aTotal)
+        {
+            File = aFile;
+            Written = aWritten;
+            Total = aTotal;
+        }
+    }
 
     public delegate void ExtractFileHandler(object sender, ExtractFileEventArgs e);
-    public delegate void ExtractProgressHandler(object sender, FileInfo file, long written, long total);
+    public delegate void ExtractProgressHandler(object sender, ExtractProgressEventArgs e);
     public delegate void PasswordAttemptHandler(object sender, PasswordEventArgs e);
     public delegate void PasswordRequiredHandler(object sender, PasswordEventArgs e);
 

@@ -173,9 +173,9 @@ namespace UnRarIt
         {
             return AddFiles(aFiles, false);
         }
+        private List<string> silentFiles = new List<string>();
         private bool AddFiles(string[] aFiles, bool nested)
         {
-            bool added = false;
             Dictionary<string, ArchiveItem> seen = new Dictionary<string, ArchiveItem>();
 
             Files.BeginUpdate();
@@ -186,7 +186,31 @@ namespace UnRarIt
 
             PartFileConsumer consumer = new PartFileConsumer();
 
-            foreach (string file in aFiles)
+            bool added = AddFiles(silentFiles, nested, seen, consumer);
+            added |= AddFiles(aFiles, nested, seen, consumer);
+            foreach (KeyValuePair<string, string> part in consumer.Parts)
+            {
+                if (!seen.ContainsKey(part.Key))
+                {
+                    silentFiles.Add(part.Value);
+                    continue;
+                }
+                added = seen[part.Key].AddPart(part.Value) || added;
+            }
+            Files.EndUpdate();
+            AdjustHeaders();
+            return added;
+        }
+        private bool AddFiles(string[] aFiles, bool nested, Dictionary<string, ArchiveItem> seen, PartFileConsumer consumer)
+        {
+            List<string> files = new List<string>(aFiles);
+            return AddFiles(files, nested, seen, consumer);
+        }
+        private bool AddFiles(List<string> aFiles, bool nested, Dictionary<string, ArchiveItem> seen, PartFileConsumer consumer)
+        {
+            bool added = false;
+            string[] files = aFiles.ToArray();
+            foreach (string file in files)
             {
                 try
                 {
@@ -202,6 +226,7 @@ namespace UnRarIt
 
                     if (consumer.Consume(info))
                     {
+                        aFiles.Remove(file);
                         continue;
                     }
 
@@ -245,16 +270,6 @@ namespace UnRarIt
                     Console.Error.WriteLine(ex);
                 }
             }
-            foreach (KeyValuePair<string, string> part in consumer.Parts)
-            {
-                if (!seen.ContainsKey(part.Key))
-                {
-                    continue;
-                }
-                added = seen[part.Key].AddPart(part.Value) || added;
-            }
-            Files.EndUpdate();
-            AdjustHeaders();
             return added;
         }
 
@@ -352,14 +367,15 @@ namespace UnRarIt
                 }
                 e.ContinueOperation = !owner.aborted;
             }
-            private void OnExtractProgress(object sender, FileInfo file, long written, long total)
+            private void OnExtractProgress(object sender, ExtractProgressEventArgs e)
             {
-                float progress = (float)((double)written / total);
-                string fn = file.Name;
+                float progress = (float)((double)e.Written / e.Total);
+                string fn = e.File.Name;
                 owner.BeginInvoke(
                     new SetStatus(delegate(string status) { Item.SubStatus = status; }),
                     String.Format("{0:0%} - {1}", progress, fn)
                     );
+                e.ContinueOperation = !owner.aborted;
             }
             private void OnPasswordAttempt(object sender, PasswordEventArgs e)
             {
@@ -622,9 +638,13 @@ namespace UnRarIt
             return rv;
         }
 
+        static Regex silentSkip = new Regex(@":(?:encryptable)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         private void HandleFile(object o)
         {
             Task task = o as Task;
+            string DestsText = null;
+            Invoke(new InvokeVoidDelegate(delegate() { DestsText = Dests.Text; }));
             try
             {
                 Invoke(
@@ -696,7 +716,7 @@ namespace UnRarIt
                     {
                         name = name.Substring(minPath.Length + 1);
                     }
-                    string rootPath = Dests.Text;
+                    string rootPath = DestsText;
                     if (task.Item.IsNested)
                     {
                         rootPath = task.File.Archive.Directory.FullName;
@@ -708,7 +728,23 @@ namespace UnRarIt
                     }
                     task.Item.BaseDirectory = baseDirectory;
 
-                    FileInfo dest = new FileInfo(Reimplement.CombinePath(baseDirectory.FullName, name));
+                    FileInfo dest;
+                    string destPath = Reimplement.CombinePath(baseDirectory.FullName, name);
+                    try
+                    {
+                        dest = new FileInfo(destPath);
+                    }
+                    catch (NotSupportedException)
+                    {
+                        if (!silentSkip.IsMatch(destPath))
+                        {
+                            Invoke(new InvokeVoidDelegate(delegate()
+                            {
+                                MessageBox.Show(this, String.Format("Invalid file path: {0}\nSkipping file", destPath));
+                            }));
+                        }
+                        continue;
+                    }
                     if (dest.Exists)
                     {
                         switch ((OverwriteAction)Config.OverwriteAction)
@@ -850,8 +886,14 @@ namespace UnRarIt
             }
         }
 
+        private bool browsedBefore = false;
         private void BrowseDest_Click(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(Dests.Text) && !browsedBefore)
+            {
+                BrowseDestDialog.SelectedPath = Dests.Text;
+                browsedBefore = true;
+            }
             if (BrowseDestDialog.ShowDialog() == DialogResult.OK)
             {
                 Dests.Add(BrowseDestDialog.SelectedPath);
@@ -866,7 +908,7 @@ namespace UnRarIt
 
         private void Homepage_Click(object sender, EventArgs e)
         {
-            Process.Start("http://tn123.ath.cx/UnRarIt/");
+            Process.Start("https://tn123.org/UnRarIt/");
         }
 
         private void OpenSettings_Click(object sender, EventArgs e)
