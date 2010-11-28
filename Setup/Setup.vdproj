@@ -27,7 +27,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9BAC458118BE4FCE9D2DB1E61899A5A1"
+        "MsmKey" = "8:_A13F0E5112EF41D288891E15E4CB3925"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -201,26 +201,6 @@
             {
             "SourcePath" = "8:..\\UnRarIt\\bin\\Release\\7z-x86-sse3.dll"
             "TargetName" = "8:7z-x86-sse3.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9BAC458118BE4FCE9D2DB1E61899A5A1"
-            {
-            "SourcePath" = "8:..\\cpufeat\\Release\\CPUFeatures_Win32.dll"
-            "TargetName" = "8:CPUFeatures_Win32.dll"
             "Tag" = "8:"
             "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
             "Condition" = "8:"
@@ -922,6 +902,34 @@
         }
         "ProjectOutput"
         {
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A13F0E5112EF41D288891E15E4CB3925"
+            {
+            "SourcePath" = "8:..\\UnRarIt\\bin\\Release\\CPUFeatures_Win32.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{82BD1D92-FA64-40C9-941E-872AC5605870}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FF0751A4E6A94604A3AD77E580521FB6"
             {
             "SourcePath" = "8:..\\UnRarIt\\obj\\Release\\UnRarIt.exe"
