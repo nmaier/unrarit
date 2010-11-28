@@ -17,13 +17,10 @@ Features
 Build
 -----
 1. Clone this repository
-2. Clone GetOpt.Net into the repo
-   https://github.com/nmaier/getoptnet
-   (Or use a git submodule)
-3. Build 7zip
-4. Build UnRarIt (See solution file)
-5. Copy the 7zip DLLs to the corresponding Debug/Release folder
-6. Build the Setup Project
+2. Build 7zip
+3. Build UnRarIt (See solution file)
+4. Copy the 7zip DLLs to the corresponding Debug/Release folder
+5. Build the Setup Project
 
 License
 -------
