@@ -32,14 +32,14 @@ namespace UnRarIt.Archive.SevenZip
         void CryptoGetTextPassword([MarshalAs(UnmanagedType.BStr)] out string password);
     }
 
-    internal enum ExtractMode : uint
+    internal enum ExtractMode : int
     {
         Extract = 0,
         Test,
         Skip
     }
 
-    internal enum OperationResult : uint
+    internal enum OperationResult : int
     {
         OK = 0,
         UnSupportedMethod,
@@ -52,10 +52,10 @@ namespace UnRarIt.Archive.SevenZip
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IArchiveExtractCallback
     {
-        void SetTotal(ulong total);
-        void SetCompleted([In] ref ulong completeValue);
+        void SetTotal(UInt64 total);
+        void SetCompleted([In] ref UInt64 completeValue);
 
-        void GetStream(uint index, [MarshalAs(UnmanagedType.Interface)] out ISequentialOutStream outStream, ExtractMode askExtractMode);
+        void GetStream(UInt32 index, [MarshalAs(UnmanagedType.Interface)] out ISequentialOutStream outStream, ExtractMode askExtractMode);
 
         void PrepareOperation(ExtractMode extractMode);
         void SetOperationResult(OperationResult result);
@@ -101,23 +101,23 @@ namespace UnRarIt.Archive.SevenZip
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IInArchive
     {
-        void Open(IInStream stream, ref ulong maxCheckStartPosition, [MarshalAs(UnmanagedType.Interface)] IArchiveOpenCallback openArchiveCallback);
+        void Open(IInStream stream, ref UInt64 maxCheckStartPosition, [MarshalAs(UnmanagedType.Interface)] IArchiveOpenCallback openArchiveCallback);
 
         void Close();
 
-        uint GetNumberOfItems();
+        UInt32 GetNumberOfItems();
 
-        void GetProperty(uint index, ItemPropId propID, ref PropVariant value);
+        void GetProperty(UInt32 index, ItemPropId propID, ref PropVariant value);
 
-        void Extract([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] uint[] indices, uint numItems, ExtractMode testMode, [MarshalAs(UnmanagedType.Interface)] IArchiveExtractCallback extractCallback);
+        void Extract([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] UInt32[] indices, UInt32 numItems, ExtractMode testMode, [MarshalAs(UnmanagedType.Interface)] IArchiveExtractCallback extractCallback);
 
         void GetArchiveProperty(ItemPropId propID, ref PropVariant value);
 
         uint GetNumberOfProperties();
-        void GetPropertyInfo(uint index, [MarshalAs(UnmanagedType.BStr)] out string name, out ItemPropId propID, out ushort varType);
+        void GetPropertyInfo(UInt32 index, [MarshalAs(UnmanagedType.BStr)] out string name, out ItemPropId propID, out ushort varType);
 
         uint GetNumberOfArchiveProperties();
-        void GetArchivePropertyInfo(uint index, [MarshalAs(UnmanagedType.BStr)] string name, out ItemPropId propID, out ushort varType);
+        void GetArchivePropertyInfo(UInt32 index, [MarshalAs(UnmanagedType.BStr)] string name, out ItemPropId propID, out ushort varType);
     }
 
     [ComImport]

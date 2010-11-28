@@ -13,20 +13,20 @@ namespace UnRarIt.Archive.SevenZip
         [DllImport("7z-x86-dbg.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_32(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 
-        [DllImport("7z-x86_dbg.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
+        [DllImport("7z-x86-dbg.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_32SSE3(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 #else
         [DllImport("7z-x86-generic.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_32(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 
-        [DllImport("7z-x86_sse3.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
+        [DllImport("7z-x86-sse3.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_32SSE3(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 #endif
 
         [DllImport("7z-x64-generic.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_64(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 
-        [DllImport("7z-x64_sse3.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
+        [DllImport("7z-x64-sse3.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_64SSE3(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 
         private IInArchive inArchive = null;
@@ -49,22 +49,22 @@ namespace UnRarIt.Archive.SevenZip
             {
                 if (CpuInfo.hasSSE3)
                 {
-                    CreateObject_64(ref format, ref Interface, out result);
+                    CreateObject_64SSE3(ref format, ref Interface, out result);
                 }
                 else
                 {
-                    CreateObject_64SSE3(ref format, ref Interface, out result);
+                    CreateObject_64(ref format, ref Interface, out result);
                 }
             }
             else
             {
                 if (CpuInfo.hasSSE3)
                 {
-                    CreateObject_32(ref format, ref Interface, out result);
+                    CreateObject_32SSE3(ref format, ref Interface, out result);
                 }
                 else
                 {
-                    CreateObject_32SSE3(ref format, ref Interface, out result);
+                    CreateObject_32(ref format, ref Interface, out result);
                 }
             }
             if (result == null)
@@ -73,7 +73,7 @@ namespace UnRarIt.Archive.SevenZip
             }
             inArchive = result as IInArchive;
 
-            ulong sp = 4194304;
+            UInt64 sp = 1 << 23;
             inArchive.Open(stream, ref sp, callback);
 
         }
@@ -82,7 +82,7 @@ namespace UnRarIt.Archive.SevenZip
             Close();
         }
 
-        public void Open(IInStream stream, ref ulong maxCheckStartPosition, IArchiveOpenCallback openArchiveCallback)
+        public void Open(IInStream stream, ref UInt64 maxCheckStartPosition, IArchiveOpenCallback openArchiveCallback)
         {
             throw new NotImplementedException();
         }
@@ -106,17 +106,17 @@ namespace UnRarIt.Archive.SevenZip
             return inArchive.GetNumberOfItems();
         }
 
-        public void GetProperty(uint index, ItemPropId propID, ref PropVariant value)
+        public void GetProperty(UInt32 index, ItemPropId propID, ref PropVariant value)
         {
             inArchive.GetProperty(index, propID, ref value);
         }
 
-        public Variant GetProperty(uint Index, ItemPropId propId)
+        public Variant GetProperty(UInt32 Index, ItemPropId propId)
         {
             return new Variant(this, Index, propId);
         }
 
-        public void Extract(uint[] indices, uint numItems, ExtractMode testMode, IArchiveExtractCallback extractCallback)
+        public void Extract(UInt32[] indices, UInt32 numItems, ExtractMode testMode, IArchiveExtractCallback extractCallback)
         {
             inArchive.Extract(indices, numItems, testMode, extractCallback);
         }
@@ -136,7 +136,7 @@ namespace UnRarIt.Archive.SevenZip
             return inArchive.GetNumberOfProperties();
         }
 
-        public void GetPropertyInfo(uint index, out string name, out ItemPropId propID, out ushort varType)
+        public void GetPropertyInfo(UInt32 index, out string name, out ItemPropId propID, out ushort varType)
         {
             inArchive.GetPropertyInfo(index, out name, out propID, out varType);
         }
@@ -146,12 +146,12 @@ namespace UnRarIt.Archive.SevenZip
             return inArchive.GetNumberOfArchiveProperties();
         }
 
-        public void GetArchivePropertyInfo(uint index, string name, out ItemPropId propID, out ushort varType)
+        public void GetArchivePropertyInfo(UInt32 index, string name, out ItemPropId propID, out ushort varType)
         {
             inArchive.GetArchivePropertyInfo(index, name, out propID, out varType);
         }
 
-        public ISequentialInStream GetStream(uint index)
+        public ISequentialInStream GetStream(UInt32 index)
         {
             return (inArchive as IInArchiveGetStream).GetStream(index);
         }
