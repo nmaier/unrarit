@@ -16,7 +16,7 @@ Features
 
 Build
 -----
-1. Clone this repository
+1. Clone this repository and init submodule(s) (git submodule update --init)
 2. Build 7zip
 3. Build UnRarIt (See solution file)
 4. Copy the 7zip DLLs to the corresponding Debug/Release folder
