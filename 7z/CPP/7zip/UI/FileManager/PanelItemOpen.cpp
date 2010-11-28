@@ -169,7 +169,7 @@ static const char *kStartExtensions =
   #endif
   " exe bat com"
   " chm"
-  " msi doc xls ppt pps wps wpt wks xlr wdb"
+  " msi doc xls ppt pps wps wpt wks xlr wdb vsd"
 
   " docx docm dotx dotm xlsx xlsm xltx xltm xlsb"
   " xlam pptx pptm potx potm ppam ppsx ppsm xsn"
@@ -440,7 +440,7 @@ HRESULT CThreadCopyFrom::ProcessVirt()
   fileNames.Add(Name);
   fileNamePointers.Add(fileNames[0]);
   return FolderOperations->CopyFrom(PathPrefix, &fileNamePointers.Front(), fileNamePointers.Size(), UpdateCallback);
-};
+}
       
 HRESULT CPanel::OnOpenItemChanged(const UString &folderPath, const UString &itemName,
     bool usePassword, const UString &password)
