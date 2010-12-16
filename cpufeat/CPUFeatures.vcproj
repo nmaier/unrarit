@@ -62,7 +62,6 @@
 				ForceConformanceInForLoopScope="true"
 				WarningLevel="3"
 				WarnAsError="true"
-				DebugInformationFormat="4"
 				CompileAs="1"
 			/>
 			<Tool
