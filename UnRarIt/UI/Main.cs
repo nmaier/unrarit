@@ -97,8 +97,11 @@ namespace UnRarIt
             StateIcons.Images.Add(Properties.Resources.error);
             StateIcons.Images.Add(Properties.Resources.run);
 
-
+#if ENABLE_SSE3
             Text = String.Format("{0} - {1}bit - {2}", Text, CpuInfo.isX64 ? 64 : 32, CpuInfo.hasSSE3 ? "SSE3/4" : "Generic");
+#else
+            Text = String.Format("{0} - {1}bit", Text, CpuInfo.isX64 ? 64 : 32);
+#endif
 
             About.Image = Icon.ToBitmap();
 

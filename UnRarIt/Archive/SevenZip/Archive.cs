@@ -19,7 +19,11 @@ namespace UnRarIt.Archive.SevenZip
         [DllImport("7z-x86-generic.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
         private extern static int CreateObject_32(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 
+#if ENABLE_SSE3
         [DllImport("7z-x86-sse3.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
+#else
+        [DllImport("7z-x86-generic.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "CreateObject")]
+#endif
         private extern static int CreateObject_32SSE3(ref Guid classID, ref Guid interfaceID, [MarshalAs(UnmanagedType.Interface)] out object outObject);
 #endif
 
