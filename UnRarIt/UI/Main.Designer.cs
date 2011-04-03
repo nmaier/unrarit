@@ -30,10 +30,10 @@ namespace UnRarIt
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Rar-Archives", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("7zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Zip-Archives", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Split-Archives", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Rar archives", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("7zip archives", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Zip archives", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Split archives", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.FilesCtx = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CtxOpenDirectory = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,12 +68,12 @@ namespace UnRarIt
             this.BrowseDestDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.ExportDialog = new System.Windows.Forms.SaveFileDialog();
             this.GroupDest = new System.Windows.Forms.GroupBox();
-            this.BrowseDest = new System.Windows.Forms.Button();
-            this.AddPassword = new System.Windows.Forms.Button();
-            this.UnrarIt = new System.Windows.Forms.Button();
             this.DestsCtx = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearDestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Dests = new UnRarIt.UI.LRUComboBox();
+            this.BrowseDest = new System.Windows.Forms.Button();
+            this.AddPassword = new System.Windows.Forms.Button();
+            this.UnrarIt = new System.Windows.Forms.Button();
             this.Files = new UnRarIt.UI.ListView();
             this.columnFile = new System.Windows.Forms.ColumnHeader();
             this.columnSize = new System.Windows.Forms.ColumnHeader();
@@ -228,7 +228,7 @@ namespace UnRarIt
             this.OpenSettings.Image = global::UnRarIt.Properties.Resources.preferences;
             this.OpenSettings.Name = "OpenSettings";
             this.OpenSettings.Size = new System.Drawing.Size(167, 22);
-            this.OpenSettings.Text = "Open Preferences";
+            this.OpenSettings.Text = "Open preferences";
             this.OpenSettings.Click += new System.EventHandler(this.OpenSettings_Click);
             // 
             // toolStripMenuItem2
@@ -299,27 +299,27 @@ namespace UnRarIt
             // 
             this.Homepage.Image = global::UnRarIt.Properties.Resources.homepage;
             this.Homepage.Name = "Homepage";
-            this.Homepage.Size = new System.Drawing.Size(133, 22);
+            this.Homepage.Size = new System.Drawing.Size(152, 22);
             this.Homepage.Text = "Homepage";
             this.Homepage.Click += new System.EventHandler(this.Homepage_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(130, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // License
             // 
             this.License.Image = global::UnRarIt.Properties.Resources.license;
             this.License.Name = "License";
-            this.License.Size = new System.Drawing.Size(133, 22);
+            this.License.Size = new System.Drawing.Size(152, 22);
             this.License.Text = "License";
             this.License.Click += new System.EventHandler(this.License_Click);
             // 
             // About
             // 
             this.About.Name = "About";
-            this.About.Size = new System.Drawing.Size(133, 22);
+            this.About.Size = new System.Drawing.Size(152, 22);
             this.About.Text = "About";
             this.About.Click += new System.EventHandler(this.About_Click);
             // 
@@ -340,42 +340,6 @@ namespace UnRarIt
             this.GroupDest.TabIndex = 8;
             this.GroupDest.TabStop = false;
             this.GroupDest.Text = "Destination";
-            // 
-            // BrowseDest
-            // 
-            this.BrowseDest.Location = new System.Drawing.Point(361, 20);
-            this.BrowseDest.Name = "BrowseDest";
-            this.BrowseDest.Size = new System.Drawing.Size(24, 20);
-            this.BrowseDest.TabIndex = 3;
-            this.BrowseDest.Text = "...";
-            this.BrowseDest.UseVisualStyleBackColor = true;
-            this.BrowseDest.Click += new System.EventHandler(this.BrowseDest_Click);
-            // 
-            // AddPassword
-            // 
-            this.AddPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AddPassword.Image = global::UnRarIt.Properties.Resources.addpassword;
-            this.AddPassword.Location = new System.Drawing.Point(138, 441);
-            this.AddPassword.Name = "AddPassword";
-            this.AddPassword.Size = new System.Drawing.Size(120, 34);
-            this.AddPassword.TabIndex = 2;
-            this.AddPassword.Text = "Add Password";
-            this.AddPassword.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.AddPassword.UseVisualStyleBackColor = true;
-            this.AddPassword.Click += new System.EventHandler(this.AddPassword_Click);
-            // 
-            // UnrarIt
-            // 
-            this.UnrarIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.UnrarIt.Image = global::UnRarIt.Properties.Resources.extract;
-            this.UnrarIt.Location = new System.Drawing.Point(12, 441);
-            this.UnrarIt.Name = "UnrarIt";
-            this.UnrarIt.Size = new System.Drawing.Size(120, 34);
-            this.UnrarIt.TabIndex = 1;
-            this.UnrarIt.Text = "Extract files";
-            this.UnrarIt.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.UnrarIt.UseVisualStyleBackColor = true;
-            this.UnrarIt.Click += new System.EventHandler(this.UnRarIt_Click);
             // 
             // DestsCtx
             // 
@@ -400,6 +364,42 @@ namespace UnRarIt
             this.Dests.Size = new System.Drawing.Size(349, 21);
             this.Dests.TabIndex = 4;
             // 
+            // BrowseDest
+            // 
+            this.BrowseDest.Location = new System.Drawing.Point(361, 20);
+            this.BrowseDest.Name = "BrowseDest";
+            this.BrowseDest.Size = new System.Drawing.Size(24, 20);
+            this.BrowseDest.TabIndex = 3;
+            this.BrowseDest.Text = "...";
+            this.BrowseDest.UseVisualStyleBackColor = true;
+            this.BrowseDest.Click += new System.EventHandler(this.BrowseDest_Click);
+            // 
+            // AddPassword
+            // 
+            this.AddPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.AddPassword.Image = global::UnRarIt.Properties.Resources.addpassword;
+            this.AddPassword.Location = new System.Drawing.Point(138, 441);
+            this.AddPassword.Name = "AddPassword";
+            this.AddPassword.Size = new System.Drawing.Size(120, 34);
+            this.AddPassword.TabIndex = 2;
+            this.AddPassword.Text = "Add password";
+            this.AddPassword.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.AddPassword.UseVisualStyleBackColor = true;
+            this.AddPassword.Click += new System.EventHandler(this.AddPassword_Click);
+            // 
+            // UnrarIt
+            // 
+            this.UnrarIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.UnrarIt.Image = global::UnRarIt.Properties.Resources.extract;
+            this.UnrarIt.Location = new System.Drawing.Point(12, 441);
+            this.UnrarIt.Name = "UnrarIt";
+            this.UnrarIt.Size = new System.Drawing.Size(120, 34);
+            this.UnrarIt.TabIndex = 1;
+            this.UnrarIt.Text = "Extract files";
+            this.UnrarIt.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.UnrarIt.UseVisualStyleBackColor = true;
+            this.UnrarIt.Click += new System.EventHandler(this.UnRarIt_Click);
+            // 
             // Files
             // 
             this.Files.AllowDrop = true;
@@ -411,13 +411,13 @@ namespace UnRarIt
             this.columnSize,
             this.columnStatus});
             this.Files.ContextMenuStrip = this.FilesCtx;
-            listViewGroup1.Header = "Rar-Archives";
+            listViewGroup1.Header = "Rar archives";
             listViewGroup1.Name = "GroupRar";
-            listViewGroup2.Header = "7zip-Archives";
+            listViewGroup2.Header = "7zip archives";
             listViewGroup2.Name = "GroupSevenZip";
-            listViewGroup3.Header = "Zip-Archives";
+            listViewGroup3.Header = "Zip archives";
             listViewGroup3.Name = "GroupZip";
-            listViewGroup4.Header = "Split-Archives";
+            listViewGroup4.Header = "Split archives";
             listViewGroup4.Name = "GroupSplit";
             this.Files.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
             listViewGroup1,
@@ -439,7 +439,7 @@ namespace UnRarIt
             // 
             // columnFile
             // 
-            this.columnFile.Text = "Archive File";
+            this.columnFile.Text = "Archive file";
             this.columnFile.Width = 200;
             // 
             // columnSize
