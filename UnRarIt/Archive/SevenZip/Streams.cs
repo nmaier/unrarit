@@ -41,8 +41,13 @@ namespace UnRarIt.Archive.SevenZip
 
     internal class SevenZipFileStream : ISevenZipStream
     {
-        protected const int BUFFER_SIZE = (1 << 23);
+        protected const int BUFFER_SIZE = 1 << 20;
 
+        protected FileInfo file;
+        public FileInfo File
+        {
+            get { return file; }
+        }
         protected FileStream stream;
         public SevenZipFileStream(FileInfo file, FileMode mode)
         {
@@ -52,13 +57,18 @@ namespace UnRarIt.Archive.SevenZip
         {
             Init(file, mode, access, BUFFER_SIZE);
         }
-        private void Init(FileInfo file, FileMode mode, FileAccess access, int buffering)
+        protected SevenZipFileStream(FileInfo file, FileMode mode, FileAccess access, int buffer_size)
         {
-            if (!file.Directory.Exists && access != FileAccess.Read)
+            Init(file, mode, access, buffer_size);
+        }
+        private void Init(FileInfo aFile, FileMode mode, FileAccess access, int buffering)
+        {
+            if (!aFile.Directory.Exists && access != FileAccess.Read)
             {
-                file.Directory.Create();
+                aFile.Directory.Create();
             }
-            stream = new FileStream(file.FullName, mode, access, FileShare.Read, buffering);
+            stream = new FileStream(aFile.FullName, mode, access, FileShare.Read, buffering);
+            file = aFile;
         }
 
         public ulong Seek(long offset, uint seekOrigin)
@@ -110,7 +120,8 @@ namespace UnRarIt.Archive.SevenZip
     }
     internal class SevenZipOutFileStream : SevenZipFileStream
     {
-        const uint FLUSH_SIZE = 1 << 27;
+        protected const int WRITE_BUFFER_SIZE = 1 << 23;
+        protected const uint FLUSH_SIZE = 1 << 27;
 
         private LowPriority lp = null;
 
@@ -118,12 +129,10 @@ namespace UnRarIt.Archive.SevenZip
         long fileSize;
         uint flush = FLUSH_SIZE;
         uint progress = BUFFER_SIZE;
-        FileInfo file;
-
         private bool ok = false;
 
         public SevenZipOutFileStream(FileInfo aFile, long aSize)
-            : base(aFile, FileMode.Create, FileAccess.ReadWrite)
+            : base(aFile, FileMode.Create, FileAccess.ReadWrite, WRITE_BUFFER_SIZE)
         {
             file = aFile;
             fileSize = aSize;
