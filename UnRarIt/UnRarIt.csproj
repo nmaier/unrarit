@@ -182,7 +182,7 @@
       <Project>{B79E24AD-1252-4C91-A197-7477D0A49149}</Project>
       <Name>UnRarIt.Updater</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UnRatIt.Archive\UnRarIt.Archive.csproj">
+    <ProjectReference Include="..\UnRarIt.Archive\UnRarIt.Archive.csproj">
       <Project>{AC3E5C73-BB39-41BA-9B96-CBC2F6680BE4}</Project>
       <Name>UnRarIt.Archive</Name>
     </ProjectReference>
