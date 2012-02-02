@@ -11,6 +11,7 @@
 #endif
 
 #include "MyString.h"
+#include "natcmp.h"
 
 
 #ifdef _WIN32
@@ -190,6 +191,11 @@ int MyStringCompareNoCase(const wchar_t *s1, const wchar_t *s2)
     }
     if (c1 == 0) return 0;
   }
+}
+
+int MyStringCompareNatural(const wchar_t *s1, const wchar_t *s2)
+{
+  return string_natural_compare_ic(s1, s2);
 }
 
 /*

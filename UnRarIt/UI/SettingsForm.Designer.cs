@@ -37,6 +37,7 @@
             this.Overwrite = new System.Windows.Forms.RadioButton();
             this.Skip = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.Nesting = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.OwnDirectoryLimit = new System.Windows.Forms.NumericUpDown();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -47,14 +48,16 @@
             this.RemoveAll = new System.Windows.Forms.RadioButton();
             this.RemoveDone = new System.Windows.Forms.RadioButton();
             this.RemoveNone = new System.Windows.Forms.RadioButton();
-            this.Nesting = new System.Windows.Forms.CheckBox();
-            this.Threads = new System.Windows.Forms.NumericUpDown();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.LowPriority = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.Threads = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OwnDirectoryLimit)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Threads)).BeginInit();
             this.SuspendLayout();
             // 
@@ -62,7 +65,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(343, 280);
+            this.buttonCancel.Location = new System.Drawing.Point(343, 305);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 0;
@@ -73,7 +76,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(262, 280);
+            this.buttonOK.Location = new System.Drawing.Point(262, 305);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
@@ -152,18 +155,29 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.Nesting);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.OwnDirectoryLimit);
             this.groupBox2.Location = new System.Drawing.Point(12, 137);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 100);
+            this.groupBox2.Size = new System.Drawing.Size(200, 110);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Directories...";
+            this.groupBox2.Text = "Directories and archives...";
+            // 
+            // Nesting
+            // 
+            this.Nesting.AutoSize = true;
+            this.Nesting.Location = new System.Drawing.Point(17, 83);
+            this.Nesting.Name = "Nesting";
+            this.Nesting.Size = new System.Drawing.Size(137, 17);
+            this.Nesting.TabIndex = 7;
+            this.Nesting.Text = "Extract nested archives";
+            this.Nesting.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(14, 16);
+            this.label1.Location = new System.Drawing.Point(14, 23);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(135, 53);
             this.label1.TabIndex = 1;
@@ -171,7 +185,7 @@
             // 
             // OwnDirectoryLimit
             // 
-            this.OwnDirectoryLimit.Location = new System.Drawing.Point(155, 21);
+            this.OwnDirectoryLimit.Location = new System.Drawing.Point(155, 23);
             this.OwnDirectoryLimit.Name = "OwnDirectoryLimit";
             this.OwnDirectoryLimit.Size = new System.Drawing.Size(39, 20);
             this.OwnDirectoryLimit.TabIndex = 0;
@@ -266,31 +280,43 @@
             this.RemoveNone.Text = "No items at all";
             this.RemoveNone.UseVisualStyleBackColor = true;
             // 
-            // Nesting
+            // groupBox5
             // 
-            this.Nesting.AutoSize = true;
-            this.Nesting.Location = new System.Drawing.Point(12, 247);
-            this.Nesting.Name = "Nesting";
-            this.Nesting.Size = new System.Drawing.Size(137, 17);
-            this.Nesting.TabIndex = 6;
-            this.Nesting.Text = "Extract nested archives";
-            this.Nesting.UseVisualStyleBackColor = true;
+            this.groupBox5.Controls.Add(this.LowPriority);
+            this.groupBox5.Controls.Add(this.label2);
+            this.groupBox5.Controls.Add(this.Threads);
+            this.groupBox5.Location = new System.Drawing.Point(12, 253);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(199, 76);
+            this.groupBox5.TabIndex = 9;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Performance";
             // 
-            // Threads
+            // LowPriority
             // 
-            this.Threads.Location = new System.Drawing.Point(379, 243);
-            this.Threads.Name = "Threads";
-            this.Threads.Size = new System.Drawing.Size(39, 20);
-            this.Threads.TabIndex = 7;
+            this.LowPriority.AutoSize = true;
+            this.LowPriority.Location = new System.Drawing.Point(17, 46);
+            this.LowPriority.Name = "LowPriority";
+            this.LowPriority.Size = new System.Drawing.Size(99, 17);
+            this.LowPriority.TabIndex = 12;
+            this.LowPriority.Text = "Low I/O Priority";
+            this.LowPriority.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(215, 247);
+            this.label2.Location = new System.Drawing.Point(14, 21);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(98, 13);
-            this.label2.TabIndex = 8;
+            this.label2.TabIndex = 10;
             this.label2.Text = "Number of Threads";
+            // 
+            // Threads
+            // 
+            this.Threads.Location = new System.Drawing.Point(154, 19);
+            this.Threads.Name = "Threads";
+            this.Threads.Size = new System.Drawing.Size(39, 20);
+            this.Threads.TabIndex = 9;
             // 
             // SettingsForm
             // 
@@ -298,10 +324,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(430, 315);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.Threads);
-            this.Controls.Add(this.Nesting);
+            this.ClientSize = new System.Drawing.Size(430, 336);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -318,14 +342,16 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OwnDirectoryLimit)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Threads)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -349,9 +375,11 @@
         private System.Windows.Forms.RadioButton RemoveDone;
         private System.Windows.Forms.RadioButton RemoveNone;
         private System.Windows.Forms.RadioButton Rename;
-        private System.Windows.Forms.CheckBox Nesting;
         private System.Windows.Forms.RadioButton RenameDirectory;
-        private System.Windows.Forms.NumericUpDown Threads;
+        private System.Windows.Forms.CheckBox Nesting;
+        private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown Threads;
+        private System.Windows.Forms.CheckBox LowPriority;
     }
 }

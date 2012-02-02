@@ -1,0 +1,8 @@
+*.user
+*.old
+*.ncb
+*.suo
+*.sdf
+UpgradeLog*.xml
+bin/
+obj/

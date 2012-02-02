@@ -2,7 +2,6 @@ DIRS = \
   Client7z\~ \
   Console\~ \
   Explorer\~ \
-  Far\~ \
   FileManager\~ \
   GUI\~ \
 

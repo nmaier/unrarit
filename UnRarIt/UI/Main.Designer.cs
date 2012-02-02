@@ -63,6 +63,8 @@ namespace UnRarIt
             this.HelpMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.Homepage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.License = new System.Windows.Forms.ToolStripMenuItem();
             this.About = new System.Windows.Forms.ToolStripMenuItem();
             this.BrowseDestDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -75,9 +77,9 @@ namespace UnRarIt
             this.AddPassword = new System.Windows.Forms.Button();
             this.UnrarIt = new System.Windows.Forms.Button();
             this.Files = new UnRarIt.UI.ListView();
-            this.columnFile = new System.Windows.Forms.ColumnHeader();
-            this.columnSize = new System.Windows.Forms.ColumnHeader();
-            this.columnStatus = new System.Windows.Forms.ColumnHeader();
+            this.columnFile = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.FilesCtx.SuspendLayout();
             this.Statusbar.SuspendLayout();
             this.MainMenu.SuspendLayout();
@@ -227,20 +229,20 @@ namespace UnRarIt
             // 
             this.OpenSettings.Image = global::UnRarIt.Properties.Resources.preferences;
             this.OpenSettings.Name = "OpenSettings";
-            this.OpenSettings.Size = new System.Drawing.Size(167, 22);
-            this.OpenSettings.Text = "Open preferences";
+            this.OpenSettings.Size = new System.Drawing.Size(152, 22);
+            this.OpenSettings.Text = "Preferences";
             this.OpenSettings.Click += new System.EventHandler(this.OpenSettings_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(164, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
             // 
             // Exit
             // 
             this.Exit.Image = global::UnRarIt.Properties.Resources.close;
             this.Exit.Name = "Exit";
-            this.Exit.Size = new System.Drawing.Size(167, 22);
+            this.Exit.Size = new System.Drawing.Size(152, 22);
             this.Exit.Text = "Exit";
             this.Exit.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -289,6 +291,8 @@ namespace UnRarIt
             this.HelpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Homepage,
             this.toolStripSeparator1,
+            this.checkForUpdatesToolStripMenuItem,
+            this.toolStripMenuItem5,
             this.License,
             this.About});
             this.HelpMenu.Name = "HelpMenu";
@@ -299,27 +303,39 @@ namespace UnRarIt
             // 
             this.Homepage.Image = global::UnRarIt.Properties.Resources.homepage;
             this.Homepage.Name = "Homepage";
-            this.Homepage.Size = new System.Drawing.Size(152, 22);
+            this.Homepage.Size = new System.Drawing.Size(170, 22);
             this.Homepage.Text = "Homepage";
             this.Homepage.Click += new System.EventHandler(this.Homepage_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(167, 6);
+            // 
+            // checkForUpdatesToolStripMenuItem
+            // 
+            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
+            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(167, 6);
             // 
             // License
             // 
             this.License.Image = global::UnRarIt.Properties.Resources.license;
             this.License.Name = "License";
-            this.License.Size = new System.Drawing.Size(152, 22);
+            this.License.Size = new System.Drawing.Size(170, 22);
             this.License.Text = "License";
             this.License.Click += new System.EventHandler(this.License_Click);
             // 
             // About
             // 
             this.About.Name = "About";
-            this.About.Size = new System.Drawing.Size(152, 22);
+            this.About.Size = new System.Drawing.Size(170, 22);
             this.About.Text = "About";
             this.About.Click += new System.EventHandler(this.About_Click);
             // 
@@ -434,8 +450,8 @@ namespace UnRarIt
             this.Files.View = System.Windows.Forms.View.Details;
             this.Files.DragDrop += new System.Windows.Forms.DragEventHandler(this.Files_DragDrop);
             this.Files.DragEnter += new System.Windows.Forms.DragEventHandler(this.Files_DragEnter);
-            this.Files.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Files_KeyPress);
             this.Files.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Files_KeyDown);
+            this.Files.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Files_KeyPress);
             // 
             // columnFile
             // 
@@ -469,9 +485,9 @@ namespace UnRarIt
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "UnRarIt.Net";
-            this.Shown += new System.EventHandler(this.Main_Shown);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
+            this.Shown += new System.EventHandler(this.Main_Shown);
             this.FilesCtx.ResumeLayout(false);
             this.Statusbar.ResumeLayout(false);
             this.Statusbar.PerformLayout();
@@ -529,6 +545,8 @@ namespace UnRarIt
         private LRUComboBox Dests;
         private System.Windows.Forms.ContextMenuStrip DestsCtx;
         private System.Windows.Forms.ToolStripMenuItem clearDestsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
     }
 }
 

@@ -26,7 +26,7 @@ namespace UnRarIt
             ExistingSize.Text = aExistingSize;
             NewFile.Text = aNew;
             NewSize.Text = aNewSize;
-            FileIcon.Image = new FileIconWin().GetIcon(aExisting, FileIconSize.ExtraLarge);
+            FileIcon.Image = UnRarIt.Interop.FileIcon.GetIcon(aExisting, FileIconSize.ExtraLarge);
         }
         public OverwriteAction Action
         {

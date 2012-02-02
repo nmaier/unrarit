@@ -29,9 +29,22 @@ int CALLBACK CompareItems2(LPARAM lParam1, LPARAM lParam2, LPARAM lpData)
     // if (panel->_sortIndex == 0)
     case kpidName:
     {
-      const UString name1 = panel->GetItemName((int)lParam1);
-      const UString name2 = panel->GetItemName((int)lParam2);
-      int res = name1.CompareNoCase(name2);
+      UString name1 = panel->GetItemName((int)lParam1);
+      UString name2 = panel->GetItemName((int)lParam2);
+      const UString ext1 = GetExtension(name1);
+      const UString ext2 = GetExtension(name2);
+
+      if (!ext1.IsEmpty()) {
+          name1 = name1.Mid(0, name1.Length() - ext1.Length());
+      }
+      if (!ext2.IsEmpty()) {
+          name2 = name2.Mid(0, name2.Length() - ext2.Length());
+      }
+
+      int res = name1.CompareNatural(name2);
+      if (!res) {
+          res = ext1.CompareNatural(ext2);
+      }
       /*
       if (res != 0 || !panel->_flatMode)
         return res;
@@ -49,7 +62,7 @@ int CALLBACK CompareItems2(LPARAM lParam1, LPARAM lParam2, LPARAM lpData)
     {
       const UString ext1 = GetExtension(panel->GetItemName((int)lParam1));
       const UString ext2 = GetExtension(panel->GetItemName((int)lParam2));
-      return ext1.CompareNoCase(ext2);
+      return ext1.CompareNatural(ext2);
     }
   }
   /*

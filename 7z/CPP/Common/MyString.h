@@ -104,6 +104,7 @@ int MyStringCompare(const wchar_t *s1, const wchar_t *s2);
 
 // int MyStringCompareNoCase(const char *s1, const char  *s2);
 int MyStringCompareNoCase(const wchar_t *s1, const wchar_t *s2);
+int MyStringCompareNatural(const wchar_t *s1, const wchar_t *s2);
 
 template <class T>
 class CStringBase
@@ -355,7 +356,13 @@ public:
   int CompareNoCase(const T *s) const
     { return MyStringCompareNoCase(_chars, s); }
 
-  /*
+  int CompareNatural(const CStringBase& s) const
+    { return MyStringCompareNatural(_chars, s._chars); }
+
+  int CompareNatural(const T *s) const
+    { return MyStringCompareNatural(_chars, s); }
+
+	/*
   int Collate(const CStringBase& s) const
     { return MyStringCollate(_chars, s._chars); }
   int CollateNoCase(const CStringBase& s) const

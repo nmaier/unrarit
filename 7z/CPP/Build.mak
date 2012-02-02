@@ -37,10 +37,7 @@ RFLAGS = $(RFLAGS) -dUNDER_CE
 LFLAGS = $(LFLAGS) /ENTRY:mainACRTStartup
 !ENDIF
 !ELSE
-!IFNDEF NEW_COMPILER
-LFLAGS = $(LFLAGS) -OPT:NOWIN98
-!ENDIF
-CFLAGS = $(CFLAGS) -Gr
+CFLAGS = $(CFLAGS)
 LIBS = $(LIBS) user32.lib advapi32.lib shell32.lib
 !ENDIF
 
@@ -50,7 +47,7 @@ COMPL_ASM = $(MY_ML) $** $O/$(*B).obj
 COMPL_ASM = $(MY_ML) -c -Fo$O/ $**
 !ENDIF
 
-CFLAGS = $(CFLAGS) $(EXTRA_CFLAGS) -nologo -c -Fo$O/ -WX -EHsc -Gr -Gy -GR-
+CFLAGS = $(CFLAGS) $(EXTRA_CFLAGS) -nologo -c -Fo$O/ -WX -EHsc -Gy -GR-
 
 CFLAGS = $(CFLAGS) -MT
 
@@ -64,8 +61,11 @@ CFLAGS = $(CFLAGS) -W3
 CFLAGS_O1 = $(CFLAGS) -Od
 CFLAGS_O2 = $(CFLAGS) -Od
 !ELSEIF "$(ARCH)" == "sse3"
-CFLAGS_O1 = $(CFLAGS) -Og -Ox -Oi -Ot -GT -GF -Og -Qipo -Ob2 -GS -arch:SSE3 -QxSSE3 -QaxSSE4.2 -Quse-intel-optimized-headers
-CFLAGS_O2 = $(CFLAGS) -Og -Ox -Oi -Ot -GT -GF -Qipo -Ob2 -Og -QxSSE3 -QaxSSE4.2 -Quse-intel-optimized-headers
+CFLAGS_O1 = $(CFLAGS) -Og -Ox -Oi -Ot -GT -GF -Og -Qipo -Ob2 -GS -arch:SSE3 -QxSSE3 -QaxSSE4.2 -Quse-intel-optimized-headers /Qfnalign /Qipo-jobs:4
+CFLAGS_O2 = $(CFLAGS) -Og -Ox -Oi -Ot -GT -GF -Qipo -Ob2 -Og -QxSSE3 -QaxSSE4.2 -Quse-intel-optimized-headers /Qfnalign /Qipo-jobs:4
+!ELSEIF "$(ARCH)" == "avx"
+CFLAGS_O1 = $(CFLAGS) -O3 -Oi -Ot -Ob2 -GT -GF -Qipo -QxSSE4.1 -QaxAVX -Quse-intel-optimized-headers
+CFLAGS_O2 = $(CFLAGS) -O3 -Oi -Ot -Ob2 -GT -GF -Qipo -QxSSE4.1 -QaxAVX -Quse-intel-optimized-headers
 !ELSE
 CFLAGS_O1 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Og -Qipo -Ob2 -GS
 CFLAGS_O2 = $(CFLAGS) -Ox -Oi -Ot -GT -GF -Qipo -Ob2 -Og 

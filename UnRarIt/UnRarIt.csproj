@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,10 +10,15 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UnRarIt</RootNamespace>
     <AssemblyName>UnRarIt</AssemblyName>
-    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>unrarit.ico</ApplicationIcon>
     <SignManifests>false</SignManifests>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,11 +31,9 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkSubset>
-    </TargetFrameworkSubset>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,17 +45,18 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>ENABLE_SSE3</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -63,15 +67,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Archive\ArchiveException.cs" />
-    <Compile Include="Archive\SevenZip\Archive.cs" />
-    <Compile Include="Archive\SevenZip\Com.cs" />
-    <Compile Include="Archive\SevenZip\Item.cs" />
-    <Compile Include="Archive\SevenZip\Streams.cs" />
-    <Compile Include="Archive\SevenZip\Un7ipLib.cs" />
-    <Compile Include="Interop\CpuInfo.cs" />
-    <Compile Include="Interop\FileIcon.cs" />
-    <Compile Include="Interop\Priority.cs" />
     <Compile Include="UI\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,11 +79,6 @@
     <Compile Include="UI\AddPasswordForm.Designer.cs">
       <DependentUpon>AddPasswordForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Archive\IArchiveEntry.cs" />
-    <Compile Include="Archive\IArchiveFile.cs" />
-    <Compile Include="Interop\FileIconWin.cs" />
-    <Compile Include="Interop\IFileIcon.cs" />
-    <Compile Include="Interop\Reimplement.cs" />
     <Compile Include="UI\ArchiveItem.cs" />
     <Compile Include="UI\ListView.cs">
       <SubType>Component</SubType>
@@ -184,11 +174,23 @@
       <Project>{ABF98F9F-CF28-4242-9459-B10AAA00E305}</Project>
       <Name>GetOptNet</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UnRarIt.Interop\UnRarIt.Interop.csproj">
+      <Project>{4B2856F5-9483-4757-BDE4-BFD04E2BB168}</Project>
+      <Name>UnRarIt.Interop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnRarIt.Updater\UnRarIt.Updater.csproj">
+      <Project>{B79E24AD-1252-4C91-A197-7477D0A49149}</Project>
+      <Name>UnRarIt.Updater</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnRatIt.Archive\UnRarIt.Archive.csproj">
+      <Project>{AC3E5C73-BB39-41BA-9B96-CBC2F6680BE4}</Project>
+      <Name>UnRarIt.Archive</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
-      <ProductName>.NET Framework Client Profile</ProductName>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

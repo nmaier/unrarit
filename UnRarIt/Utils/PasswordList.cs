@@ -178,10 +178,11 @@ namespace UnRarIt.Utils
         private void AddFromStream(StreamReader r)
         {
             string line;
-            uint count;
-            int lastUsed;
             while ((line = r.ReadLine()) != null)
             {
+                uint count = 0;
+                int lastUsed = 0;
+
                 line = line.Trim();
                 lastUsed = 0; count = 0;
                 if (line.Contains("\t"))
@@ -189,11 +190,17 @@ namespace UnRarIt.Utils
                     string[] pieces = line.Split(new char[] { '\t' });
                     if (pieces.Length >= 2)
                     {
-                        uint.TryParse(pieces[1], out count);
+                        if (!uint.TryParse(pieces[1], out count))
+                        {
+                            count = 0;
+                        }
                     }
                     if (pieces.Length >= 3)
                     {
-                        int.TryParse(pieces[2], out lastUsed);
+                        if (!int.TryParse(pieces[2], out lastUsed))
+                        {
+                            lastUsed = 0;
+                        }
                     }
                     line = pieces[0];
                 }
@@ -248,7 +255,7 @@ namespace UnRarIt.Utils
                 }
             }
             passwords.Sort();
-            using (Stream stream = new FileStream(file.FullName, FileMode.OpenOrCreate, FileAccess.Write))
+            using (Stream stream = new FileStream(file.FullName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read, 1 << 19))
             {
                 SaveToStream(stream);
             }
@@ -256,7 +263,7 @@ namespace UnRarIt.Utils
         }
         public void SaveToFile(string aFile)
         {
-            using (Stream stream = new FileStream(aFile, FileMode.OpenOrCreate, FileAccess.Write))
+            using (Stream stream = new FileStream(aFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read, 1 << 19))
             {
                 SaveToStream(stream);
             }

@@ -258,11 +258,11 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index, ISequentialOutStre
       {
         UString fullPathNew;
         CreateComplexDirectory(pathParts, fullPathNew);
-        if (_fi.IsDir)
+        /*if (_fi.IsDir)
           NFile::NDirectory::SetDirTime(fullPathNew,
             (WriteCTime && _fi.CTimeDefined) ? &_fi.CTime : NULL,
             (WriteATime && _fi.ATimeDefined) ? &_fi.ATime : NULL,
-            (WriteMTime && _fi.MTimeDefined) ? &_fi.MTime : (_arc->MTimeDefined ? &_arc->MTime : NULL));
+            (WriteMTime && _fi.MTimeDefined) ? &_fi.MTime : (_arc->MTimeDefined ? &_arc->MTime : NULL));*/
       }
     }
 
@@ -434,10 +434,11 @@ STDMETHODIMP CArchiveExtractCallback::SetOperationResult(Int32 operationResult)
   }
   if (_outFileStream)
   {
-    _outFileStreamSpec->SetTime(
+    /*_outFileStreamSpec->SetTime(
         (WriteCTime && _fi.CTimeDefined) ? &_fi.CTime : NULL,
         (WriteATime && _fi.ATimeDefined) ? &_fi.ATime : NULL,
         (WriteMTime && _fi.MTimeDefined) ? &_fi.MTime : (_arc->MTimeDefined ? &_arc->MTime : NULL));
+        */
     _curSize = _outFileStreamSpec->ProcessedSize;
     _curSizeDefined = true;
     RINOK(_outFileStreamSpec->Close());

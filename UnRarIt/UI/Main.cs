@@ -10,10 +10,12 @@ using UnRarIt.Archive;
 using UnRarIt.Archive.SevenZip;
 using UnRarIt.Interop;
 using UnRarIt.Utils;
+using UnRarIt.Updater;
+using System.Reflection;
 
 namespace UnRarIt
 {
-    public partial class Main : Form
+    public partial class Main : Form, UpdateTarget
     {
         private static Properties.Settings Config = Properties.Settings.Default;
         private static PasswordList passwords = new PasswordList();
@@ -24,7 +26,7 @@ namespace UnRarIt
             RegexOptions.IgnoreCase | RegexOptions.Compiled
             );
         private static Regex skipper = new Regex
-            (@"^\._|\bthumbs.db$|\b__MACOSX\b|\bds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf|url|lnk)$",
+            (@"^\._|\bthumbs.db$|\b__MACOSX\b|\bds_store\b|\bdxva_sig$|rapidpoint|\.(?:ion|pif|jbf|url|lnk|nfo)|^file_id.diz$",
             RegexOptions.IgnoreCase | RegexOptions.Compiled
             );
 
@@ -84,6 +86,11 @@ namespace UnRarIt
         private bool aborted = false;
         private bool stopped = false;
         private bool auto;
+
+        public Version AppVersion { get { return Assembly.GetExecutingAssembly().GetName().Version; } }
+        public Uri UpdateURI { get { return new Uri("https://tn123.org/UnRarIt/version"); } }
+
+        private Updater.Updater updater;
 
         public Main(bool aAuto, string dir, string[] args)
         {
@@ -442,7 +449,7 @@ namespace UnRarIt
                         i.StateImageIndex = 2;
                         continue;
                     }
-                    tasks.Add(new Task(this, i, new SevenZipArchiveFile(i.File, i.Format)));
+                    tasks.Add(new Task(this, i, new SevenZipArchiveFile(i.File, i.Format, Properties.Settings.Default.Priority)));
                 }
                 IEnumerator<Task> taskEnumerator = tasks.GetEnumerator();
                 Dictionary<AutoResetEvent, Task> runningTasks = new Dictionary<AutoResetEvent, Task>();
@@ -926,6 +933,24 @@ namespace UnRarIt
                 auto = false;
                 Run();
                 Close();
+                return;
+            }
+
+            updater = new Updater.Updater(this);
+            updater.OnHasUpdate += HasUpdate;
+            updater.Check();
+        }
+        private void HasUpdate(Version NewVersion, Uri InfoURI)
+        {
+            if (MessageBox.Show(
+                this,
+                String.Format("New version {0} is available!\n\nVisit {1}?", NewVersion, InfoURI),
+                "Update available",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Information
+                ) == DialogResult.Yes)
+            {
+                Process.Start(InfoURI.ToString());
             }
         }
 
@@ -1066,6 +1091,12 @@ namespace UnRarIt
         {
             Dests.Items.Clear();
             DestinationsChanged();
+        }
+
+        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (updater != null)
+                updater.Check(UpdateCheckType.Forced);
         }
     }
 }

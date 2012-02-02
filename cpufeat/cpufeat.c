@@ -20,78 +20,59 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include <windows.h>
+#include <intrin.h>
 
-static UINT32 _feat_edx, _feat_ecx;
+static unsigned _feat_edx, _feat_ecx;
 static void fill() {
 	int a[4];
-	__cpuid(&a, 1);
-	_feat_edx = (UINT32)a[3];
-	_feat_ecx = (UINT32)a[2];
+	__cpuid(a, 1);
+	_feat_edx = (unsigned)a[3];
+	_feat_ecx = (unsigned)a[2];
 }
 
-BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
+int __stdcall DllMain(void *instance, unsigned long reason, void *reserved)
 {
-	if (reason == DLL_PROCESS_ATTACH) {
+	if (reason == 1) {
 		fill();
 	}
-    return TRUE;
-}
-
-static char num[33];
-__inline char *utoar(UINT32 c)
-{
-	/* use this instead of _itoa because we don't want to depend on CRT */
-    wsprintf(num, "%u", c);
-    return num;
+    return 1;
 }
 
 #define EXPORT __stdcall
-#define EXPORTED(name) UINT32 EXPORT name()
+#define EXPORTED(name) unsigned EXPORT name()
 
-EXPORTED(featuresEDX)
-{
+EXPORTED(featuresEDX) {
+	return _feat_edx;
+}
+EXPORTED(featuresECX) {
 	return _feat_edx;
 }
 
-EXPORTED(featuresECX)
-{
-	return _feat_edx;
-}
 
-
-EXPORTED(hasMMX)
-{
+EXPORTED(hasMMX) {
 	return (_feat_edx >> 23) & 1;
 }
 
-EXPORTED(hasSSE)
-{
+EXPORTED(hasSSE) {
 	return (_feat_edx >> 24) & 3 ? 1 : 0;
 }
-EXPORTED(hasSSE2)
-{
+EXPORTED(hasSSE2) {
 	return (_feat_edx >> 25) & 1;
 }
-EXPORTED(hasHT)
-{
+EXPORTED(hasHT) {
 	return (_feat_edx >> 28) & 1;
 }
 
-EXPORTED(hasSSE3)
-{
+EXPORTED(hasSSE3) {
 	return _feat_ecx & 1;
 }
-EXPORTED(hasSSSE3)
-{
+EXPORTED(hasSSSE3) {
 	return (_feat_ecx >> 9) & 1;
 }
 
-EXPORTED(hasSSE4)
-{
+EXPORTED(hasSSE4) {
 	return (_feat_ecx >> 19) & 1;
 }
-EXPORTED(hasSSSE4)
-{
+EXPORTED(hasSSSE4) {
 	return (_feat_ecx >> 20) & 1;
 }

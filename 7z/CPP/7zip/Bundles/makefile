@@ -7,10 +7,6 @@ DIRS = \
   Format7zR\~ \
   Format7zExtract\~ \
   Format7zExtractR\~ \
-  LzmaCon\~ \
-  SFXCon\~ \
-  SFXSetup\~ \
-  SFXWin\~ \
   
 all: $(DIRS)
 

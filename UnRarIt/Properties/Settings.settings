@@ -23,5 +23,8 @@
     <Setting Name="Threads" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="Priority" Type="UnRarIt.Interop.ThreadIOPriority" Scope="User">
+      <Value Profile="(Default)">NORMAL</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
