@@ -97,7 +97,7 @@ namespace UnRarIt.Updater
                         lastChecked = Properties.Settings.Default.LastChecked;
                     }
                     catch (Exception) { }
-                    if (aType == UpdateCheckType.Periodical && lastChecked <= DateTime.Now.AddDays(7))
+                    if (aType == UpdateCheckType.Periodical && DateTime.Now.Subtract(lastChecked).Days < 7)
                     {
                         return false;
                     }
