@@ -42,7 +42,7 @@ namespace UnRarIt.Archive.SevenZip
     internal class SevenZipFileStream : ISevenZipStream
     {
         // 7-zip will take care of this actually
-        protected const int BUFFER_SIZE = 1;// << 21;
+        protected const int BUFFER_SIZE = 8192;
 
         protected FileInfo file;
         public FileInfo File
@@ -64,11 +64,16 @@ namespace UnRarIt.Archive.SevenZip
         }
         private void Init(FileInfo aFile, FileMode mode, FileAccess access, int buffering)
         {
+            FileOptions opts = FileOptions.SequentialScan;
+            if (access != FileAccess.Read)
+            {
+                opts |= FileOptions.WriteThrough;
+            }
             if (!aFile.Directory.Exists && access != FileAccess.Read)
             {
                 aFile.Directory.Create();
             }
-            stream = new FileStream(aFile.FullName, mode, access, FileShare.Read, buffering);
+            stream = new FileStream(aFile.FullName, mode, access, FileShare.Read, buffering, opts);
             file = aFile;
         }
 
@@ -121,8 +126,8 @@ namespace UnRarIt.Archive.SevenZip
     }
     internal class SevenZipOutFileStream : SevenZipFileStream
     {
-        protected const int WRITE_BUFFER_SIZE = 1 << 23;
-        protected const uint FLUSH_SIZE = 1 << 27;
+        protected const int WRITE_BUFFER_SIZE = 1 << 20;
+        protected const uint FLUSH_SIZE = 1 << 24;
 
         private IOPriority lp = null;
 
