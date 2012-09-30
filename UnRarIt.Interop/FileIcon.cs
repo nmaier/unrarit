@@ -17,62 +17,53 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 \* *************************************************************** */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
-using System.Collections.Generic;
-using System.IO;
-using System.Drawing.Imaging;
 
 namespace UnRarIt.Interop
 {
-    public enum FileIconSize
+  public enum FileIconSize
+  {
+    Small = 0x1,
+    Large = 0x0,
+    ExtraLarge = 0x2
+  };
+  public class FileIcon
+  {
+    private static IFileIcon Impl;
+    static FileIcon()
     {
-        Small = 0x1,
-        Large = 0x0,
-        ExtraLarge = 0x2
-    };
-    public class FileIcon
-    {
-        private static IFileIcon Impl;
-        static FileIcon()
-        {
-
-            foreach (Type t in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                if (new List<Type>(t.GetInterfaces()).Contains(typeof(IFileIcon)))
-                {
-                    try
-                    {
-                        ConstructorInfo ctor = t.GetConstructor(new Type[] { });
-                        Impl = (IFileIcon)ctor.Invoke(new Object[] { });
-                        return;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.Error.WriteLine(ex);
-                    }
-                }
-            }            
+      Impl = null;
+      foreach (Type t in Assembly.GetExecutingAssembly().GetTypes()) {
+        if (new List<Type>(t.GetInterfaces()).Contains(typeof(IFileIcon))) {
+          try {
+            ConstructorInfo ctor = t.GetConstructor(new Type[] { });
+            Impl = (IFileIcon)ctor.Invoke(new Object[] { });
+            return;
+          }
+          catch (Exception ex) {
+            Console.Error.WriteLine(ex);
+          }
         }
-
-        private FileIcon()
-        {
-        }
-
-        public static Image GetIcon(string aPath, FileIconSize aSize)
-        {
-            if (Impl != null)
-            {
-                try
-                {
-                    return Impl.GetIcon(aPath, aSize);
-                }
-                catch (Exception)
-                {
-                    // fall through
-                }
-            }
-            return null;
-        }
+      }
     }
+
+    private FileIcon()
+    {
+    }
+
+    public static Image GetIcon(string aPath, FileIconSize aSize)
+    {
+      if (Impl != null) {
+        try {
+          return Impl.GetIcon(aPath, aSize);
+        }
+        catch (Exception) {
+          // fall through
+        }
+      }
+      return null;
+    }
+  }
 }
