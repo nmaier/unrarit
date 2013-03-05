@@ -2,7 +2,10 @@
 *.old
 *.ncb
 *.suo
-*.sdf
+*.*sdf
 UpgradeLog*.xml
 bin/
 obj/
+Release/
+Debug/
+ipch/
