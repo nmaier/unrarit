@@ -8,25 +8,16 @@ using UnRarIt.Interop;
 
 namespace UnRarIt
 {
-    public enum OverwriteAction
-    {
-        Unspecified = 2,
-        Overwrite = 1,
-        Skip = 0,
-        Rename = 3,
-        RenameDirectory = 4
-    };
-
     public partial class OverwriteForm : Form
     {
-        public OverwriteForm(string aExisting, string aExistingSize, string aNew, string aNewSize)
+        public OverwriteForm(string existing, string existingSize, string newFile, string newSize)
         {
             InitializeComponent();
-            ExistingFile.Text = aExisting;
-            ExistingSize.Text = aExistingSize;
-            NewFile.Text = aNew;
-            NewSize.Text = aNewSize;
-            FileIcon.Image = UnRarIt.Interop.FileIcon.GetIcon(aExisting, FileIconSize.ExtraLarge);
+            ExistingFile.Text = existing;
+            ExistingSize.Text = existingSize;
+            NewFile.Text = newFile;
+            NewSize.Text = newSize;
+            FileIcon.Image = UnRarIt.Interop.FileIcon.GetIcon(existing, FileIconSize.ExtraLarge);
         }
         public OverwriteAction Action
         {

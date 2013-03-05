@@ -55,7 +55,7 @@ namespace UnRarIt
             OwnDirectoryLimit.Value = Config.OwnDirectoryLimit;
             Threads.Value = Config.Threads;
             Nesting.Checked = Config.Nesting;
-            LowPriority.Checked = Config.Priority == Interop.ThreadIOPriority.LOW;
+            LowPriority.Checked = Config.Priority == Interop.ThreadIOPriority.Low;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -114,7 +114,7 @@ namespace UnRarIt
                 Config.EmptyListWhenDone = 2;
             }
             Config.Nesting = Nesting.Checked;
-            Config.Priority = LowPriority.Checked ? Interop.ThreadIOPriority.LOW : Interop.ThreadIOPriority.NORMAL;
+            Config.Priority = LowPriority.Checked ? Interop.ThreadIOPriority.Low : Interop.ThreadIOPriority.Normal;
 
             Config.Save();
             Close();

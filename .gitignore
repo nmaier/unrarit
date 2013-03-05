@@ -9,3 +9,4 @@ obj/
 Release/
 Debug/
 ipch/
+packages/

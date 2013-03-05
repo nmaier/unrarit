@@ -14,10 +14,19 @@ namespace UnRarIt
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing) {
+  if (components != null) {
+    components.Dispose();
+  }
+  if (overwritePromptMutex != null) {
+    overwritePromptMutex.Dispose();
+    overwritePromptMutex = null;
+  }
+  if (passwords != null) {
+    passwords.Dispose();
+    passwords = null;
+  }
+}
             base.Dispose(disposing);
         }
 
@@ -155,7 +164,7 @@ namespace UnRarIt
       this.requeueToolStripMenuItem.Image = global::UnRarIt.Properties.Resources.run;
       this.requeueToolStripMenuItem.Name = "requeueToolStripMenuItem";
       this.requeueToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-      this.requeueToolStripMenuItem.Text = "Requeue items";
+      this.requeueToolStripMenuItem.Text = "Re-queue items";
       this.requeueToolStripMenuItem.Click += new System.EventHandler(this.requeueToolStripMenuItem_Click);
       // 
       // requeueFailedToolStripMenuItem
@@ -163,7 +172,7 @@ namespace UnRarIt
       this.requeueFailedToolStripMenuItem.Image = global::UnRarIt.Properties.Resources.reqerror;
       this.requeueFailedToolStripMenuItem.Name = "requeueFailedToolStripMenuItem";
       this.requeueFailedToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-      this.requeueFailedToolStripMenuItem.Text = "Requeue Failed";
+      this.requeueFailedToolStripMenuItem.Text = "Re-queue Failed";
       this.requeueFailedToolStripMenuItem.Click += new System.EventHandler(this.requeueFailedToolStripMenuItem_Click);
       // 
       // StateIcons
@@ -183,7 +192,7 @@ namespace UnRarIt
       this.Statusbar.Name = "Statusbar";
       this.Statusbar.Size = new System.Drawing.Size(782, 22);
       this.Statusbar.TabIndex = 2;
-      this.Statusbar.Text = "statusStrip";
+      this.Statusbar.Text = "Status Strip";
       // 
       // Progress
       // 
@@ -214,7 +223,7 @@ namespace UnRarIt
       this.MainMenu.Name = "MainMenu";
       this.MainMenu.Size = new System.Drawing.Size(782, 24);
       this.MainMenu.TabIndex = 4;
-      this.MainMenu.Text = "MainMenu";
+      this.MainMenu.Text = "Main Menu";
       // 
       // FileMenu
       // 
@@ -465,7 +474,6 @@ namespace UnRarIt
       this.Files.DragDrop += new System.Windows.Forms.DragEventHandler(this.Files_DragDrop);
       this.Files.DragEnter += new System.Windows.Forms.DragEventHandler(this.Files_DragEnter);
       this.Files.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Files_KeyDown);
-      this.Files.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Files_KeyPress);
       // 
       // columnFile
       // 

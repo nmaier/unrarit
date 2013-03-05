@@ -1,15 +1,21 @@
 ﻿using System;
+
 namespace UnRarIt.Archive
 {
-    public interface IArchiveEntry
-    {
-        ulong CompressedSize { get; }
-        uint Crc { get; }
-        DateTime DateTime { get; }
-        System.IO.FileInfo Destination { get; set; }
-        bool IsCrypted { get; }
-        string Name { get; }
-        ulong Size { get; }
-        uint Version { get; }
-    }
+  [CLSCompliant(false)]
+  public interface IArchiveEntry
+  {
+    [CLSCompliant(false)]
+    ulong CompressedSize { get; }
+    [CLSCompliant(false)]
+    uint Checksum { get; }
+    DateTime DateTime { get; }
+    System.IO.FileInfo Destination { get; set; }
+    bool IsEncrypted { get; }
+    string Name { get; }
+    [CLSCompliant(false)]
+    ulong Size { get; }
+    [CLSCompliant(false)]
+    uint Version { get; }
+  }
 }

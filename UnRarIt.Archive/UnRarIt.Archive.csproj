@@ -30,6 +30,13 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\unrarit.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>UnRarIt.Archive.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,20 +48,51 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchiveException.cs" />
+    <Compile Include="ExtractFileEventArgs.cs" />
+    <Compile Include="ExtractionStage.cs" />
+    <Compile Include="ExtractProgressEventArgs.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IArchiveEntry.cs" />
     <Compile Include="IArchiveFile.cs" />
+    <Compile Include="PasswordEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SevenZip\COM\ArchivePropId.cs" />
+    <Compile Include="SevenZip\COM\ExtractMode.cs" />
+    <Compile Include="SevenZip\COM\IArchiveExtractCallback.cs" />
+    <Compile Include="SevenZip\COM\IArchiveOpenCallback.cs" />
+    <Compile Include="SevenZip\COM\IArchiveOpenVolumeCallback.cs" />
+    <Compile Include="SevenZip\COM\IGetPassword.cs" />
+    <Compile Include="SevenZip\COM\IInArchive.cs" />
+    <Compile Include="SevenZip\COM\IInArchiveGetStream.cs" />
+    <Compile Include="SevenZip\COM\IInStream.cs" />
+    <Compile Include="SevenZip\COM\IProgress.cs" />
+    <Compile Include="SevenZip\COM\ISequentialInStream.cs" />
+    <Compile Include="SevenZip\COM\ISequentialOutStream.cs" />
+    <Compile Include="SevenZip\COM\ItemPropId.cs" />
+    <Compile Include="SevenZip\COM\OperationResult.cs" />
+    <Compile Include="SevenZip\COM\PropVariant.cs" />
+    <Compile Include="SevenZip\COM\PropVariantUnion.cs" />
+    <Compile Include="SevenZip\COM\SaveNativeMethods.cs" />
+    <Compile Include="SevenZip\ISevenZipCleanupStream.cs" />
+    <Compile Include="SevenZip\ISevenZipStream.cs" />
     <Compile Include="SevenZip\Archive.cs" />
-    <Compile Include="SevenZip\Com.cs" />
-    <Compile Include="SevenZip\Item.cs" />
-    <Compile Include="SevenZip\Streams.cs" />
-    <Compile Include="SevenZip\Un7ipLib.cs" />
+    <Compile Include="SevenZip\ArchiveFile.cs" />
+    <Compile Include="SevenZip\SevenZipFileStream.cs" />
+    <Compile Include="SevenZip\SevenZipMissingPasswordException.cs" />
+    <Compile Include="SevenZip\SevenZipNullStream.cs" />
+    <Compile Include="SevenZip\Variant.cs" />
+    <Compile Include="SevenZip\SevenZipItemInfo.cs" />
+    <Compile Include="SevenZip\SevenZipOutFileStream.cs" />
+    <Compile Include="SevenZip\SevenZipException.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UnRarIt.Interop\UnRarIt.Interop.csproj">
       <Project>{4B2856F5-9483-4757-BDE4-BFD04E2BB168}</Project>
       <Name>UnRarIt.Interop</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UnRarIt.Archive.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
