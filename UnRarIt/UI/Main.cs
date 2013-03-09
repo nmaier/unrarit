@@ -58,6 +58,7 @@ namespace UnRarIt
       StateIcons.Images.Add(Properties.Resources.done);
       StateIcons.Images.Add(Properties.Resources.error);
       StateIcons.Images.Add(Properties.Resources.run);
+      StateIcons.Images.Add(Properties.Resources.warning);
 
       Text = String.Format(CultureInfo.CurrentCulture, "{0} - {1}bit", Text, CpuInfo.IsX64 ? 64 : 32);
 
@@ -158,10 +159,10 @@ namespace UnRarIt
         }
         if (!parts.IsComplete) {
           item.StateImageIndex = 3;
-          item.SubStatus = "Missing parts! Requeue at your own risk!";
-          item.StateImageIndex = 2;
+          item.SubStatus = "Missing parts! Re-queue at your own risk!";
+          item.StateImageIndex = 4;
         }
-        else {
+        else if (item.StateImageIndex == 4) {
           item.StateImageIndex = 3;
           item.SubStatus = "Ready...";
           item.StateImageIndex = 0;

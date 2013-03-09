@@ -185,6 +185,7 @@
     <None Include="Resources\import.png" />
     <None Include="Resources\extract.png" />
     <None Include="Resources\process-stop.png" />
+    <Content Include="Resources\warning.png" />
     <Content Include="unrarit.ico" />
   </ItemGroup>
   <ItemGroup>
