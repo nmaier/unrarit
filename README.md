@@ -4,27 +4,26 @@ Batch rar/zip/7z/split extraction tool in .Net
 
 Features 
 --------
-* Support for RAR, ZIP and 7-ZIP
-* Support for Split-Archives
-* Support for nested archives
-* Password "cracking" using a password list. Recently/often used passwords will be tried first to speed up the process.
-* Smart directory management. Generate directories on the fly. Strip non-required directories.
-* Auto-renaming and/or deletion of successfully processed archives.
-* Per file/archive/session existing file handling.
-* Optimized extraction libraries specific to the processor to gain a speed boost for password "cracking" and extraction
-* Fully multi-threaded to take advantage of multi-core/-processor systems
+  * Support for RAR, ZIP and 7-ZIP
+  * Support for Split-Archives
+  * Support for nested archives
+  * Password "cracking" using a password list. Recently/often used passwords will be tried first to speed up the process.
+  * Smart directory management. Generate directories on the fly. Strip non-required directories.
+  * Auto-renaming and/or deletion of successfully processed archives.
+  * Per file/archive/session existing file handling.
+  * Fully multi-threaded to take advantage of multi-core/-processor systems
 
 Build
 -----
-1. Clone this repository and init submodule(s) (git submodule update --init)
-2. Build 7zip
-3. Build UnRarIt (See solution file)
-4. Copy the 7zip DLLs to the corresponding Debug/Release folder
-5. Build the Setup Project
+  1. Clone this repository
+  2. Build UnRarIt (See solution file)
+  3. Copy the 7zip DLLs to the corresponding Debug/Release folder
+  4. Run the program ;)
+  5. Optionally build the Setup Project and install
 
 License
 -------
-Written 2009 by Nils Maier - Copyrights are disclaimed - Public domain
+Written 2009-1013 by Nils Maier - Copyrights are disclaimed - Public domain
 You may use this program freely for any means and without any limitation.
 
 GetOptNet and UnRar are copyrighted and available under free-to-use or completely free licenses.
