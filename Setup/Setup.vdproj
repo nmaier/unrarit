@@ -76,13 +76,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_834C2054EB163FC09521F84858447FF2"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7CD0FDB32A60EA7C73C03C43D251F585"
+        "OwnerKey" = "8:_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -94,7 +88,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
+        "OwnerKey" = "8:_7CD0FDB32A60EA7C73C03C43D251F585"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_834C2054EB163FC09521F84858447FF2"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -209,11 +209,6 @@
             "AssemblyAsmDisplayName" = "8:UnRatIt.Archive, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_7CD0FDB32A60EA7C73C03C43D251F585"
-                    {
-                    "Name" = "8:UnRatIt.Archive.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:UnRatIt.Archive.dll"
             "TargetName" = "8:"
@@ -240,11 +235,6 @@
             "AssemblyAsmDisplayName" = "8:UnRarIt.Updater, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_834C2054EB163FC09521F84858447FF2"
-                    {
-                    "Name" = "8:UnRarIt.Updater.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:UnRarIt.Updater.dll"
             "TargetName" = "8:"
@@ -311,11 +301,6 @@
             "AssemblyAsmDisplayName" = "8:UnRarIt.Interop, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_B8D1A09F7275599A6C44A568A10B9795"
-                    {
-                    "Name" = "8:UnRarIt.Interop.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:UnRarIt.Interop.dll"
             "TargetName" = "8:"
@@ -362,11 +347,6 @@
             "AssemblyAsmDisplayName" = "8:GetOptNet, Version=1.0.1.0, Culture=neutral, PublicKeyToken=c9bf2c3a9070fff0, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
-                    {
-                    "Name" = "8:GetOptNet.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:GetOptNet.dll"
             "TargetName" = "8:"
@@ -486,15 +466,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UnRarIt.Net"
-        "ProductCode" = "8:{86C84CCD-407F-4988-8AFB-DB0DE0E1B852}"
-        "PackageCode" = "8:{7C9A496D-65AC-44B7-8B75-DCEA47ABFB35}"
+        "ProductCode" = "8:{1364A4D1-F1BE-40C1-B285-F665A4229975}"
+        "PackageCode" = "8:{90CD8DBE-09AC-44A7-865F-3C2980DE0B2D}"
         "UpgradeCode" = "8:{AF6374D3-725E-4BC2-9C06-722794CDAD33}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:13.03.04"
+        "ProductVersion" = "8:13.03.09"
         "Manufacturer" = "8:Nils Maier"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://tn123.org/UnRarIt"
