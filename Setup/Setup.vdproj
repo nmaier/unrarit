@@ -21,12 +21,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_5A2B1C9B7E1194F56F67B35C30DD80C5"
-        "OwnerKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_7CD0FDB32A60EA7C73C03C43D251F585"
         "OwnerKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
         "MsmSig" = "8:_UNDEFINED"
@@ -63,6 +57,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
+        "OwnerKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -94,7 +94,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5A2B1C9B7E1194F56F67B35C30DD80C5"
+        "OwnerKey" = "8:_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_6C87ADFFBF53452492FD6C36C0B44925"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -154,17 +160,17 @@
         "InstallerBootstrapper" = "3:2"
             "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
             {
-            "Enabled" = "11:FALSE"
+            "Enabled" = "11:TRUE"
             "PromptEnabled" = "11:TRUE"
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5.SP1"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
                     {
-                    "Name" = "8:.NET Framework 3.5 SP1"
-                    "ProductCode" = "8:Microsoft.Net.Framework.3.5.SP1"
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
                     }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
@@ -194,7 +200,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v3.5"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.0,Profile=Client"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=76617"
                 }
@@ -220,37 +226,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5A2B1C9B7E1194F56F67B35C30DD80C5"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GetOptNet, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_5A2B1C9B7E1194F56F67B35C30DD80C5"
-                    {
-                    "Name" = "8:GetOptNet.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:GetOptNet.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7CD0FDB32A60EA7C73C03C43D251F585"
@@ -386,6 +361,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:GetOptNet, Version=1.0.1.0, Culture=neutral, PublicKeyToken=c9bf2c3a9070fff0, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
+                    {
+                    "Name" = "8:GetOptNet.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:GetOptNet.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -486,15 +492,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UnRarIt.Net"
-        "ProductCode" = "8:{2FA88B23-4315-49FD-AB07-1D45C728331F}"
-        "PackageCode" = "8:{E290831B-801C-47F5-87A4-F09675603CDA}"
+        "ProductCode" = "8:{9E5BB4B6-5590-42C2-BDF2-F0262AADF2D3}"
+        "PackageCode" = "8:{8D0EC15E-1F29-49DF-87FE-8229B18EC0B8}"
         "UpgradeCode" = "8:{AF6374D3-725E-4BC2-9C06-722794CDAD33}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:12.02.02"
+        "ProductVersion" = "8:12.09.30"
         "Manufacturer" = "8:Nils Maier"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://tn123.org/UnRarIt"
