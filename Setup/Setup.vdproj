@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_711D9F8B531B4D198DF6D6155138AFD3"
+        "OwnerKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_7CD0FDB32A60EA7C73C03C43D251F585"
         "OwnerKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
         "MsmSig" = "8:_UNDEFINED"
@@ -57,12 +63,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
-        "OwnerKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -71,6 +71,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_FF0751A4E6A94604A3AD77E580521FB6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_711D9F8B531B4D198DF6D6155138AFD3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -89,12 +95,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_B8D1A09F7275599A6C44A568A10B9795"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -202,6 +202,37 @@
         }
         "File"
         {
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_711D9F8B531B4D198DF6D6155138AFD3"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:GetOptNet, Version=1.2.0.0, Culture=neutral, PublicKeyToken=c9bf2c3a9070fff0, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_711D9F8B531B4D198DF6D6155138AFD3"
+                    {
+                    "Name" = "8:GetOptNet.dll"
+                    "Attributes" = "3:576"
+                    }
+                }
+            "SourcePath" = "8:GetOptNet.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
+            "Condition" = "8:"
+            "Transitive" = "11:TRUE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7CD0FDB32A60EA7C73C03C43D251F585"
             {
             "AssemblyRegister" = "3:1"
@@ -355,37 +386,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:GetOptNet, Version=1.0.1.0, Culture=neutral, PublicKeyToken=c9bf2c3a9070fff0, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
-                    {
-                    "Name" = "8:GetOptNet.dll"
-                    "Attributes" = "3:576"
-                    }
-                }
-            "SourcePath" = "8:GetOptNet.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
-            "Condition" = "8:"
-            "Transitive" = "11:TRUE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
         }
         "FileType"
         {
@@ -486,15 +486,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UnRarIt.Net"
-        "ProductCode" = "8:{1364A4D1-F1BE-40C1-B285-F665A4229975}"
-        "PackageCode" = "8:{6D0014D4-6C04-4ADE-82FF-DA440AD7F047}"
+        "ProductCode" = "8:{21C1D723-D756-4C40-B563-F3773E8A2FC8}"
+        "PackageCode" = "8:{5472C8B8-A1A9-4765-828E-02AF23B439EC}"
         "UpgradeCode" = "8:{AF6374D3-725E-4BC2-9C06-722794CDAD33}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:13.03.09"
+        "ProductVersion" = "8:13.03.10"
         "Manufacturer" = "8:Nils Maier"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://tn123.org/UnRarIt"
