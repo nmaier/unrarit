@@ -3,6 +3,8 @@
 *.ncb
 *.suo
 *.*sdf
+*.msi
+*.cmd
 UpgradeLog*.xml
 bin/
 obj/
