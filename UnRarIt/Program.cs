@@ -32,15 +32,15 @@ namespace UnRarIt
     }
 
 
-    [GetOptOptions(AcceptPrefixType = ArgumentPrefixType.Dashes, CaseType = ArgumentCaseType.OnlyLower)]
+    [GetOptOptions(AcceptPrefixType = ArgumentPrefixTypes.Dashes, CaseType = ArgumentCaseType.OnlyLower)]
     private class Options : GetOpt
     {
       [Parameters]
       public string[] Args = new string[0];
-      [Argument(Helpvar = "DIRECTORY", Helptext = "Specifies the directory to extract to")]
+      [Argument(HelpVar = "DIRECTORY", HelpText = "Specifies the directory to extract to")]
       [ShortArgument('d')]
       public string Dir = string.Empty;
-      [Argument(Helptext = "Extract all files and exit")]
+      [Argument(HelpText = "Extract all files and exit")]
       [ShortArgument('a')]
       public bool Auto = false;
     }

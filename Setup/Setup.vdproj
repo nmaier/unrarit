@@ -76,13 +76,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B8D1A09F7275599A6C44A568A10B9795"
+        "OwnerKey" = "8:_834C2054EB163FC09521F84858447FF2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -94,7 +88,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_834C2054EB163FC09521F84858447FF2"
+        "OwnerKey" = "8:_B8D1A09F7275599A6C44A568A10B9795"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -206,9 +206,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:UnRatIt.Archive, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:UnRatIt.Archive, Version=1.1.0.0, Culture=neutral, PublicKeyToken=2f0751876de668f5, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_7CD0FDB32A60EA7C73C03C43D251F585"
+                    {
+                    "Name" = "8:UnRatIt.Archive.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:UnRatIt.Archive.dll"
             "TargetName" = "8:"
@@ -232,9 +237,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:UnRarIt.Updater, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:UnRarIt.Updater, Version=2.1.0.0, Culture=neutral, PublicKeyToken=838ebe48d9276d3c, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_834C2054EB163FC09521F84858447FF2"
+                    {
+                    "Name" = "8:UnRarIt.Updater.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:UnRarIt.Updater.dll"
             "TargetName" = "8:"
@@ -298,9 +308,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:UnRarIt.Interop, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:UnRarIt.Interop, Version=1.1.0.0, Culture=neutral, PublicKeyToken=0fe206567581a317, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_B8D1A09F7275599A6C44A568A10B9795"
+                    {
+                    "Name" = "8:UnRarIt.Interop.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:UnRarIt.Interop.dll"
             "TargetName" = "8:"
@@ -347,13 +362,18 @@
             "AssemblyAsmDisplayName" = "8:GetOptNet, Version=1.0.1.0, Culture=neutral, PublicKeyToken=c9bf2c3a9070fff0, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_E4A2088FDD7F82C2F23EFDEFA76BFEE7"
+                    {
+                    "Name" = "8:GetOptNet.dll"
+                    "Attributes" = "3:576"
+                    }
                 }
             "SourcePath" = "8:GetOptNet.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3D30CBC6A275491C9115AAA63744BA62"
             "Condition" = "8:"
-            "Transitive" = "11:FALSE"
+            "Transitive" = "11:TRUE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
             "Hidden" = "11:FALSE"
@@ -467,7 +487,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UnRarIt.Net"
         "ProductCode" = "8:{1364A4D1-F1BE-40C1-B285-F665A4229975}"
-        "PackageCode" = "8:{90CD8DBE-09AC-44A7-865F-3C2980DE0B2D}"
+        "PackageCode" = "8:{6D0014D4-6C04-4ADE-82FF-DA440AD7F047}"
         "UpgradeCode" = "8:{AF6374D3-725E-4BC2-9C06-722794CDAD33}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

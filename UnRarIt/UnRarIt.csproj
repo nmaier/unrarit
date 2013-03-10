@@ -67,9 +67,9 @@
     <AssemblyOriginatorKeyFile>UnRarIt.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GetOptNet, Version=1.0.1.0, Culture=neutral, PublicKeyToken=c9bf2c3a9070fff0, processorArchitecture=MSIL">
+    <Reference Include="GetOptNet, Version=1.2.0.0, Culture=neutral, PublicKeyToken=c9bf2c3a9070fff0, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GetOptNet.1.0.1.0\lib\net30\GetOptNet.dll</HintPath>
+      <HintPath>..\packages\GetOptNet.1.2.0.0\lib\net35-Client\GetOptNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
