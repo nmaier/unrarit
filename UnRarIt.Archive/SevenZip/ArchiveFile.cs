@@ -30,9 +30,10 @@ namespace UnRarIt.Archive
     public static readonly Guid FormatZip = new Guid("23170f69-40c1-278a-1000-000110010000");
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Rar")]
     public static readonly Guid FormatRar = new Guid("23170f69-40c1-278a-1000-000110030000");
+    public static readonly Guid FormatRar5 = new Guid("23170f69-40c1-278a-1000-000110CC0000");
     public static readonly Guid FormatSplit = new Guid("23170f69-40c1-278a-1000-000110EA0000");
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-    public static readonly ReadOnlyCollection<Guid> AllFormats = new ReadOnlyCollection<Guid>(new List<Guid>() { FormatZip, FormatRar, FormatSevenZip, FormatSplit });
+    public static readonly ReadOnlyCollection<Guid> AllFormats = new ReadOnlyCollection<Guid>(new List<Guid>() { FormatZip, FormatRar, FormatRar5, FormatSevenZip, FormatSplit });
     private readonly Dictionary<string, IArchiveEntry> items = new Dictionary<string, IArchiveEntry>();
     private string currentPassword = string.Empty;
     private readonly Dictionary<string, SevenZipFileStream> fileStreams = new Dictionary<string, SevenZipFileStream>();
